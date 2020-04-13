@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    namespace userPackage
+    namespace UserPackage
     {
-        class user
+        class User
         {
             private String email;
-            private string password;
+            private string Password;
             private string nickname;
             private myBoard Board;
 
 
-            public user(string email, string password, string nickname)
+            public User(string email, string password, string nickname)
             {
                 this.email = email;
                 this.password = password;
@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 myBoard = new BoardPackage.Board();
             }
 
-            public Boolean validatePassword(string password)
+            public Boolean ValidatePassword(string password)
             {
                 return this.password == password;
             }
