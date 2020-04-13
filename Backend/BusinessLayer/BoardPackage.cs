@@ -46,7 +46,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
-                return inProgress.AddTask(title, description, dueDate);
+                return backlog.AddTask(title, description, dueDate);
             }
 
             public Column GetColumn(string ColumnName)
@@ -110,10 +110,28 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.activeBoard = activeBoard;
             }
 
-            public Task AddTask(string title, string description, DateTime dueDate)
+
+            public Column GetColumn(string columnName)
             {
-                
+               return activeBoard.GetColumn(columnName);
             }
+
+            public Column GetColumn(int columnOrdinal)
+            {
+                return activeBoard.GetColumn(columnOrdinal);
+            }
+
+            public void SetLimit(int columnId,int limit)
+            {
+                activeBoard.SetLimit(columnId, limit);
+            }
+
+            public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+            {
+              activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
+            }
+
+
         }
 
         class Column
