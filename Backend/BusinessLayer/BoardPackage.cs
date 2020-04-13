@@ -9,6 +9,92 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     namespace BoardPackage
     {
+        class Board
+        {
+            private Column backlog;
+            private Column inProgress;
+            private Column done;
+
+            public Board()
+            {
+                backlog = new Column();
+                inProgress = new Column();
+                done = new Column();
+            }
+
+            public void AdvanceTask(int ColumnOrdinal, int taskId)
+            {
+
+                if (ColumnOrdinal == 3)
+                    throw new Exception("Can't advance mission that is already done");
+                if (ColumnOrdinal == 2)
+                {
+                    Task removed = inProgress.RemoveTask(taskId);
+                    done.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
+                }
+                else if (ColumnOrdinal == 1)
+                {
+                    Task removed = backlog.RemoveTask(taskId);
+                    inProgress.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
+                }
+                else
+                {
+                    throw new Exception("This columnOrdinal Illegal");
+                }
+
+            }
+
+            public Task AddTask(string title, string description, DateTime dueDate)
+            {
+                return inProgress.AddTask(title, description, dueDate);
+            }
+
+            public Column GetColumn(string ColumnName)
+            {
+                if (ColumnName.Equals("backlog"))
+                    return backlog;
+                else if (ColumnName.Equals("inProgress"))
+                    return inProgress;
+                else if (ColumnName.Equals("done"))
+                    return done;
+                else
+                    throw new Exception("This Column is not exist");
+            }
+
+            public Column GetColumn(int columnOrdinal)
+            {
+                if (columnOrdinal == 1)
+                    return backlog;
+                else if (columnOrdinal == 2)
+                    return inProgress;
+                else if (columnOrdinal == 3)
+                    return done;
+                else
+                    throw new Exception("This Column is not exist");
+            }
+
+            public void SetLimit(int columnId, int limit)
+            {
+                GetColumn(columnId).SetLimit(limit);
+            }
+
+            public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+            {
+                GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
+            }
+
+            public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+            {
+                GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
+            }
+
+            public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+            {
+                GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
+            }
+
+        }
+
 
         class BoardController
         {
@@ -106,6 +192,20 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.dueDate = dueDate;
             }
 
+            public string GetTitle()
+            {
+                return title;
+            }
+
+            public string GetDescription()
+            {
+                return description;
+            }
+
+            public DateTime GetDueDate()
+            {
+                return dueDate;
+            }
             public void UpdateTaskDueDate(DateTime dueDate)
             {
                 if (!ValidateDueDate(dueDate))
