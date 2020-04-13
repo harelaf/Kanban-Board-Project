@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLayer\UserPackage.cs" />
-    <Compile Include="BusinessLayer\Task.cs" />
+    <Compile Include="BusinessLayer\BoardPackage.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />
