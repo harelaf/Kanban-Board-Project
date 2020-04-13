@@ -3,11 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     namespace BoardPackage
     {
+
+        class BoardController
+        {
+            private Board activeBoard;
+
+            public BoardController()
+            {
+                activeBoard = null;
+            }
+
+            public BoardController(Board activeBoard)
+            {
+                this.activeBoard = activeBoard;
+            }
+
+            public Task AddTask(string title, string description, DateTime dueDate)
+            {
+                
+            }
+        }
 
         class Column
         {
