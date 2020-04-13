@@ -116,9 +116,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                return activeBoard.GetColumn(columnName);
             }
 
-            public Column GetColumn(int columnOrdinal)
+            public Task AddTask(string title, string description, DateTime dueDate)
             {
-                return activeBoard.GetColumn(columnOrdinal);
+                return activeBoard.AddTask(title, description, dueDate);
+            }
+
+            public void AdvanceTask(int columnOrdinal, int taskId)
+            {
+                activeBoard.AdvanceTask(columnOrdinal, taskId);
+            }
+
+            public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+            {
+                activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+            }
+
+            public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+            {
+                activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
             }
 
             public void SetLimit(int columnId,int limit)
