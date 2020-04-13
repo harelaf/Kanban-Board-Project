@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessLayer\Class1.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />
@@ -86,7 +87,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BusinessLayer\" />
     <Folder Include="DataAccessLayer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
