@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         class User
         {
             private String email;
-            private string Password;
+            private string password;
             private string nickname;
             private myBoard Board;
 
