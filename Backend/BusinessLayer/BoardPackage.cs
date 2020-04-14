@@ -110,7 +110,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.activeBoard = activeBoard;
             }
 
-
             public Column GetColumn(string columnName)
             {
                return activeBoard.GetColumn(columnName);
@@ -153,11 +152,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             List<Task> taskList;
             int limit;
+            int idGiver;
 
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
+                idGiver = 0;
             }
 
             public Task AddTask(string title, string description, DateTime dueDate)
@@ -166,7 +167,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("Can't add new task, column has a limit of " + limit);
                 }
-                Task toAdd = new Task(title, description, dueDate);
+                Task toAdd = new Task(title, description, dueDate, idGiver);
+                idGiver++;
                 taskList.Add(toAdd);
                 return toAdd;
             }
@@ -214,8 +216,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private string description;
             private DateTime creationDate;
             private DateTime dueDate;
+            private int taskId;
 
-            public Task(string title, string description, DateTime dueDate)
+            public Task(string title, string description, DateTime dueDate, int taskId)
             {
                 if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
                     throw new Exception("One or more of the parameters illegal");
@@ -223,6 +226,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.description = description;
                 this.creationDate = DateTime.Now;
                 this.dueDate = dueDate;
+                this.taskId = taskId;
+            }
+
+            public int GetTaskId()
+            {
+                return taskId;
             }
 
             public string GetTitle()
