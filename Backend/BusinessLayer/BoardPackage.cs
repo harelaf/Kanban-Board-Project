@@ -39,7 +39,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 else
                 {
-                    throw new Exception("This columnOrdinal Illegal");
+                    throw new Exception("This columnOrdinal is illegal");
                 }
 
             }
@@ -53,12 +53,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 if (ColumnName.Equals("backlog"))
                     return backlog;
-                else if (ColumnName.Equals("inProgress"))
+                else if (ColumnName.Equals("in progress"))
                     return inProgress;
                 else if (ColumnName.Equals("done"))
                     return done;
                 else
-                    throw new Exception("This Column is not exist");
+                    throw new Exception("This Column does not exist");
             }
 
             public Column GetColumn(int columnOrdinal)
@@ -70,7 +70,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 else if (columnOrdinal == 3)
                     return done;
                 else
-                    throw new Exception("This Column is not exist");
+                    throw new Exception("This Column does not exist");
             }
 
             public void SetLimit(int columnId, int limit)
@@ -105,15 +105,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 activeBoard = null;
             }
 
-            public BoardController(Board activeBoard)
+            public void SetActiveBoard(Board newBoard)
             {
-                this.activeBoard = activeBoard;
+                activeBoard = newBoard;
+            }
+
+            public Board GetBoard()
+            {
+                return activeBoard;
             }
 
             public Column GetColumn(string columnName)
             {
                return activeBoard.GetColumn(columnName);
-            } 
+            }
+
+            public Column GetColumn(int columnOrdinal )
+            {
+                return activeBoard.GetColumn(columnOrdinal);
+            }
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
@@ -205,6 +215,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("This column already has more tasks than the new limit");
                 }
                 this.limit = newLim;
+            }
+
+            public int GetLimit()
+            {
+                return limit;
+            }
+
+            public List<Task> GetTaskList()
+            {
+                return taskList;
             }
 
         }
