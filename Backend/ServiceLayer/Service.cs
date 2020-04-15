@@ -18,12 +18,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private User activeUser;
         private BoardService boardService;
         private UserService userService;
+
         /// <summary>
         /// Simple public constructor.
         /// </summary>
         public Service()
         {
-            throw new NotImplementedException();
+            activeUser = new User(null, null);
+            boardService = new BoardService();
+            userService = new UserService();
         }
                
         /// <summary>        
@@ -66,8 +69,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            if (activeUser != null)
-                return userService.Logout(email);
+            if (activeUser.Email != null)
+            {
+                Response response = userService.Logout(email);
+                if (!response.ErrorOccured)
+                    activeUser = new User(null, null);
+                return response;
+            }
             else
                 return new Response("No user is logged in");
         }
@@ -104,7 +112,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
-            if (activeUser != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email))
                 return boardService.addTask(email, title, description, dueDate);
             else
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
