@@ -28,7 +28,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             boardService = new BoardService();
             userService = new UserService();
         }
-               
+
         /// <summary>        
         /// Loads the data. Intended be invoked only when the program starts
         /// </summary>
@@ -59,7 +59,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email != null)
+                return new Response<User>("You can't login, there is already an online user in the system");
+            Response<User> response=userService.Login(email, password);
+            if (response.ErrorOccured)
+                return response;
+            activeUser = response.Value;
+            return response;
         }
 
         /// <summary>        
@@ -69,7 +75,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            if (activeUser.Email != null)
+            if (activeUser.Email != null && activeUser.Email.Equals(email))
             {
                 Response response = userService.Logout(email);
                 if (!response.ErrorOccured)
