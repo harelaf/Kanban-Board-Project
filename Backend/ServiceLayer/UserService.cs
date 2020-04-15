@@ -10,6 +10,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         private readonly UserController userController;
 
+        public UserService()
+        {
+            userController = new UserController();
+        }
+
         public Response Logout(string email)
         {
             Response response = new Response();

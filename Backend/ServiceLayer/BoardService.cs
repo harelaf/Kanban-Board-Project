@@ -35,5 +35,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             return response;
         }
+
+        public Response AdvanceTask(string email, int columnOrdinal, int taskId)
+        {
+            Response response;
+            try
+            {
+                boardController.AdvanceTask(columnOrdinal, taskId);
+                response = new Response();
+            }
+            catch (Exception e)
+            {
+                response = new Response(e.Message);
+            }
+            return response;
+        }
     }
 }
