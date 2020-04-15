@@ -113,7 +113,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public Column GetColumn(string columnName)
             {
                return activeBoard.GetColumn(columnName);
-            }
+            } 
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
@@ -227,6 +227,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.creationDate = DateTime.Now;
                 this.dueDate = dueDate;
                 this.taskId = taskId;
+            }
+
+            public DateTime GetCreationDate()
+            {
+                return creationDate;
             }
 
             public int GetTaskId()

@@ -1,4 +1,5 @@
 ﻿using System;
+using IntroSE.Kanban.Backend.BusinessLayer.UserPackage;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -13,6 +14,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     /// </summary>
     public class Service : IService
     {
+        private User activeUser;
+        private BoardService boardService;
 
         /// <summary>
         /// Simple public constructor.
@@ -97,7 +100,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
-            throw new NotImplementedException();
+            if (activeUser != null && activeUser.Email.Equals(email))
+                return boardService.addTask(email, title, description, dueDate);
+            else
+                return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
 
         /// <summary>
