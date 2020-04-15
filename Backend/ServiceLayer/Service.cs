@@ -1,5 +1,6 @@
 ﻿using System;
 using IntroSE.Kanban.Backend.BusinessLayer.UserPackage;
+using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -16,7 +17,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         private User activeUser;
         private BoardService boardService;
-
+        private UserService userService;
         /// <summary>
         /// Simple public constructor.
         /// </summary>
@@ -65,7 +66,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            throw new NotImplementedException();
+            if (activeUser != null)
+                return userService.Logout(email);
+            else
+                return new Response("No user is logged in");
         }
 
         /// <summary>
