@@ -49,7 +49,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
             User serviceUser = new User(user.GetEmail(),user.GetNickname(), user.GetBoard());
             response = new Response<User>(serviceUser);
-            boardService.SetActiveBoard(serviceUser.GetBoard());
             return response;
         }
 
