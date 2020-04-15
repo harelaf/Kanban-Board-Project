@@ -123,6 +123,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return myBoard;
             }
+
+            public string GetNickname()
+            {
+                return nickname;
+            }
         }
     }
 }

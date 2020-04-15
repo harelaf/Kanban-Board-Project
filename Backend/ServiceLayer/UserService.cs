@@ -17,8 +17,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         public Response Logout(string email)
         {
-            Response response=new Response();
-            try {
+            Response response = new Response();
+            try
+            {
                 userController.Logout(email);
             }
             catch (Exception e)
@@ -33,15 +34,36 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             throw new NotImplementedException();
         }
 
-        public Response<User> Login(string email,string password)
+        public Response<User> Login(string email, string password)
         {
-            throw new NotImplementedException();
-            //Response<User> res;
+            Response<User> response;
+            BusinessLayer.UserPackage.User user = null;
+            try
+            {
+                user = userController.Login(email, password);
+            }
+            catch (Exception e)
+            {
+                return new Response<User>(e.Message);
+            }
+
+            User serviceUser = new User(user.GetEmail(),user.GetNickname());
+            response = new Response<User>(serviceUser);
+            return response;
         }
-            
-        public Response Register(string email,string password,string nickname)
+
+        public Response Register(string email, string password, string nickname)
         {
-            throw new NotImplementedException();
+            Response response = new Response();
+            try
+            {
+                userController.Register(email, password, nickname);
+            }
+            catch (Exception e)
+            {
+                response = new Response(e.Message);
+            }
+            return response;
         }
 
     }
