@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             }
 
-            public User login(string Email, string Password)
+            public User Login(string Email, string Password)
             {
                 if (UserList.ContainsKey(Email))
                 {
@@ -31,15 +31,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                         return MyUser;
                     }
                     else
-                    
                         throw new Exception("your password is incorrect");
                     
                 }
                 else
-                
                     throw new Exception("there is no such user. please register.");
-                
-
             }
 
             public void Logout(string Email)
