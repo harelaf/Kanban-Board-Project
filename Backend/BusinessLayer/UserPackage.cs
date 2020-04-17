@@ -17,7 +17,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public UserController()
             {
-
+                UserList = new Dictionary<string, User>();
+                CurrentUser = null;
             }
 
             public User Login(string Email, string Password)
@@ -127,6 +128,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public string GetNickname()
             {
                 return nickname;
+            }
+
+            public void LoadData()
+            {
+
             }
         }
     }
