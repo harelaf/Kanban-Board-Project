@@ -72,8 +72,10 @@
   <ItemGroup>
     <Compile Include="BusinessLayer\UserPackage.cs" />
     <Compile Include="BusinessLayer\BoardPackage.cs" />
-    <Compile Include="DataAccessLayer\RegisteredEmail.cs" />
+    <Compile Include="DataAccessLayer\DalController.cs" />
     <Compile Include="DataAccessLayer\DalObject.cs" />
+    <Compile Include="DataAccessLayer\User.cs" />
+    <Compile Include="DataAccessLayer\RegisteredEmail.cs" />
     <Compile Include="DataAccessLayer\Board.cs" />
     <Compile Include="DataAccessLayer\Column.cs" />
     <Compile Include="DataAccessLayer\Task.cs" />
