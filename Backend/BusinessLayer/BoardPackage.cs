@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -38,26 +39,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 else
                 {
-                    throw new Exception("This columnOrdinal Illegal");
+                    throw new Exception("This columnOrdinal is illegal");
                 }
 
             }
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
-                return inProgress.AddTask(title, description, dueDate);
+                return backlog.AddTask(title, description, dueDate);
             }
 
             public Column GetColumn(string ColumnName)
             {
                 if (ColumnName.Equals("backlog"))
                     return backlog;
-                else if (ColumnName.Equals("inProgress"))
+                else if (ColumnName.Equals("in progress"))
                     return inProgress;
                 else if (ColumnName.Equals("done"))
                     return done;
                 else
-                    throw new Exception("This Column is not exist");
+                    throw new Exception("This Column does not exist");
             }
 
             public Column GetColumn(int columnOrdinal)
@@ -69,7 +70,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 else if (columnOrdinal == 3)
                     return done;
                 else
-                    throw new Exception("This Column is not exist");
+                    throw new Exception("This Column does not exist");
             }
 
             public void SetLimit(int columnId, int limit)
@@ -95,15 +96,79 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
 
+        class BoardController
+        {
+            private Board activeBoard;
+
+            public BoardController()
+            {
+                activeBoard = null;
+            }
+
+            public void SetActiveBoard(Board newBoard)
+            {
+                activeBoard = newBoard;
+            }
+
+            public Board GetBoard()
+            {
+                return activeBoard;
+            }
+
+            public Column GetColumn(string columnName)
+            {
+               return activeBoard.GetColumn(columnName);
+            }
+
+            public Column GetColumn(int columnOrdinal )
+            {
+                return activeBoard.GetColumn(columnOrdinal);
+            }
+
+            public Task AddTask(string title, string description, DateTime dueDate)
+            {
+                return activeBoard.AddTask(title, description, dueDate);
+            }
+
+            public void AdvanceTask(int columnOrdinal, int taskId)
+            {
+                activeBoard.AdvanceTask(columnOrdinal, taskId);
+            }
+
+            public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+            {
+                activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+            }
+
+            public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+            {
+                activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
+            }
+
+            public void SetLimit(int columnId,int limit)
+            {
+                activeBoard.SetLimit(columnId, limit);
+            }
+
+            public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+            {
+              activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
+            }
+
+
+        }
+
         class Column
         {
             List<Task> taskList;
             int limit;
+            int idGiver;
 
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
+                idGiver = 0;
             }
 
             public Task AddTask(string title, string description, DateTime dueDate)
@@ -112,7 +177,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("Can't add new task, column has a limit of " + limit);
                 }
-                Task toAdd = new Task(title, description, dueDate);
+                Task toAdd = new Task(title, description, dueDate, idGiver);
+                idGiver++;
                 taskList.Add(toAdd);
                 return toAdd;
             }
@@ -151,6 +217,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.limit = newLim;
             }
 
+            public int GetLimit()
+            {
+                return limit;
+            }
+
+            public List<Task> GetTaskList()
+            {
+                return taskList;
+            }
+
         }
 
         class Task
@@ -160,8 +236,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private string description;
             private DateTime creationDate;
             private DateTime dueDate;
+            private int taskId;
 
-            public Task(string title, string description, DateTime dueDate)
+            public Task(string title, string description, DateTime dueDate, int taskId)
             {
                 if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
                     throw new Exception("One or more of the parameters illegal");
@@ -169,6 +246,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.description = description;
                 this.creationDate = DateTime.Now;
                 this.dueDate = dueDate;
+                this.taskId = taskId;
+            }
+
+            public DateTime GetCreationDate()
+            {
+                return creationDate;
+            }
+
+            public int GetTaskId()
+            {
+                return taskId;
             }
 
             public string GetTitle()
