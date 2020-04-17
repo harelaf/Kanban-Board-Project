@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class RegisteredEmail extends DalObject<RegisteredEmail>
+    class RegisteredEmail : DalObject<RegisteredEmail>
     {
         public List<string> Emails;
         public DalController DCtrl;
@@ -14,6 +14,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             this.DCtrl = DCtrl;
             this.Emails = Emails;
+        }
+
+        public override string FromJson(string json)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override RegisteredEmail Import()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }
