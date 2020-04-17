@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="BusinessLayer\UserPackage.cs" />
     <Compile Include="BusinessLayer\BoardPackage.cs" />
+    <Compile Include="DataAccessLayer\RegisteredEmail.cs" />
     <Compile Include="ServiceLayer\Response.cs" />
     <Compile Include="ServiceLayer\ResponseT.cs" />
     <Compile Include="ServiceLayer\IService.cs" />
@@ -88,8 +89,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataAccessLayer\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
