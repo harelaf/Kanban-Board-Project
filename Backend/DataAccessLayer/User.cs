@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -34,17 +35,22 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override void Save()
         {
-            throw new NotImplementedException();
+            dalController.Write(ToFilename(), ToJson());
         }
 
         public override User Import()
         {
-            throw new NotImplementedException();
+            return JsonSerializer.Deserialize<User>(FromJson(ToFilename()));
         }
 
         public override string FromJson(string json)
         {
-            throw new NotImplementedException();
+            return dalController.Read(json);
+        }
+
+        private string ToFilename()
+        {
+            return email.Replace('@', '.');
         }
     }
 }
