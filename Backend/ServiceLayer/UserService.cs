@@ -56,7 +56,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return new Response<User>(e.Message);
             }
 
-            User serviceUser = new User(user.GetEmail(),user.GetNickname(), user.GetBoard());
+            User serviceUser = new User(user.GetEmail(), user.GetNickname(), user.GetBoard());
             response = new Response<User>(serviceUser);
             return response;
         }

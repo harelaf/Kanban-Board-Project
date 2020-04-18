@@ -23,17 +23,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 done = new Column();
             }
 
+            public Board(Column backlog, Column inProgress, Column done)
+            {
+                this.backlog = backlog;
+                this.inProgress = inProgress;
+                this.done = done;
+            }
+
             public void AdvanceTask(int ColumnOrdinal, int taskId)
             {
 
-                if (ColumnOrdinal == 3)
-                    throw new Exception("Can't advance mission that is already done");
                 if (ColumnOrdinal == 2)
+                    throw new Exception("Can't advance mission that is already done");
+                if (ColumnOrdinal == 1)
                 {
                     Task removed = inProgress.RemoveTask(taskId);
                     done.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
                 }
-                else if (ColumnOrdinal == 1)
+                else if (ColumnOrdinal == 0)
                 {
                     Task removed = backlog.RemoveTask(taskId);
                     inProgress.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
@@ -64,11 +71,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Column GetColumn(int columnOrdinal)
             {
-                if (columnOrdinal == 1)
+                if (columnOrdinal == 0)
                     return backlog;
-                else if (columnOrdinal == 2)
+                else if (columnOrdinal == 1)
                     return inProgress;
-                else if (columnOrdinal == 3)
+                else if (columnOrdinal == 2)
                     return done;
                 else
                     throw new Exception("This Column does not exist");
@@ -174,6 +181,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 limit = -1;
             }
 
+            public Column(List<Task> taskList, int limit)
+            {
+                this.taskList = taskList;
+                this.limit = limit;
+            }
+
             public Task AddTask(string title, string description, DateTime dueDate)
             {
                 if (taskList.Count == limit)
@@ -187,7 +200,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Task RemoveTask(int taskId)
             {
-                Task toRemove = taskList.ElementAt(taskId);
+                Task toRemove = taskList[taskId];
                 taskList.Remove(toRemove);
                 foreach (Task task in taskList)
                 {
@@ -264,6 +277,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.taskId = taskId;
             }
 
+            public Task(string title, string description, DateTime dueDate, int taskId, DateTime creationDate)
+            {
+                if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
+                    throw new Exception("One or more of the parameters illegal");
+                this.title = title;
+                this.description = description;
+                this.creationDate = creationDate;
+                this.dueDate = dueDate;
+                this.taskId = taskId;
+            }
+
             public DateTime GetCreationDate()
             {
                 return creationDate;
@@ -296,14 +320,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void UpdateTaskDueDate(DateTime dueDate)
             {
                 if (!ValidateDueDate(dueDate))
-                    throw new Exception("The dueDate is Illegal(already passed)");
+                    throw new Exception("The dueDate is Illegal(Date already passed)");
                 this.dueDate = dueDate;
             }
 
             public void UpdateTaskTitle(string title)
             {
                 if (!ValidateTitle(title))
-                    throw new Exception("Illegal title(over 50 characters)");
+                    throw new Exception("Illegal title(over 50 characters or empty)");
                 this.title = title;
             }
 
@@ -317,7 +341,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool ValidateTitle(string title)
             {
-                return title.Length <= 50;
+                return title.Length <= 50 & title.Length > 0;
             }
 
             private bool ValidateDescription(string newDesc)
@@ -327,13 +351,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool ValidateDueDate(DateTime newDue)
             {
-                bool res = newDue.Year >= DateTime.Now.Year;
-                res = res & newDue.Month >= DateTime.Now.Month;
-                res = res & newDue.Day >= DateTime.Now.Day;
-                res = res & newDue.Hour >= DateTime.Now.Hour;
-                res = res & newDue.Minute >= DateTime.Now.Minute;
-                res = res & newDue.Second >= DateTime.Now.Second;
-                return res;
+                return newDue.CompareTo(DateTime.Now) > 0;
             }
 
             public DataAccessLayer.Task ToDalObject()

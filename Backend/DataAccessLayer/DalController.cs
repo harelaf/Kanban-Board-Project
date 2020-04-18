@@ -11,12 +11,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public string Read(string filename)
         {
-            return File.ReadAllText(filename);
+            return File.ReadAllText(filename + ".json");
         }
 
         public void Write(string filename, string content)
         {
-            File.WriteAllText(filename, content);
+            File.WriteAllText(filename + ".json", content);
         }
     }
 }

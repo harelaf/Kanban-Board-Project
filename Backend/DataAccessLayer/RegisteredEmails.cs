@@ -9,9 +9,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class RegisteredEmails : DalObject<RegisteredEmails>
     {
-        public List<string> Emails;
-        public DalController DCtrl;
-        public const string FILE_NAME = "RegisteredEmails";
+        public List<string> Emails { get; set; }
+        public DalController DCtrl { get; set; }
+        private const string FILE_NAME = "RegisteredEmails";
+
         public RegisteredEmails(DalController DCtrl,List<string> Emails)
         {
             this.DCtrl = DCtrl;
@@ -37,6 +38,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public override void Save()
         {
             DCtrl.Write(FILE_NAME, ToJson());
+        }
+
+        public override string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
 }

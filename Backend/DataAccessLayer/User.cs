@@ -61,5 +61,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             return email.Replace('@', '.');
         }
+
+        public override string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

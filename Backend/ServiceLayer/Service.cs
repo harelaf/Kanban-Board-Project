@@ -76,8 +76,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null)
             {
+                if (!activeUser.Email.Equals(email))
+                {
+                    return new Response("The user you're trying to logout isn't the one that's logged in");
+                }
                 Response response = userService.Logout(email);
                 if (!response.ErrorOccured)
                     activeUser = new User(null, null);

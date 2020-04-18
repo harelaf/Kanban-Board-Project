@@ -15,9 +15,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public abstract string FromJson(string json);
 
-        public string ToJson()
-        {
-            return JsonSerializer.Serialize(this);
-        }
+        public abstract string ToJson();
     }
 }

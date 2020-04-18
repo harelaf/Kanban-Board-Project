@@ -91,6 +91,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     registeredEmails.Emails.Add(Email);
                     registeredEmails.Save();
+                    MyUser.ToDalObject().Save();
                 }
             }
 
@@ -101,7 +102,39 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     DataAccessLayer.User temp = new DataAccessLayer.User(email);
                     temp = temp.Import();
-                    UserList.Add(email, new User(email, temp.password, temp.nickname));
+
+                    User toAdd = new User(email, temp.password, temp.nickname);
+
+                    DataAccessLayer.Board tempBoard = temp.myBoard;
+
+                    BoardPackage.Column backlog;
+                    List<BoardPackage.Task> backlogList = new List<BoardPackage.Task>();
+                    foreach (DataAccessLayer.Task task in tempBoard.BackLog.TaskList)
+                    {
+                        backlogList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                    }
+                    backlog = new BoardPackage.Column(backlogList, tempBoard.BackLog.Limit);
+
+                    BoardPackage.Column inprogress;
+                    List<BoardPackage.Task> inprogressList = new List<BoardPackage.Task>();
+                    foreach (DataAccessLayer.Task task in tempBoard.InProgress.TaskList)
+                    {
+                        inprogressList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                    }
+                    inprogress = new BoardPackage.Column(inprogressList, tempBoard.InProgress.Limit);
+
+                    BoardPackage.Column done;
+                    List<BoardPackage.Task> doneList = new List<BoardPackage.Task>();
+                    foreach (DataAccessLayer.Task task in tempBoard.Done.TaskList)
+                    {
+                        doneList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                    }
+                    done = new BoardPackage.Column(doneList, tempBoard.Done.Limit);
+
+                    BoardPackage.Board board = new BoardPackage.Board(backlog, inprogress, done);
+
+                    toAdd.SetBoard(board);
+                    UserList.Add(email, toAdd);
                 }
             }
 
@@ -154,9 +187,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return nickname;
             }
 
-            public void LoadData()
+            public void SetBoard(BoardPackage.Board newBoard)
             {
-
+                myBoard = newBoard;
             }
 
             public DataAccessLayer.User ToDalObject()
