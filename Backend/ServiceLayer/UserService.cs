@@ -31,7 +31,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         public Response LoadData()
         {
-            throw new NotImplementedException();
+            Response response = new Response();
+            try
+            {
+                userController.LoadData();
+            }
+            catch (Exception e)
+            {
+                response = new Response(e.Message);
+            }
+            return response;
         }
 
         public Response<User> Login(string email, string password)
@@ -64,6 +73,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 response = new Response(e.Message);
             }
             return response;
+        }
+
+        public void Save()
+        {
+            userController.Save();
         }
 
     }

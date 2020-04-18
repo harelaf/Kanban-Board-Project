@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessLayer\IPersistedObject.cs" />
     <Compile Include="BusinessLayer\UserPackage.cs" />
     <Compile Include="BusinessLayer\BoardPackage.cs" />
     <Compile Include="DataAccessLayer\DalController.cs" />

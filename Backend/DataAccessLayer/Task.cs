@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class Task
+    class Task : DalObject<Task>
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -32,7 +32,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             TaskId = 0;
         }
 
+        public override void Save()
+        {
+            throw new NotImplementedException();
+        }
 
+        public override Task Import()
+        {
+            throw new NotImplementedException();
+        }
 
+        public override string FromJson(string json)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

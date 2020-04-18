@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error.</returns>
         public Response LoadData()
         {
-            throw new NotImplementedException();
+            return userService.LoadData();
         }
 
 
@@ -110,7 +110,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response LimitColumnTasks(string email, int columnOrdinal, int limit)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.LimitColumnTasks(columnOrdinal, limit);
+            {
+                Response response = boardService.LimitColumnTasks(columnOrdinal, limit);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -126,7 +130,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.AddTask(title, description, dueDate);
+            {
+                Response<Task> response = boardService.AddTask(title, description, dueDate);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -142,7 +150,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+            {
+                Response response = boardService.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -158,7 +170,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.UpdateTaskTitle(columnOrdinal, taskId, title);
+            {
+                Response response = boardService.UpdateTaskTitle(columnOrdinal, taskId, title);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -174,7 +190,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.UpdateTaskDescription(columnOrdinal, taskId, description);
+            {
+                Response response = boardService.UpdateTaskDescription(columnOrdinal, taskId, description);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -189,7 +209,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response AdvanceTask(string email, int columnOrdinal, int taskId)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.AdvanceTask(columnOrdinal, taskId);
+            {
+                Response response = boardService.AdvanceTask(columnOrdinal, taskId);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -204,7 +228,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<Column> GetColumn(string email, string columnName)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email))
-                return boardService.GetColumn(columnName);
+            {
+                Response<Column> response = boardService.GetColumn(columnName);
+                CheckToSave(response);
+                return response;
+            }
             else
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
@@ -223,6 +251,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return boardService.GetColumn(columnOrdinal);
             else
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+        }
+
+        private void CheckToSave(Response response)
+        {
+            if (!response.ErrorOccured)
+            {
+                userService.Save();
+            }
         }
     }
 }

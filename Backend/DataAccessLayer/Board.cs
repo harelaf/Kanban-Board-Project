@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
 
 
-    class Board
+    class Board : DalObject<Board>
     {
         public Column BackLog { get; set; }
         public Column InProgress { get; set; }
@@ -26,6 +26,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.BackLog = BackLog;
             this.InProgress = InProgress;
             this.Done = Done;
+        }
+
+        public override void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Board Import()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string FromJson(string json)
+        {
+            throw new NotImplementedException();
         }
     }
 }

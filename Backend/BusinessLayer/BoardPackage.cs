@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
+using IntroSE.Kanban.Backend.DataAccessLayer;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     namespace BoardPackage
     {
-        class Board
+        class Board : IPersistedObject<DataAccessLayer.Board>
         {
             private Column backlog;
             private Column inProgress;
@@ -93,6 +94,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
             }
 
+            public DataAccessLayer.Board ToDalObject()
+            {
+                return new DataAccessLayer.Board(backlog.ToDalObject(), inProgress.ToDalObject(), done.ToDalObject());
+            }
         }
 
 
@@ -158,17 +163,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         }
 
-        class Column
+        class Column : IPersistedObject<DataAccessLayer.Column>
         {
             List<Task> taskList;
             int limit;
-            int idGiver;
 
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
-                idGiver = 0;
             }
 
             public Task AddTask(string title, string description, DateTime dueDate)
@@ -177,8 +180,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("Can't add new task, column has a limit of " + limit);
                 }
-                Task toAdd = new Task(title, description, dueDate, idGiver);
-                idGiver++;
+                Task toAdd = new Task(title, description, dueDate, taskList.Count);
                 taskList.Add(toAdd);
                 return toAdd;
             }
@@ -187,6 +189,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 Task toRemove = taskList.ElementAt(taskId);
                 taskList.Remove(toRemove);
+                foreach (Task task in taskList)
+                {
+                    task.SetTaskId(taskList.IndexOf(task));
+                }
                 return toRemove;
             }
 
@@ -227,9 +233,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return taskList;
             }
 
+            public DataAccessLayer.Column ToDalObject()
+            {
+                List <DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
+                foreach (Task task in taskList)
+                {
+                    DALList.Add(task.ToDalObject());
+                }
+                return new DataAccessLayer.Column(DALList, limit);
+            }
         }
 
-        class Task
+        class Task : IPersistedObject<DataAccessLayer.Task>
         {
 
             private string title;
@@ -257,6 +272,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public int GetTaskId()
             {
                 return taskId;
+            }
+
+            public void SetTaskId(int id)
+            {
+                this.taskId = id;
             }
 
             public string GetTitle()
@@ -314,6 +334,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 res = res & newDue.Minute >= DateTime.Now.Minute;
                 res = res & newDue.Second >= DateTime.Now.Second;
                 return res;
+            }
+
+            public DataAccessLayer.Task ToDalObject()
+            {
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId);
             }
         }
     }

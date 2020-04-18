@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
+using IntroSE.Kanban.Backend.DataAccessLayer;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -14,11 +15,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             private Dictionary<string, User> UserList;
             private User CurrentUser;
+            private RegisteredEmails registeredEmails;
 
             public UserController()
             {
                 UserList = new Dictionary<string, User>();
                 CurrentUser = null;
+                registeredEmails = new RegisteredEmails();
             }
 
             public User Login(string Email, string Password)
@@ -79,27 +82,48 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void Register(string Email, string Password, string NickName)
             {
                 if (UserList.ContainsKey(Email))
-                
+                {
                     throw new Exception("this Email is already used");
-
-                
-
+                }
                 if (CheckProperPassToRegister(Password))
                 {
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
+                    registeredEmails.Emails.Add(Email);
+                    registeredEmails.Save();
                 }
+            }
 
+            public void LoadData()
+            {
+                registeredEmails = registeredEmails.Import();
+                foreach (string email in registeredEmails.Emails)
+                {
+                    DataAccessLayer.User temp = new DataAccessLayer.User(email);
+                    temp = temp.Import();
+                    UserList.Add(email, new User(email, temp.password, temp.nickname));
+                }
+            }
 
+            public void Save()
+            {
+                if (CurrentUser != null)
+                {
+                    CurrentUser.ToDalObject().Save();
+                }
+                else
+                {
+                    throw new Exception("No user is currently logged in");
+                }
             }
         }
 
-        class User
+        class User : IPersistedObject<DataAccessLayer.User>
         {
             private String email;
             private string password;
             private string nickname;
-            private Board myBoard;
+            private BoardPackage.Board myBoard;
 
 
             public User(string email, string password, string nickname)
@@ -107,7 +131,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.email = email;
                 this.password = password;
                 this.nickname = nickname;
-                myBoard = new Board();
+                myBoard = new BoardPackage.Board();
             }
 
             public Boolean ValidatePassword(string password)
@@ -120,7 +144,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return email;
             }
 
-            public Board GetBoard()
+            public BoardPackage.Board GetBoard()
             {
                 return myBoard;
             }
@@ -133,6 +157,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void LoadData()
             {
 
+            }
+
+            public DataAccessLayer.User ToDalObject()
+            {
+                return new DataAccessLayer.User(email, password, nickname, myBoard.ToDalObject());
             }
         }
     }

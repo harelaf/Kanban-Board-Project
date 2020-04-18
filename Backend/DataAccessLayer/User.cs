@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     class User : DalObject<User>
     {
         public string email { get; set; }
-        private string password { get; set; }
+        public string password { get; set; }
         public string nickname { get; set; }
         public Board myBoard { get; set; }
         public DalController dalController;
@@ -30,6 +30,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.password = password;
             this.nickname = nickname;
             this.myBoard = myBoard;
+            dalController = new DalController();
+        }
+
+        public User(string email)
+        {
+            this.email = email;
+            password = null;
+            nickname = null;
+            myBoard = null;
             dalController = new DalController();
         }
 
