@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BusinessLayer.UserPackage;
+using log4net;
+
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     class UserService
     {
         private readonly UserController userController;
+        private log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserService()
         {
@@ -21,9 +24,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.Logout(email);
+                log.Debug($"Logged out of {email} successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed to logout: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -35,9 +40,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.LoadData();
+                log.Debug("Loaded the data successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed to load the data: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -50,9 +57,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 user = userController.Login(email, password);
+                log.Debug($"Logged in to {email} successfully");
             }
             catch (Exception e)
             {
+                log.Warn($"Failed to login to {email}: " + e.Message);
                 return new Response<User>(e.Message);
             }
 
@@ -67,9 +76,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.Register(email, password, nickname);
+                log.Debug($"User {email} registered successfully");
             }
             catch (Exception e)
             {
+                log.Warn($"Failed to register user {email}: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;

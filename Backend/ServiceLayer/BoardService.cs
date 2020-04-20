@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
+using log4net;
+
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
-{
+{ 
     class BoardService
     {
         private readonly BoardController boardController;
+        private log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public BoardService()
         {
@@ -26,6 +29,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response<Task> response;
             if(boardController.GetBoard() == null)
             {
+                log.Warn("Tried addding a task with no user connected");
                 response = new Response<Task>("No user is logged in");
                 return response;
             }
@@ -33,9 +37,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 BusinessLayer.BoardPackage.Task returnedTask = boardController.AddTask(title, description, dueDate);
                 response = new Response<Task>(new Task(returnedTask.GetTaskId(), returnedTask.GetCreationDate(), returnedTask.GetTitle(), returnedTask.GetDescription()));
+                log.Debug("Task added successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at adding a task: " + e.Message);
                 response = new Response<Task>(e.Message);
             }
             return response;
@@ -46,6 +52,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried advancing a task with no user connected");
                 response = new Response("No user is logged in");
                 return response;
             }
@@ -53,9 +60,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.AdvanceTask(columnOrdinal, taskId);
                 response = new Response();
+                log.Debug("Task has advanced successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at advancing a task: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -66,6 +75,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to update a task's title when a user wasn't connected");
                 response = new Response("No user is logged in");
                 return response;
             }
@@ -73,9 +83,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.UpdateTaskTitle(columnOrdinal, taskId, title);
                 response = new Response();
+                log.Debug("Updated a task's title successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at Updating a Task  Title: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -86,6 +98,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to update a task's due date when a user wasn't connected");
                 response = new Response("No user is logged in");
                 return response;
             }
@@ -93,9 +106,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
                 response = new Response();
+                log.Debug("Updated a task's due date successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at Updating a Task DueDate: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -106,6 +121,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to update a task's description when a user wasn't connected");
                 response = new Response("No user is logged in");
                 return response;
             }
@@ -113,9 +129,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.UpdateTaskDescription(columnOrdinal, taskId, description);
                 response = new Response();
+                log.Debug("Updated a task's description successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at Updating a Task Descriptiona: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -126,6 +144,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to update a column's task limit when a user wasn't connected");
                 response = new Response("No user is logged in");
                 return response;
             }
@@ -133,9 +152,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.SetLimit(columnOrdinal, limit);
                 response = new Response();
+                log.Debug("Updated a column's task limit successfully");
             }
             catch (Exception e)
             {
+                log.Warn("Failed at setting a new column limit: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
@@ -146,6 +167,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response<Column> response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to get a column when a user wasn't connected");
                 response = new Response<Column>("No user is logged in");
                 return response;
             }
@@ -162,6 +184,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
+                log.Warn("Failed at getting the wanted column: " + e.Message);
+
                 response = new Response<Column>(e.Message);
             }
             return response;
@@ -172,6 +196,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response<Column> response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried to get a column when a user wasn't connected");
                 response = new Response<Column>("No user is logged in");
                 return response;
             }
@@ -194,6 +219,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
+                log.Warn("Failed at getting the wanted column: " + e.Message);
                 response = new Response<Column>(e.Message);
             }
             return response;
@@ -204,6 +230,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response<Board> response;
             if (boardController.GetBoard() == null)
             {
+                log.Warn("Tried finding a board without a user connected");
                 response = new Response<Board>("No user is logged in");
                 return response;
             }
