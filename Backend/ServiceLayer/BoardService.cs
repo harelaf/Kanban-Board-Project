@@ -36,7 +36,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 BusinessLayer.BoardPackage.Task returnedTask = boardController.AddTask(title, description, dueDate);
-                response = new Response<Task>(new Task(returnedTask.GetTaskId(), returnedTask.GetCreationDate(), returnedTask.GetTitle(), returnedTask.GetDescription()));
+                response = new Response<Task>(new Task(returnedTask.GetTaskId(), returnedTask.GetCreationDate(), returnedTask.GetDueDate(), returnedTask.GetTitle(), returnedTask.GetDescription()));
                 log.Debug("Task added successfully");
             }
             catch (Exception e)
