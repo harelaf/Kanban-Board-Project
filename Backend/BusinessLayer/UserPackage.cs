@@ -85,7 +85,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("this Email is already used");
                 }
-                if (CheckProperPassToRegister(Password))
+                if (CheckProperPassToRegister(Password)&IsLegalEmailAdress(Email))
                 {
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
@@ -93,6 +93,31 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     registeredEmails.Save();
                     MyUser.ToDalObject().Save();
                 }
+            }
+
+            private bool IsLegalEmailAdress(string Email)
+            {
+                if (!Email.Contains("@"))
+                    throw new Exception("Ilegal email, the email must contains @");
+                int index = Email.IndexOf('@');
+                int counter = 0;
+
+                if (Email.Substring(index).Contains("@"))
+                    throw new Exception("Ilegal email, the email contains more than one @");
+
+                for(int i = index; i < Email.Length; i++)
+                {
+                    if (Email[index] != '.')
+                        counter++;
+                    else if (counter < 2)
+                        throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                    else
+                        counter = 0;
+                }
+
+                if (counter < 2)
+                    throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                return true;
             }
 
             public void LoadData()
