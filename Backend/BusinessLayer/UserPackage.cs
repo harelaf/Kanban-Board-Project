@@ -97,22 +97,31 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool IsLegalEmailAdress(string Email)
             {
-                if (!Email.Contains("@"))
+                if (Email.IndexOf('@')==-1)
                     throw new Exception("Ilegal email, the email must contains @");
+
                 int index = Email.IndexOf('@');
                 int counter = 0;
+                if (index == 0)
+                    throw new Exception("The email address can't start with @");
 
                 if (Email.Substring(index).Contains("@"))
                     throw new Exception("Ilegal email, the email contains more than one @");
 
-                for(int i = index; i < Email.Length; i++)
+                for (int i = index; i < Email.Length; i++)
                 {
                     if (Email[index] != '.')
+                    {
                         counter++;
+                    }
                     else if (counter < 2)
+                    {
                         throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                    }
                     else
+                    {
                         counter = 0;
+                    }
                 }
 
                 if (counter < 2)
@@ -166,13 +175,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void Save()
             {
                 if (CurrentUser != null)
-                {
                     CurrentUser.ToDalObject().Save();
-                }
                 else
-                {
                     throw new Exception("No user is currently logged in");
-                }
             }
         }
 
@@ -182,7 +187,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private string password;
             private string nickname;
             private BoardPackage.Board myBoard;
-
 
             public User(string email, string password, string nickname)
             {
