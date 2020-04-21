@@ -177,7 +177,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> serviceTasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
                 {
-                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetTitle(), task.GetDescription()));
+                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                 }
                 Column responseColumn = new Column(serviceTasks, columnName, column.GetLimit());
                 response = new Response<Column>(responseColumn);
@@ -206,7 +206,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> serviceTasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
                 {
-                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetTitle(), task.GetDescription()));
+                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                 }
                 Column responseColumn;
                 if (columnOrdinal == 0)

@@ -105,7 +105,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (index == 0)
                     throw new Exception("The email address can't start with @");
 
-                if (Email.Substring(index).Contains("@"))
+                if (Email.Substring(index + 1).Contains("@"))
                     throw new Exception("Ilegal email, the email contains more than one @");
 
                 for (int i = index; i < Email.Length; i++)
