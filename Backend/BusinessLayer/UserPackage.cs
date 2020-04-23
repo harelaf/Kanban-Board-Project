@@ -111,7 +111,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 try
                 {
                     var addr = new System.Net.Mail.MailAddress(Email);
-                    if (!Email.Contains("@"))
+                    if (Email.IndexOf('@') == -1)
                         throw new Exception("Ilegal email, the email must contains @");
                     int index = Email.IndexOf('@');
                     int counter = 0;
@@ -119,9 +119,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     if (Email.Substring(index + 1).Contains("@"))
                         throw new Exception("Ilegal email, the email contains more than one @");
 
-                    for (int i = index; i < Email.Length; i++)
+                    for (int i = index + 1; i < Email.Length; i++)
                     {
-                        if (Email[index + 1] != '.')
+                        if (Email[i] != '.')
                             counter++;
                         else if (counter < 2)
                             throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
