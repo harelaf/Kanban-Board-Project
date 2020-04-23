@@ -59,18 +59,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 bool isExistNumber = false;
                 for (int index = 0; index < password.Length & (!isExistCapitalLetter | !isExistSmallChar | !isExistNumber); index++)
                 {
-                    for (char i = 'a'; i < 'z' & !isExistSmallChar; i++)
+                    for (char i = 'a'; i <= 'z' & !isExistSmallChar; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistSmallChar = true;
+                        }
+                    }
 
-                    for (char i = 'A'; i < 'Z' & !isExistCapitalLetter; i++)
+                    for (char i = 'A'; i <= 'Z' & !isExistCapitalLetter; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistCapitalLetter = true;
+                        }
+                    }
 
-                    for (char i = '0'; i < '9' & !isExistNumber; i++)
+                    for (char i = '0'; i <= '9' & !isExistNumber; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistNumber = true;
-
+                        }
+                    }
                 }
 
                 if (isExistNumber == false | isExistCapitalLetter == false | isExistSmallChar == false)
@@ -87,12 +98,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
+                    /* //Un-needed test for same nicknames
                     foreach (User item in UserList.Values)
                     {
                         if (item.GetNickname().Equals(NickName))
                         { 
                             throw new Exception("This nickname is already in use"); 
                         }
+                    }
+                    */
+                    if(NickName == null)
+                    {
+                        throw new Exception("A null value was entered for the nickname");
+                    }
+                    else if(NickName == "")
+                    {
+                        throw new Exception("An empty nickname was entered");
                     }
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
@@ -111,7 +132,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 try
                 {
                     var addr = new System.Net.Mail.MailAddress(Email);
-                    if (!Email.Contains("@"))
+                    if (Email.IndexOf('@') == -1)
                         throw new Exception("Ilegal email, the email must contains @");
                     int index = Email.IndexOf('@');
                     int counter = 0;
@@ -119,9 +140,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     if (Email.Substring(index + 1).Contains("@"))
                         throw new Exception("Ilegal email, the email contains more than one @");
 
-                    for (int i = index; i < Email.Length; i++)
+                    for (int i = index + 1; i < Email.Length; i++)
                     {
-                        if (Email[index + 1] != '.')
+                        if (Email[i] != '.')
                             counter++;
                         else if (counter < 2)
                             throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
