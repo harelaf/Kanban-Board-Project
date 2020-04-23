@@ -346,7 +346,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool ValidateTitle(string title)
             {
-                return title.Length <= 50 & title.Length > 0;
+                return title != null && title.Length <= 50 & title.Length > 0;
             }
 
             private bool ValidateDescription(string newDesc)

@@ -59,18 +59,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 bool isExistNumber = false;
                 for (int index = 0; index < password.Length & (!isExistCapitalLetter | !isExistSmallChar | !isExistNumber); index++)
                 {
-                    for (char i = 'a'; i < 'z' & !isExistSmallChar; i++)
+                    for (char i = 'a'; i <= 'z' & !isExistSmallChar; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistSmallChar = true;
+                        }
+                    }
 
-                    for (char i = 'A'; i < 'Z' & !isExistCapitalLetter; i++)
+                    for (char i = 'A'; i <= 'Z' & !isExistCapitalLetter; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistCapitalLetter = true;
+                        }
+                    }
 
-                    for (char i = '0'; i < '9' & !isExistNumber; i++)
+                    for (char i = '0'; i <= '9' & !isExistNumber; i++)
+                    {
                         if (password[index] == i)
+                        {
                             isExistNumber = true;
-
+                        }
+                    }
                 }
 
                 if (isExistNumber == false | isExistCapitalLetter == false | isExistSmallChar == false)
