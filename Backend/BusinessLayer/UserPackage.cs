@@ -85,17 +85,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("this Email is already used");
                 }
-                if (CheckProperPassToRegister(Password)&IsLegalEmailAdress(Email))
+                if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
                     foreach (User item in UserList.Values)
+                    {
                         if (item.GetNickname().Equals(NickName))
-                            throw new Exception("This nickname is already in use");
-                    
+                        { 
+                            throw new Exception("This nickname is already in use"); 
+                        }
+                    }
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
                     registeredEmails.Emails.Add(Email);
                     registeredEmails.Save();
                     MyUser.ToDalObject().Save();
+                }
+                else
+                {
+                    throw new Exception("The password or email entered are invaild");
                 }
             }
 
@@ -104,6 +111,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 try
                 {
                     var addr = new System.Net.Mail.MailAddress(Email);
+                    if (!Email.Contains("@"))
+                        throw new Exception("Ilegal email, the email must contains @");
+                    int index = Email.IndexOf('@');
+                    int counter = 0;
+
+                    if (Email.Substring(index + 1).Contains("@"))
+                        throw new Exception("Ilegal email, the email contains more than one @");
+
+                    for (int i = index; i < Email.Length; i++)
+                    {
+                        if (Email[index + 1] != '.')
+                            counter++;
+                        else if (counter < 2)
+                            throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                        else
+                            counter = 0;
+                    }
+
+                    if (counter < 2)
+                        throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+
                     return addr.Address == Email;
                 }
                 catch
