@@ -365,7 +365,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool ValidateDueDate(DateTime newDue)
             {
-                return newDue.CompareTo(DateTime.Now) > 0;//new date is in the future.
+                return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
             public DataAccessLayer.Task ToDalObject()
