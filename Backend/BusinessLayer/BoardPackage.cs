@@ -32,18 +32,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void AdvanceTask(int ColumnOrdinal, int taskId)
             {
-
-                if (ColumnOrdinal == 2)
+                if (ColumnOrdinal == 2)//cannot advance further than 'done'.
                     throw new Exception("Can't advance mission that is already done");
                 if (ColumnOrdinal == 1)
                 {
+                    Task toRemove = inProgress.GetTaskList()[taskId];
+                    done.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate());//first tries to add to the next column and removes after if adding succeeded
                     Task removed = inProgress.RemoveTask(taskId);
-                    done.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
                 }
                 else if (ColumnOrdinal == 0)
                 {
+                    Task toRemove = backlog.GetTaskList()[taskId];
+                    inProgress.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate());//first tries to add to the next column and removes after if adding succeeded
                     Task removed = backlog.RemoveTask(taskId);
-                    inProgress.AddTask(removed.GetTitle(), removed.GetDescription(), removed.GetDueDate());
                 }
                 else
                 {
@@ -321,6 +322,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return dueDate;
             }
+
             public void UpdateTaskDueDate(DateTime dueDate)
             {
                 if (!ValidateDueDate(dueDate))
@@ -356,7 +358,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool ValidateDueDate(DateTime newDue)
             {
-                return newDue.CompareTo(DateTime.Now) > 0;
+                return newDue.CompareTo(DateTime.Now) > 0;//new date is in the future.
             }
 
             public DataAccessLayer.Task ToDalObject()
