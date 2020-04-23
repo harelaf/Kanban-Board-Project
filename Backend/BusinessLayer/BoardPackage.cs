@@ -83,23 +83,30 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void SetLimit(int columnId, int limit)
             {
-                if (columnId == 2 | columnId == 0)
-                    throw new Exception("Can not limit the amount of tasks in the first and third columns");
+                //Un-needed test for limiting columns 1 and 3
+                //if (columnId == 2 | columnId == 0)
+                  //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
                 GetColumn(columnId).SetLimit(limit);
             }
 
             public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
+                if (columnOrdinal == 2)
+                    throw new Exception("Cannot change tasks that are in the done column");
                 GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
             }
 
             public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
+                if (columnOrdinal == 2)
+                    throw new Exception("Cannot change tasks that are in the done column");
                 GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
             }
 
             public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
+                if (columnOrdinal == 2)
+                    throw new Exception("Cannot change tasks that are in the done column");
                 GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
             }
 
@@ -233,7 +240,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void SetLimit(int newLim)
             {
-                if (taskList.Count > newLim)
+                if (taskList.Count > newLim & newLim >= 0)
                 {
                     throw new Exception("This column already has more tasks than the new limit");
                 }

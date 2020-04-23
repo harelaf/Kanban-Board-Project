@@ -98,12 +98,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
+                    /* //Un-needed test for same nicknames
                     foreach (User item in UserList.Values)
                     {
                         if (item.GetNickname().Equals(NickName))
                         { 
                             throw new Exception("This nickname is already in use"); 
                         }
+                    }
+                    */
+                    if(NickName == null)
+                    {
+                        throw new Exception("A null value was entered for the nickname");
+                    }
+                    else if(NickName == "")
+                    {
+                        throw new Exception("An empty nickname was entered");
                     }
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
