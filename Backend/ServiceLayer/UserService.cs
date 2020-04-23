@@ -75,7 +75,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response = new Response();
             try
             {
-                userController.Register(email, password, nickname);
+                userController.Register(email.ToLower(), password, nickname);
                 log.Debug($"User {email} registered successfully");
             }
             catch (Exception e)
