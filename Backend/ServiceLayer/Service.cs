@@ -78,11 +78,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null)
             {
-                if (!activeUser.Email.Equals(email))
+                if (!activeUser.Email.Equals(email.ToLower()))
                 {
                     return new Response("The user you're trying to logout isn't the one that's logged in");
                 }
-                Response response = userService.Logout(email);
+                Response response = userService.Logout(email.ToLower());
                 if (!response.ErrorOccured)
                     activeUser = new User(null, null);
                 return response;

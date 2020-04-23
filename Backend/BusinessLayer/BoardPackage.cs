@@ -195,6 +195,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     throw new Exception("Can't add new task, column has a limit of " + limit);
                 }
+                if (description == null)
+                    description = "";
                 Task toAdd = new Task(title, description, dueDate, taskList.Count);
                 taskList.Add(toAdd);
                 return toAdd;
@@ -335,12 +337,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void UpdateTaskDescription(string description)
             {
+                if (description == null)
+                    description = "";
                 if (!ValidateDescription(description))
                     throw new Exception("Description not fit(over than 300 character)");
-                if (description == null)
-                    this.description = "";
-                else
-                    this.description = description;
+                this.description = description;
             }
 
             private bool ValidateTitle(string title)
