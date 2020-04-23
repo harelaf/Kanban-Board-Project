@@ -87,6 +87,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password)&IsLegalEmailAdress(Email))
                 {
+                    foreach (User item in UserList.Values)
+                        if (item.GetNickname().Equals(NickName))
+                            throw new Exception("This nickname is already in use");
+                    
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
                     registeredEmails.Emails.Add(Email);
@@ -97,36 +101,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             private bool IsLegalEmailAdress(string Email)
             {
-                if (Email.IndexOf('@')==-1)
-                    throw new Exception("Ilegal email, the email must contains @");
-
-                int index = Email.IndexOf('@');
-                int counter = 0;
-                if (index == 0)
-                    throw new Exception("The email address can't start with @");
-
-                if (Email.Substring(index).Contains("@"))
-                    throw new Exception("Ilegal email, the email contains more than one @");
-
-                for (int i = index; i < Email.Length; i++)
+                try
                 {
-                    if (Email[index] != '.')
-                    {
-                        counter++;
-                    }
-                    else if (counter < 2)
-                    {
-                        throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
-                    }
-                    else
-                    {
-                        counter = 0;
-                    }
+                    var addr = new System.Net.Mail.MailAddress(Email);
+                    return addr.Address == Email;
                 }
-
-                if (counter < 2)
-                    throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
-                return true;
+                catch
+                {
+                    return false;
+                }
             }
 
             public void LoadData()

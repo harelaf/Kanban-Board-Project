@@ -83,6 +83,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void SetLimit(int columnId, int limit)
             {
+                if (columnId == 2 | columnId == 0)
+                    throw new Exception("Can not limit the amount of tasks in the first and third columns");
                 GetColumn(columnId).SetLimit(limit);
             }
 
@@ -335,8 +337,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 if (!ValidateDescription(description))
                     throw new Exception("Description not fit(over than 300 character)");
-                this.description = description;
-                      
+                if (description == null)
+                    this.description = "";
+                else
+                    this.description = description;
             }
 
             private bool ValidateTitle(string title)

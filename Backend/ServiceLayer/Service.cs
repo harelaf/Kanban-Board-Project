@@ -98,7 +98,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
         public Response<Board> GetBoard(string email)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
                 return boardService.GetBoard();
             else
                 return new Response<Board>("No user is logged in the system, or the email doesn't match the current logged in user");
@@ -113,7 +113,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response LimitColumnTasks(string email, int columnOrdinal, int limit)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.LimitColumnTasks(columnOrdinal, limit);
                 CheckToSave(response);
@@ -133,7 +133,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response<Task> response = boardService.AddTask(title, description, dueDate);
                 CheckToSave(response);
@@ -153,7 +153,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
                 CheckToSave(response);
@@ -173,7 +173,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.UpdateTaskTitle(columnOrdinal, taskId, title);
                 CheckToSave(response);
@@ -193,7 +193,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.UpdateTaskDescription(columnOrdinal, taskId, description);
                 CheckToSave(response);
@@ -212,7 +212,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AdvanceTask(string email, int columnOrdinal, int taskId)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.AdvanceTask(columnOrdinal, taskId);
                 CheckToSave(response);
@@ -231,7 +231,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<Column> GetColumn(string email, string columnName)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response<Column> response = boardService.GetColumn(columnName);
                 CheckToSave(response);
@@ -251,7 +251,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         public Response<Column> GetColumn(string email, int columnOrdinal)
         {
-            if (activeUser.Email != null && activeUser.Email.Equals(email))
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
                 return boardService.GetColumn(columnOrdinal);
             else
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
@@ -260,9 +260,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private void CheckToSave(Response response)
         {
             if (!response.ErrorOccured)
-            {
                 userService.Save();
-            }
         }
     }
 }

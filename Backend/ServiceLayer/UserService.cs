@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response response = new Response();
             try
             {
-                userController.Logout(email);
+                userController.Logout(email.ToLower());
                 log.Debug($"Logged out of {email} successfully");
             }
             catch (Exception e)
@@ -56,7 +56,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             BusinessLayer.UserPackage.User user = null;
             try
             {
-                user = userController.Login(email, password);
+                user = userController.Login(email.ToLower(), password);
                 log.Debug($"Logged in to {email} successfully");
             }
             catch (Exception e)

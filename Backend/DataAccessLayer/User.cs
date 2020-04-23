@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public User(string email, string password, string nickname, Board myBoard)
         {
-            this.email = email;
+            this.email = email.ToLower();
             this.password = password;
             this.nickname = nickname;
             this.myBoard = myBoard;
@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public User(string email)
         {
-            this.email = email;
+            this.email = email.ToLower();
             password = null;
             nickname = null;
             myBoard = null;
