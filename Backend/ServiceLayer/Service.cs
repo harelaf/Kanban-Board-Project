@@ -18,6 +18,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private User activeUser;
         private BoardService boardService;
         private UserService userService;
+        private log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Simple public constructor.
@@ -48,6 +49,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error<returns>
         public Response Register(string email, string password, string nickname)
         {
+            if (email == null)
+            {
+                log.Warn("The email used to register is null");
+                return new Response<User>("The email used to register is null");
+            }
+
             return userService.Register(email, password, nickname);  
         }
 
@@ -60,7 +67,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<User> Login(string email, string password)
         {
             if (activeUser.Email != null)
+            {
+                log.Warn("You can't login, there is already an online user in the system");
                 return new Response<User>("You can't login, there is already an online user in the system");
+            }
+            if (email == null)
+            {
+                log.Warn("The email used to login is null");
+                return new Response<User>("The email used to login is null");
+            }
+
             Response<User> response=userService.Login(email, password);
             if (response.ErrorOccured)
                 return response;
@@ -80,6 +96,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 if (!activeUser.Email.Equals(email.ToLower()))
                 {
+                    log.Warn("The user you're trying to logout isn't the one that's logged in");
                     return new Response("The user you're trying to logout isn't the one that's logged in");
                 }
                 Response response = userService.Logout(email.ToLower());
@@ -88,7 +105,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Warn("Tried to log out of a user when no user was logged in");
                 return new Response("No user is logged in");
+            }
         }
 
         /// <summary>

@@ -197,7 +197,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     }
                     done = new BoardPackage.Column(doneList, tempBoard.Done.Limit);
 
-                    BoardPackage.Board board = new BoardPackage.Board(backlog, inprogress, done);
+                    BoardPackage.Board board = new BoardPackage.Board(backlog, inprogress, done, tempBoard.idGiver);
 
                     toAdd.SetBoard(board);
                     UserList.Add(email, toAdd);

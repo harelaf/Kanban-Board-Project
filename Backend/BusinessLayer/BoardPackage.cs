@@ -15,19 +15,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private Column backlog;
             private Column inProgress;
             private Column done;
+            private int idGiver;
 
             public Board()
             {
                 backlog = new Column();
                 inProgress = new Column();
                 done = new Column();
+                idGiver = 0;
             }
 
-            public Board(Column backlog, Column inProgress, Column done)
+            public Board(Column backlog, Column inProgress, Column done, int idGiver)
             {
                 this.backlog = backlog;
                 this.inProgress = inProgress;
                 this.done = done;
+                this.idGiver = idGiver;
             }
 
             public void AdvanceTask(int ColumnOrdinal, int taskId)
@@ -36,14 +39,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("Can't advance mission that is already done");
                 if (ColumnOrdinal == 1)
                 {
-                    Task toRemove = inProgress.GetTaskList()[taskId];
-                    done.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate());//first tries to add to the next column and removes after if adding succeeded
+                    Task toRemove = inProgress.GetTaskList().Find(x => x.GetTaskId() == taskId);
+                    done.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
                     Task removed = inProgress.RemoveTask(taskId);
                 }
                 else if (ColumnOrdinal == 0)
                 {
-                    Task toRemove = backlog.GetTaskList()[taskId];
-                    inProgress.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate());//first tries to add to the next column and removes after if adding succeeded
+                    Task toRemove = backlog.GetTaskList().Find(x => x.GetTaskId() == taskId);
+                    inProgress.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
                     Task removed = backlog.RemoveTask(taskId);
                 }
                 else
@@ -55,7 +58,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
-                return backlog.AddTask(title, description, dueDate);
+                Task toAdd = backlog.AddTask(title, description, dueDate, idGiver);
+                idGiver++;
+                return toAdd;
             }
 
             public Column GetColumn(string ColumnName)
@@ -113,7 +118,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.Board ToDalObject()
             {
-                return new DataAccessLayer.Board(backlog.ToDalObject(), inProgress.ToDalObject(), done.ToDalObject());
+                return new DataAccessLayer.Board(backlog.ToDalObject(), inProgress.ToDalObject(), done.ToDalObject(), idGiver);
             }
         }
 
@@ -142,7 +147,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                return activeBoard.GetColumn(columnName);
             }
 
-            public Column GetColumn(int columnOrdinal )
+            public Column GetColumn(int columnOrdinal)
             {
                 return activeBoard.GetColumn(columnOrdinal);
             }
@@ -197,7 +202,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.limit = limit;
             }
 
-            public Task AddTask(string title, string description, DateTime dueDate)
+            public Task AddTask(string title, string description, DateTime dueDate, int taskId)
             {
                 if (taskList.Count == limit)
                 {
@@ -205,37 +210,39 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (description == null)
                     description = "";
-                Task toAdd = new Task(title, description, dueDate, taskList.Count);
+                Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
                 return toAdd;
             }
 
             public Task RemoveTask(int taskId)
             {
-                Task toRemove = taskList[taskId];
+                Task toRemove = taskList.Find(x => x.GetTaskId() == taskId);
                 taskList.Remove(toRemove);
+                /*
                 foreach (Task task in taskList)
                 {
                     task.SetTaskId(taskList.IndexOf(task));
                 }
+                */
                 return toRemove;
             }
 
             public void UpdateTaskDueDate(int taskId, DateTime dueDate)
             {
-                Task toUpdate = taskList.ElementAt(taskId);
+                Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDueDate(dueDate);
             }
 
             public void UpdateTaskTitle(int taskId, string title)
             {
-                Task toUpdate = taskList.ElementAt(taskId);
+                Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskTitle(title);
             }
 
             public void UpdateTaskDescription(int taskId, string description)
             {
-                Task toUpdate = taskList.ElementAt(taskId);
+                Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDescription(description);
             }
 
