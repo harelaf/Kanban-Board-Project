@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -6,6 +6,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         ///<summary>This method loads the data from the persistance.</summary>
         Response LoadData();
+
+        ///<summary>Remove all persistent data.</summary>
+        Response DeleteData();
 
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
@@ -110,5 +113,45 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="columnOrdinal">Column ID</param>
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         Response<Column> GetColumn(string email, int columnOrdinal);
+
+
+        /// <summary>
+        /// Removes a column given it's identifier.
+        /// The first column is identified by 0, the ID increases by 1 for each column
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Column ID</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        Response RemoveColumn(string email, int columnOrdinal);
+
+        /// <summary>
+        /// Adds a new column, given it's name and a location to place it.
+        /// The first column is identified by 0, the ID increases by 1 for each column        
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Location to place to column</param>
+        /// <param name="Name">new Column name</param>
+        /// <returns>A response object with a value set to the Column, the response should contain a error message in case of an error</returns>
+        Response<Column> AddColumn(string email, int columnOrdinal, string Name);
+
+        /// <summary>
+        /// Moves a column to the right, swapping it with the column wich is currently located there.
+        /// The first column is identified by 0, the ID increases by 1 for each column        
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Current location of the columns</param>
+        /// <returns>A response object with a value set to the column, the response should contain a error message in case of an error</returns>
+        Response<Column> MoveColumnRight(string email, int columnOrdinal);
+
+        /// <summary>
+        /// Moves a column to the left, swapping it with the column wich is currently located there.
+        /// The first column is identified by 0, the ID increases by 1 for each column.
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Current location of the columns</param>
+        /// <returns>A response object with a value set to the column, the response should contain a error message in case of an error</returns>
+        Response<Column> MoveColumnLeft(string email, int columnOrdinal);
+
+
     }
 }
