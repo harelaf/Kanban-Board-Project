@@ -38,7 +38,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return userService.LoadData();
         }
-
+        
+        ///<summary>Remove all persistent data.</summary>
+        public Response DeleteData()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Registers a new user
@@ -268,13 +273,61 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="email">Email of the user. Must be logged in</param>
         /// <param name="columnOrdinal">Column ID</param>
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
-
         public Response<Column> GetColumn(string email, int columnOrdinal)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
                 return boardService.GetColumn(columnOrdinal);
             else
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+        }
+        
+        /// <summary>
+        /// Removes a column given it's identifier.
+        /// The first column is identified by 0, the ID increases by 1 for each column
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Column ID</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        public Response RemoveColumn(string email, int columnOrdinal)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// Adds a new column, given it's name and a location to place it.
+        /// The first column is identified by 0, the ID increases by 1 for each column        
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Location to place to column</param>
+        /// <param name="Name">new Column name</param>
+        /// <returns>A response object with a value set to the new Column, the response should contain a error message in case of an error</returns>
+        public Response<Column> AddColumn(string email, int columnOrdinal, string Name)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// Moves a column to the right, swapping it with the column wich is currently located there.
+        /// The first column is identified by 0, the ID increases by 1 for each column        
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Current location of the column</param>
+        /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
+        public Response<Column> MoveColumnRight(string email, int columnOrdinal)
+        {
+            throw new NotImplementedException();
+        }
+        
+        /// <summary>
+        /// Moves a column to the left, swapping it with the column wich is currently located there.
+        /// The first column is identified by 0, the ID increases by 1 for each column.
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="columnOrdinal">Current location of the column</param>
+        /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
+        public Response<Column> MoveColumnLeft(string email, int columnOrdinal)
+        {
+            throw new NotImplementedException();
         }
 
         private void CheckToSave(Response response)
