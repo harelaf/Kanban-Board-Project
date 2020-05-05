@@ -49,10 +49,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error<returns>
         public Response Register(string email, string password, string nickname)
         {
-            if (email == null)
+            if (email == null | password == null | nickname == null)
             {
                 log.Warn("The email used to register is null");
-                return new Response<User>("The email used to register is null");
+                return new Response<User>("The email/password/nickname used to register is null");
             }
 
             return userService.Register(email, password, nickname);  
