@@ -16,6 +16,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public Board myBoard { get; set; }
         public DalController dalController;
 
+        string connetion_string = null;
+        string sql_query = null;
+        string database_name = "kanbanDB.sqlite";
+        SQLiteConnection connection;
+        SQLiteCommand command;
+
         public User()
         {
             email = null;
@@ -50,29 +56,54 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override User Import()
         {
-            string connetion_string = null;
-            string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
-
-            SQLiteConnection connection;
-            SQLiteCommand command;
-
             connetion_string = $"Data Source={database_name};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
-
+            int idGiver = 0, NumOfColumns = 0, i = 0;
+            List<Column> columnList;
+            List<Task> taskList;
             try
             {
                 connection.Open();
+                string sql_query = $"SELECT * FROM tbUsers WHERE Email = {email};";
+                command = new SQLiteCommand(sql_query, connection);
+                dataReader = command.ExecuteReader();
+                if (dataReader.Read())
+                {
+                    email = (string)dataReader["Email"];
+                    password = (string)dataReader["password"];
+                    nickname = (string)dataReader["nickName"];
+                    idGiver = (int)dataReader["idGiver"];
+                    NumOfColumns = (int)dataReader["NumOfColumns"];
+                }
+                while (i < NumOfColumns)
+                {
+                    sql_query = $"SELECT * FROM tbTasks WHERE Email = {email} AND ColumnId = {i};";
+                    command = new SQLiteCommand(sql_query, connection);
+                    dataReader = command.ExecuteReader();
+                    taskList = new List<Task>();
+                    while (dataReader.Read())
+                    {
 
-                string sql = "SELECT * FROM dbUsers WHERE Email = " + email;
-                SQLiteCommand c = new SQLiteCommand(sql, connection);
-                SQLiteDataReader reader = c.ExecuteReader();
+                        //taskList.Add(new Task((string)dataReader["title"], (string)dataReader["description"],
+                        //    new DateTime((string)dataReader["creationDate"]), dataReader["dueDate"]));
+                    }
+                }
+                //myBoard = new Board(, idGiver);
+
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                Console.WriteLine("Error");
+                Console.WriteLine(ex.ToString());
             }
+            finally
+            {
+                connection.Close();
+                command.Dispose();
+            }
+            
+            return this;
         }
     }
 }

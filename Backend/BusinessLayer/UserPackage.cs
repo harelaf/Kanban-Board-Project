@@ -15,13 +15,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             private Dictionary<string, User> UserList;
             private User CurrentUser;
-            private RegisteredEmails registeredEmails;
+            private RegisteredEmails registeredemails;
 
             public UserController()
             {
                 UserList = new Dictionary<string, User>();
                 CurrentUser = null;
-                registeredEmails = new RegisteredEmails();
+                registeredemails = new RegisteredEmails();
             }
 
             public User Login(string Email, string Password)
@@ -117,8 +117,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     }
                     User MyUser = new User(Email, Password, NickName);
                     UserList.Add(Email, MyUser);
-                    registeredEmails.Emails.Add(Email);
-                    registeredEmails.Save();
+                    //registeredEmails.Emails.Add(Email);
+                    //registeredEmails.Save();
                     MyUser.ToDalObject().Save();
                 }
                 else
@@ -163,8 +163,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void LoadData()
             {
-                registeredEmails = registeredEmails.Import();
-                foreach (string email in registeredEmails.Emails)
+                registeredemails = registeredemails.Import();
+                foreach (string email in registeredemails.Emails)
                 {
                     DataAccessLayer.User temp = new DataAccessLayer.User(email);
                     temp = temp.Import();
@@ -219,6 +219,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private string password;
             private string nickname;
             private BoardPackage.Board myBoard;
+            private int numOfColumns;
 
             public User(string email, string password, string nickname)
             {

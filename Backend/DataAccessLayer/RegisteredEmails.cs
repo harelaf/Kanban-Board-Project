@@ -3,32 +3,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
+using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class RegisteredEmails
     {
         public List<string> Emails { get; set; }
-        public DalController DCtrl { get; set; }
-        private const string FILE_NAME = "RegisteredEmails";
-
-        public RegisteredEmails(DalController DCtrl,List<string> Emails)
+        string connetion_string = null;
+        string sql_query = null;
+        string database_name = "kanbanDB.sqlite";
+        SQLiteConnection connection;
+        SQLiteCommand command;
+        
+        public RegisteredEmails(List<string> Emails)
         {
-            this.DCtrl = DCtrl;
             this.Emails = Emails;
         }
 
         public RegisteredEmails()
         {
             Emails = new List<string>();
-            DCtrl = new DalController();
         }
 
         public RegisteredEmails Import()
         {
-            throw new NotImplementedException();
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+            SQLiteDataReader dataReader;
+            try
+            {
+                connection.Open();
+                string sql = "SELECT Email FROM tbUsers;";
+                SQLiteCommand c = new SQLiteCommand(sql, connection);
+                dataReader = c.ExecuteReader();
+                Emails.Clear();
+                while (dataReader.Read())
+                {
+                    Emails.Add((string)dataReader["Email"]);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Error");
+                Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                command.Dispose();
+            }
+            return this;
         }
-
     }
 }
