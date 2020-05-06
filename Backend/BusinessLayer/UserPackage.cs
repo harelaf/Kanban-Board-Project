@@ -172,32 +172,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     User toAdd = new User(email, temp.password, temp.nickname);
 
                     DataAccessLayer.Board tempBoard = temp.myBoard;
-
-                    BoardPackage.Column backlog;
-                    List<BoardPackage.Task> backlogList = new List<BoardPackage.Task>();
-                    foreach (DataAccessLayer.Task task in tempBoard.BackLog.TaskList)
+                    
+                    List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
+                    foreach(DataAccessLayer.Column myColumn in tempBoard.columnList)
                     {
-                        backlogList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                        List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
+                        foreach (DataAccessLayer.Task task in myColumn.TaskList)
+                        {
+                            myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                        }
+                        cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit,myColumn.Name));
                     }
-                    backlog = new BoardPackage.Column(backlogList, tempBoard.BackLog.Limit);
 
-                    BoardPackage.Column inprogress;
-                    List<BoardPackage.Task> inprogressList = new List<BoardPackage.Task>();
-                    foreach (DataAccessLayer.Task task in tempBoard.InProgress.TaskList)
-                    {
-                        inprogressList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
-                    }
-                    inprogress = new BoardPackage.Column(inprogressList, tempBoard.InProgress.Limit);
-
-                    BoardPackage.Column done;
-                    List<BoardPackage.Task> doneList = new List<BoardPackage.Task>();
-                    foreach (DataAccessLayer.Task task in tempBoard.Done.TaskList)
-                    {
-                        doneList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
-                    }
-                    done = new BoardPackage.Column(doneList, tempBoard.Done.Limit);
-
-                    BoardPackage.Board board = new BoardPackage.Board(backlog, inprogress, done, tempBoard.idGiver);
+                    BoardPackage.Board board = new BoardPackage.Board(cl, tempBoard.idGiver);
 
                     toAdd.SetBoard(board);
                     UserList.Add(email, toAdd);
