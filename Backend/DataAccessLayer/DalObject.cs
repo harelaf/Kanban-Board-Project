@@ -12,9 +12,5 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public abstract void Save();
 
         public abstract T Import();
-
-        public abstract string FromJson(string json);
-
-        public abstract string ToJson();
     }
 }

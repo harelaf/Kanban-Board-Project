@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
+using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -14,6 +14,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public string nickname { get; set; }
         public Board myBoard { get; set; }
         public DalController dalController;
+
+        string connetion_string = null;
+        string sql_query = null;
+        string database_name = "kanbanDB.sqlite";
+        SQLiteConnection connection;
+        SQLiteCommand command;
 
         public User()
         {
@@ -44,27 +50,59 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override void Save()
         {
-            dalController.Write(ToFilename(), ToJson());
+            throw new NotImplementedException();
         }
 
         public override User Import()
         {
-            return JsonSerializer.Deserialize<User>(FromJson(ToFilename()));
-        }
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+            SQLiteDataReader dataReader;
+            int idGiver = 0, NumOfColumns = 0, i = 0;
+            List<Column> columnList;
+            List<Task> taskList;
+            try
+            {
+                connection.Open();
+                string sql_query = $"SELECT * FROM tbUsers WHERE Email = {email};";
+                command = new SQLiteCommand(sql_query, connection);
+                dataReader = command.ExecuteReader();
+                if (dataReader.Read())
+                {
+                    email = (string)dataReader["Email"];
+                    password = (string)dataReader["password"];
+                    nickname = (string)dataReader["nickName"];
+                    idGiver = (int)dataReader["idGiver"];
+                    NumOfColumns = (int)dataReader["NumOfColumns"];
+                }
+                while (i < NumOfColumns)
+                {
+                    sql_query = $"SELECT * FROM tbTasks WHERE Email = {email} AND ColumnId = {i};";
+                    command = new SQLiteCommand(sql_query, connection);
+                    dataReader = command.ExecuteReader();
+                    taskList = new List<Task>();
+                    while (dataReader.Read())
+                    {
 
-        public override string FromJson(string json)
-        {
-            return dalController.Read(json);
-        }
+                        //taskList.Add(new Task((string)dataReader["title"], (string)dataReader["description"],
+                        //    new DateTime((string)dataReader["creationDate"]), dataReader["dueDate"]));
+                    }
+                }
+                //myBoard = new Board(, idGiver);
 
-        private string ToFilename()
-        {
-            return email.Replace('@', '.');
-        }
-
-        public override string ToJson()
-        {
-            return JsonSerializer.Serialize(this);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error");
+                Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                connection.Close();
+                command.Dispose();
+            }
+            
+            return this;
         }
     }
 }
