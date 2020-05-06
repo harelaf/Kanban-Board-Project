@@ -1,11 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BusinessLayer.BoardPackage;
 using log4net;
-
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 { 
@@ -215,7 +215,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     responseColumn = new Column(serviceTasks, "in progress", column.GetLimit());
                 else
                     responseColumn = new Column(serviceTasks, "done", column.GetLimit());
-                response = new Response<Column>(responseColumn);
+              
+                    response = new Response<Column>(responseColumn);
             }
             catch (Exception e)
             {
@@ -242,5 +243,95 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             response = new Response<Board>(responseBoard);
             return response;
         }
+
+        public Response<Column> AddColumn(int columnOrdinal,string name)
+        {
+            
+            try
+            {
+                BusinessLayer.BoardPackage.Column column = new BusinessLayer.BoardPackage.Column(name);
+
+                List<Task> tasks = new List<Task>();
+                foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
+                {
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    tasks.Add(add);
+                }
+
+                Column responseColumn = new Column(tasks, name, column.GetLimit());
+                return new Response<Column>(responseColumn);
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at adding the wanted column: " + e.Message);
+                return new Response<Column>(e.Message);
+            }
+           
+        }
+
+        public Response<Column> RemoveColumn(int columnOrdinal)
+        {
+            try
+            {
+                BusinessLayer.BoardPackage.Column removed = boardController.RemoveColumn(columnOrdinal);
+                List<Task> tasks = new List<Task>();
+                foreach(BusinessLayer.BoardPackage.Task task in removed.GetTaskList())
+                {
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    tasks.Add(add);
+                }
+
+                Column responseColumn = new Column(tasks, removed.GetColumnName(), removed.GetLimit());
+                return new Response<Column>(responseColumn);
+            }
+            catch(Exception e)
+            {
+                log.Warn("Failed at removing the wanted column: " + e.Message);
+                return new Response<Column>(e.Message);
+            }
+        }
+
+        public Response<Column>MoveColumnRight(int columnOrdinal)
+        {
+            try
+            {
+                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnRight(columnOrdinal);
+                List<Task> tasks = new List<Task>();
+                foreach(BusinessLayer.BoardPackage.Task task in moved.GetTaskList())
+                {
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    tasks.Add(add);
+                }
+                Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());
+                return new Response<Column>(responseColumn);
+            }catch(Exception e)
+            {
+                log.Warn("Failed at moving right the wanted column: " + e.Message);
+                return new Response<Column>(e.Message);
+            }
+        }
+
+        public Response<Column> MoveColumnLeft(int columnOrdinal)
+        {
+            try
+            {
+                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnLeft(columnOrdinal);
+                List<Task> tasks = new List<Task>();
+                foreach (BusinessLayer.BoardPackage.Task task in moved.GetTaskList())
+                {
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    tasks.Add(add);
+                }
+                Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());
+                return new Response<Column>(responseColumn);
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at moving left the wanted column: " + e.Message);
+                return new Response<Column>(e.Message);
+            }
+        }
+
+
     }
 }

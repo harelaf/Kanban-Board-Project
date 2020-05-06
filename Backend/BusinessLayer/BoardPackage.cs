@@ -258,7 +258,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 limit = -1;
                 columnName = "";
             }
-
+            
             public Column(string columnName)
             {
                 this.taskList = new List<Task>();
