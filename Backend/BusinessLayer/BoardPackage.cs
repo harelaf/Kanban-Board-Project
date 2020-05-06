@@ -12,108 +12,152 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     {
         class Board : IPersistedObject<DataAccessLayer.Board>
         {
-            private Column backlog;
-            private Column inProgress;
-            private Column done;
+
+            private List<Column> list;
             private int idGiver;
 
             public Board()
             {
-                backlog = new Column();
-                inProgress = new Column();
-                done = new Column();
+                for (int i = 0; i < 3; i++)
+                    list[i] = new Column();
                 idGiver = 0;
             }
 
-            public Board(Column backlog, Column inProgress, Column done, int idGiver)
+            public Board(List<Column> list, int idGiver)
             {
-                this.backlog = backlog;
-                this.inProgress = inProgress;
-                this.done = done;
+                this.list = list;
                 this.idGiver = idGiver;
             }
 
             public void AdvanceTask(int ColumnOrdinal, int taskId)
             {
-                if (ColumnOrdinal == 2)//cannot advance further than 'done'.
+                if (ColumnOrdinal == list.Count - 1)//cannot advance further than 'done'.
                     throw new Exception("Can't advance mission that is already done");
-                if (ColumnOrdinal == 1)
-                {
-                    Task toRemove = inProgress.GetTaskList().Find(x => x.GetTaskId() == taskId);
-                    done.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
-                    Task removed = inProgress.RemoveTask(taskId);
-                }
-                else if (ColumnOrdinal == 0)
-                {
-                    Task toRemove = backlog.GetTaskList().Find(x => x.GetTaskId() == taskId);
-                    inProgress.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
-                    Task removed = backlog.RemoveTask(taskId);
-                }
-                else
-                {
+
+                if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                     throw new Exception("This columnOrdinal is illegal");
-                }
+
+                Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == taskId);
+                list[ColumnOrdinal + 1].AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
+                Task removed = list[ColumnOrdinal].RemoveTask(taskId);
 
             }
 
             public Task AddTask(string title, string description, DateTime dueDate)
             {
-                Task toAdd = backlog.AddTask(title, description, dueDate, idGiver);
+                Task toAdd = list[0].AddTask(title, description, dueDate, idGiver);
                 idGiver++;
                 return toAdd;
             }
 
+            public int GetNumOfColumns()
+            {
+                return list.Count;
+            }
+
             public Column GetColumn(string ColumnName)
             {
-                if (ColumnName.Equals("backlog"))
-                    return backlog;
-                else if (ColumnName.Equals("in progress"))
-                    return inProgress;
-                else if (ColumnName.Equals("done"))
-                    return done;
-                else
-                    throw new Exception("This Column does not exist");
+                bool isFound = false;
+                int index = 0;
+                while (!isFound & index < list.Count)
+                {
+                    if (ColumnName.Equals(list[index].GetColumnName()))
+                        return GetColumn(index);
+                    index++;
+                }
+                throw new Exception("This Column does not exist");
             }
 
             public Column GetColumn(int columnOrdinal)
             {
-                if (columnOrdinal == 0)
-                    return backlog;
-                else if (columnOrdinal == 1)
-                    return inProgress;
-                else if (columnOrdinal == 2)
-                    return done;
-                else
+                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                     throw new Exception("This Column does not exist");
+                return list[columnOrdinal];
             }
 
             public void SetLimit(int columnId, int limit)
             {
                 //Un-needed test for limiting columns 1 and 3
                 //if (columnId == 2 | columnId == 0)
-                  //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
+                //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
+                if (columnId > list.Count - 1 | columnId < 0)
+                    throw new Exception("This columnOrdinal does not exist");
                 GetColumn(columnId).SetLimit(limit);
             }
 
             public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
-                if (columnOrdinal == 2)
+                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+                    throw new Exception("This columnOrdinal does not exist");
+
+                if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
+
                 GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
             }
 
             public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
-                if (columnOrdinal == 2)
+                if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
+
+                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+                    throw new Exception("This columnOrdinal does not exist");
+
                 GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
             }
 
             public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
-                if (columnOrdinal == 2)
+                if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
+
+                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+                    throw new Exception("This columnOrdinal does not exist");
+
                 GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
+            }
+
+            public Column RemoveColumn(int columnOrdinal)
+            {
+                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+                    throw new Exception("This columnOrdinal does not exist");
+
+                Column removed = GetColumn(columnOrdinal);
+                list.Remove(removed);
+                return removed;
+            }
+
+            public Column MoveColumnLeft(int columnOrdinal)
+            {
+                if (columnOrdinal == 0)
+                    throw new Exception("You can't move the first column left");
+
+                Column res = GetColumn(columnOrdinal);
+                list.Remove(res);
+                list.Insert(columnOrdinal - 1, res);
+
+                return res;
+            }
+
+            public Column MoveColumnRight(int columnOrdinal)
+            {
+                if (columnOrdinal == list.Count-1)
+                    throw new Exception("You can't move the last column right");
+
+                Column res = GetColumn(columnOrdinal);
+                list.Remove(res);
+                list.Insert(columnOrdinal + 1, res);
+                return res;
+            }
+            
+            public Column AddColumn(int columnOrdinal,string name)
+            {
+                if (columnOrdinal < 0 | columnOrdinal > list.Count)
+                    throw new Exception("The columnOrdinal is ilegal");
+                Column add = new Column(name);
+                list.Insert(columnOrdinal, add);
+                return add;
             }
 
             public DataAccessLayer.Board ToDalObject()
@@ -144,7 +188,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Column GetColumn(string columnName)
             {
-               return activeBoard.GetColumn(columnName);
+                return activeBoard.GetColumn(columnName);
             }
 
             public Column GetColumn(int columnOrdinal)
@@ -172,34 +216,68 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
             }
 
-            public void SetLimit(int columnId,int limit)
+            public void SetLimit(int columnId, int limit)
             {
                 activeBoard.SetLimit(columnId, limit);
             }
 
             public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
-              activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
+                activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
             }
 
+            public Column RemoveColumn(int columnOrdinal)
+            {
+                return activeBoard.RemoveColumn(columnOrdinal);
+            }
 
+            public Column MoveColumnLeft(int columnOrdinal)
+            {
+                return activeBoard.MoveColumnLeft(columnOrdinal);
+            }
+
+            public Column MoveColumnRight(int columnOrdinal)
+            {
+               return activeBoard.MoveColumnRight(columnOrdinal);
+            }
+
+            public Column AddColumn(int columnOrdinal, string name)
+            {
+                return activeBoard.AddColumn(columnOrdinal,name);
+            }
         }
 
         class Column : IPersistedObject<DataAccessLayer.Column>
         {
-            List<Task> taskList;
-            int limit;
+            private List<Task> taskList;
+            private int limit;
+            private string columnName;
 
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
+                columnName = null;
             }
 
-            public Column(List<Task> taskList, int limit)
+            public Column(string columnName)
+            {
+                this.taskList = new List<Task>();
+                this.columnName = columnName;
+                limit = -1;
+
+            }
+
+            public Column(List<Task> taskList, int limit, string columnName)
             {
                 this.taskList = taskList;
                 this.limit = limit;
+                this.columnName = columnName;
+            }
+
+            public string GetColumnName()
+            {
+                return columnName;
             }
 
             public Task AddTask(string title, string description, DateTime dueDate, int taskId)
@@ -267,7 +345,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.Column ToDalObject()
             {
-                List <DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
+                List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
                 foreach (Task task in taskList)
                 {
                     DALList.Add(task.ToDalObject());
