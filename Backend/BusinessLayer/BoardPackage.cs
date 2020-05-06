@@ -252,12 +252,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Task> taskList;
             private int limit;
             private string columnName;
-
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
-                columnName = null;
+                columnName = "";
             }
 
             public Column(string columnName)
@@ -265,7 +264,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.taskList = new List<Task>();
                 this.columnName = columnName;
                 limit = -1;
-
+                name = "";
             }
 
             public Column(List<Task> taskList, int limit, string columnName)

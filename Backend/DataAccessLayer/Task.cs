@@ -41,15 +41,5 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             throw new NotImplementedException();
         }
-
-        public override string FromJson(string json)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToJson()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
