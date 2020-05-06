@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -44,27 +45,34 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override void Save()
         {
-            dalController.Write(ToFilename(), ToJson());
+            throw new NotImplementedException();
         }
 
         public override User Import()
         {
-            return JsonSerializer.Deserialize<User>(FromJson(ToFilename()));
-        }
+            string connetion_string = null;
+            string sql_query = null;
+            string database_name = "kanbanDB.sqlite";
 
-        public override string FromJson(string json)
-        {
-            return dalController.Read(json);
-        }
+            SQLiteConnection connection;
+            SQLiteCommand command;
 
-        private string ToFilename()
-        {
-            return email.Replace('@', '.');
-        }
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+            SQLiteDataReader dataReader;
 
-        public override string ToJson()
-        {
-            return JsonSerializer.Serialize(this);
+            try
+            {
+                connection.Open();
+
+                string sql = "SELECT * FROM dbUsers WHERE Email = " + email;
+                SQLiteCommand c = new SQLiteCommand(sql, connection);
+                SQLiteDataReader reader = c.ExecuteReader();
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }

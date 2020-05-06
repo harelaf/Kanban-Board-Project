@@ -10,8 +10,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public List<Task> TaskList { get; set; }
         public int Limit { get; set; }
+        public string Name { get; set; }
 
-        public Column(List<Task>TaskList, int Limit)
+        public Column(List<Task>TaskList, int Limit, string Name)
         {
             this.TaskList = TaskList;
             this.Limit = Limit;
@@ -21,6 +22,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             TaskList=new List<Task>();
             Limit = 0;
+            Name = "";
         }
 
         public override void Save()
@@ -29,16 +31,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
 
         public override Column Import()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string FromJson(string json)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToJson()
         {
             throw new NotImplementedException();
         }

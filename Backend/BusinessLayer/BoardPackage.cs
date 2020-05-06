@@ -187,13 +187,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         class Column : IPersistedObject<DataAccessLayer.Column>
         {
-            List<Task> taskList;
-            int limit;
+            private List<Task> taskList;
+            private int limit;
+            private string name;
 
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
+                name = "";
             }
 
             public Column(List<Task> taskList, int limit)

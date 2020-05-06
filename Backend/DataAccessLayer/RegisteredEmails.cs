@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class RegisteredEmails : DalObject<RegisteredEmails>
+    class RegisteredEmails
     {
         public List<string> Emails { get; set; }
         public DalController DCtrl { get; set; }
@@ -25,24 +25,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             DCtrl = new DalController();
         }
 
-        public override string FromJson(string json)
+        public RegisteredEmails Import()
         {
-            return DCtrl.Read(json);
+            throw new NotImplementedException();
         }
 
-        public override RegisteredEmails Import()
-        {
-            return JsonSerializer.Deserialize<RegisteredEmails>(FromJson(FILE_NAME));
-        }
-
-        public override void Save()
-        {
-            DCtrl.Write(FILE_NAME, ToJson());
-        }
-
-        public override string ToJson()
-        {
-            return JsonSerializer.Serialize(this);
-        }
     }
 }
