@@ -290,7 +290,21 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveColumn(string email, int columnOrdinal)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email == null)
+            {
+                log.Warn("Tried to remove column of the user when no user was logged in");
+                return new Response<Column>("No user is active");
+            }
+            if (activeUser.Nickname == null)
+            {
+                return new Response<Column>("The nickName of the user can't be null");
+            }
+            if (!activeUser.Email.Equals(email.ToLower()))
+            {
+                log.Warn("Tried to remove column of other user");
+                return new Response<Column>("Other user is active");
+            }
+            return boardService.RemoveColumn(columnOrdinal);
         }
         
         /// <summary>
@@ -303,7 +317,21 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the new Column, the response should contain a error message in case of an error</returns>
         public Response<Column> AddColumn(string email, int columnOrdinal, string Name)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email == null)
+            {
+                log.Warn("Tried to add column to the user when no user was logged in");
+                return new Response<Column>("No user is active");
+            }
+            if (activeUser.Nickname == null)
+            {
+                return new Response<Column>("The nickName of the user can't be null");
+            }
+            if (!activeUser.Email.Equals(email.ToLower()))
+            {
+                log.Warn("Tried to add column to other user");
+                return new Response<Column>("Other user is active");
+            }
+            return boardService.AddColumn(columnOrdinal,Name);
         }
         
         /// <summary>
@@ -315,7 +343,21 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnRight(string email, int columnOrdinal)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email == null)
+            {
+                log.Warn("Tried to move column right of a user when no user was logged in");
+                return new Response<Column>("No user is active");
+            }
+            if (activeUser.Nickname == null)
+            {
+                return new Response<Column>("The nickName of the user can't be null");
+            }
+            if (!activeUser.Email.Equals(email.ToLower()))
+            {
+                log.Warn("Tried to move column right of other user");
+                return new Response<Column>("Other user is active");
+            }
+            return boardService.MoveColumnRight(columnOrdinal);
         }
         
         /// <summary>
@@ -327,7 +369,21 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnLeft(string email, int columnOrdinal)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email == null)
+            {
+                log.Warn("Tried to move column left of a user when no user was logged in");
+                return new Response<Column>("No user is active");
+            }
+            if (activeUser.Nickname == null)
+            {
+                return new Response<Column>("The nickName of the user can't be null");
+            }
+            if (!activeUser.Email.Equals(email.ToLower()))
+            {
+                log.Warn("Tried to move column left of other user");
+                return new Response<Column>("Other user is active");
+            }
+            return boardService.MoveColumnLeft(columnOrdinal);
         }
 
         private void CheckToSave(Response response)
