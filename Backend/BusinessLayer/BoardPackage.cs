@@ -16,6 +16,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Column> list;
             private int idGiver;
 
+            /// <summary>
+            /// an empty constractor of new board 
+            /// </summary>
             public Board()
             {
                 for (int i = 0; i < 3; i++)
@@ -23,12 +26,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 idGiver = 0;
             }
 
+            /// <summary>
+            /// Constractor of new board which gets list of columns and idGiver and initializing the fields
+            /// </summary>
+            /// <param name="list"></param>
+            /// <param name="idGiver"></param>
             public Board(List<Column> list, int idGiver)
             {
                 this.list = list;
                 this.idGiver = idGiver;
             }
 
+            /// <summary>
+            /// This function advance task from one column to the next column
+            /// </summary>
+            /// <param name="ColumnOrdinal"></param>
+            /// <param name="taskId"></param>
             public void AdvanceTask(int ColumnOrdinal, int taskId)
             {
                 if (ColumnOrdinal == list.Count - 1)//cannot advance further than 'done'.
@@ -43,12 +56,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             }
 
+            /// <summary>
+            /// This function adds new task to the board by giving the title, description and dueDate of the new task
+            /// </summary>
+            /// <param name="title"></param>
+            /// <param name="description"></param>
+            /// <param name="dueDate"></param>
+            /// <returns> This function returns the added task </returns>
+
             public Task AddTask(string title, string description, DateTime dueDate)
             {
                 Task toAdd = list[0].AddTask(title, description, dueDate, idGiver);
                 idGiver++;
                 return toAdd;
             }
+            /// <summary>
+            /// getter to the amount of columns in the board
+            /// </summary>
+            /// <returns>This function returns the amount of columns in the list</returns>
 
             public int GetNumOfColumns()
             {
@@ -60,7 +85,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return idGiver;
             }
 
-            public Column GetColumn(string ColumnName)
+
+            /// <summary>
+            /// This function searches a specific column by his name 
+            /// </summary>
+            /// <param name="ColumnName"></param>
+            /// <returns>returns the fit column</returns>
+
+	    public Column GetColumn(string ColumnName)
             {
                 bool isFound = false;
                 int index = 0;
@@ -72,14 +104,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 throw new Exception("This Column does not exist");
             }
-
+            /// <summary>
+            /// This function searches a specific column by his column ordinal  
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>returns the fit column</returns>
             public Column GetColumn(int columnOrdinal)
             {
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                     throw new Exception("This Column does not exist");
                 return list[columnOrdinal];
             }
-
+            /// <summary>
+            /// This function sets the limit of tasks that can be in a specific column
+            /// </summary>
+            /// <param name="columnId"></param>
+            /// <param name="limit"></param>
             public void SetLimit(int columnId, int limit)
             {
                 //Un-needed test for limiting columns 1 and 3
@@ -89,7 +129,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("This columnOrdinal does not exist");
                 GetColumn(columnId).SetLimit(limit);
             }
-
+            /// <summary>
+            /// This function updates the description of a specific task 
+            /// by giving a column ordinal and task id to identify the specific task
+            /// and by giving a new description to the task
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="description"></param>
             public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
@@ -101,6 +148,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
             }
 
+            /// <summary>
+            /// This function updates the title of a specific task 
+            /// by giving a column ordinal and task id to identify the specific task
+            /// and by giving a new title to the task
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="title"></param>
             public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
                 if (columnOrdinal == list.Count - 1)
@@ -112,6 +167,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
             }
 
+            /// <summary>
+            /// This function updates the due date of a specific task 
+            /// by giving a column ordinal and task id to identify the specific task
+            /// and by giving a new due date to the task
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="title"></param>
             public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
                 if (columnOrdinal == list.Count - 1)
@@ -122,7 +185,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
                 GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
             }
-
+            /// <summary>
+            /// This function removes a column from the board by using the column ordinal of the unwanted column 
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the removed column</returns>
             public Column RemoveColumn(int columnOrdinal)
             {
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
@@ -132,7 +199,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 list.Remove(removed);
                 return removed;
             }
-
+            /// <summary>
+            /// This function is shifting a specific column, one column left by using the column ordinal
+            /// of the column we want to shift left
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnLeft(int columnOrdinal)
             {
                 if (columnOrdinal == 0)
@@ -144,7 +216,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
                 return res;
             }
-
+            /// <summary>
+            /// This function is shifting a specific column, one column right by using the column ordinal
+            /// of the column we want to shift right
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnRight(int columnOrdinal)
             {
                 if (columnOrdinal == list.Count-1)
@@ -155,22 +232,33 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 list.Insert(columnOrdinal + 1, res);
                 return res;
             }
-            
+            /// <summary>
+            /// This function creates a new column with new name and column ordinal 
+            /// and adds this column to the board
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="name"></param>
+            /// <returns>This function returns the new column that added to the board</returns>
             public Column AddColumn(int columnOrdinal,string name)
             {
                 if (columnOrdinal < 0 | columnOrdinal > list.Count)
                     throw new Exception("The columnOrdinal is ilegal");
-                Column add = new Column(name);
+                Column add = new Column(name,columnOrdinal);
                 list.Insert(columnOrdinal, add);
                 return add;
             }
 
             public Boolean ToDalObject()
+
+            /// <summary>
+            /// This function passing the board to the DAL for saving the data of the board
+            /// </summary>
+            /// <returns>This function returns other board that represents this board in the DAL</returns>
+	public Boolean ToDalObject()
             {
                 foreach(Column myColumn in list)
                 {
-                    myColumn.ToDalObject().Save();
-                }
+                    myColumn.ToDalObject().Save();                }
                 return true;
             }
         }
@@ -180,76 +268,152 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             private Board activeBoard;
 
+            /// <summary>
+            /// Constactor of an empty BoardController
+            /// </summary>
             public BoardController()
             {
                 activeBoard = null;
             }
-
+            /// <summary>
+            /// This function initalizing the active board 
+            /// </summary>
+            /// <param name="newBoard"></param>
             public void SetActiveBoard(Board newBoard)
             {
                 activeBoard = newBoard;
             }
-
+            /// <summary>
+            /// Getter to the board
+            /// </summary>
+            /// <returns>This function returns the active board</returns>
             public Board GetBoard()
             {
                 return activeBoard;
             }
-
+            /// <summary>
+            /// This function searches a specific column by its column name
+            /// </summary>
+            /// <param name="columnName"></param>
+            /// <returns>This function returns the column which its name is the specific column name we are looking for </returns>
             public Column GetColumn(string columnName)
             {
                 return activeBoard.GetColumn(columnName);
             }
-
+            /// <summary>
+            /// This function searches a specific column by its column ordinal
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the column which its column ordinal is the specific column name we are looking for</returns>
             public Column GetColumn(int columnOrdinal)
             {
                 return activeBoard.GetColumn(columnOrdinal);
             }
 
+            /// <summary>
+            /// This function gets new details of task to add to the column (title, description and due date) 
+            /// </summary>
+            /// <param name="title"></param>
+            /// <param name="description"></param>
+            /// <param name="dueDate"></param>
+            /// <returns>This function returns the new added task</returns>
             public Task AddTask(string title, string description, DateTime dueDate)
             {
                 return activeBoard.AddTask(title, description, dueDate);
             }
 
+            /// <summary>
+            /// This function is advancing a task by giving the identify details of the task(column ordinal,task id) 
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
             public void AdvanceTask(int columnOrdinal, int taskId)
             {
                 activeBoard.AdvanceTask(columnOrdinal, taskId);
             }
 
+            /// <summary>
+            /// This function gets The identify deatils of specific task(column ordinal and task id)
+            /// and gets a new due date and update this task's due date
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="dueDate"></param>
             public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
                 activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
             }
 
+            /// <summary>
+            /// /// This function gets The identify deatils of specific task(column ordinal and task id)
+            /// and gets a new title date and update this task's title
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="title"></param>
             public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
                 activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
             }
 
+            /// <summary>
+            /// This function initizaling the limit of a specific column which identified by its column id
+            /// </summary>
+            /// <param name="columnId"></param>
+            /// <param name="limit"></param>
             public void SetLimit(int columnId, int limit)
             {
                 activeBoard.SetLimit(columnId, limit);
             }
 
+            /// <summary>
+            /// /// This function gets The identify deatils of specific task(column ordinal and task id)
+            /// and gets a new description and update this task's description
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="taskId"></param>
+            /// <param name="description"></param>
             public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
                 activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
             }
 
+            /// <summary>
+            /// This function gets the column ordinal of a specific column and removes it from the board
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the removed column</returns>
             public Column RemoveColumn(int columnOrdinal)
             {
                 return activeBoard.RemoveColumn(columnOrdinal);
             }
 
+            /// <summary>
+            /// This column is shifting a specific column one column left. This column is identify by his column ordinal 
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnLeft(int columnOrdinal)
             {
                 return activeBoard.MoveColumnLeft(columnOrdinal);
             }
 
+            /// <summary>
+            /// This column is shifting a specific column one column right. This column is identify by his column ordinal 
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnRight(int columnOrdinal)
             {
                return activeBoard.MoveColumnRight(columnOrdinal);
             }
 
+            /// <summary>
+            /// This function gets details of a new column (column ordinal and name) and add this column to the active board
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            /// <param name="name"></param>
+            /// <returns>This function returns the added column</returns>
             public Column AddColumn(int columnOrdinal, string name)
             {
                 return activeBoard.AddColumn(columnOrdinal,name);
@@ -261,33 +425,82 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Task> taskList;
             private int limit;
             private string columnName;
+            private int columnOrdinal;
 
+            /// <summary>
+            /// an empty constructor of a new empty column 
+            /// </summary>
             public Column()
             {
                 taskList = new List<Task>();
                 limit = -1;
                 columnName = "";
+                this.columnOrdinal = 0;
             }
             
-            public Column(string columnName)
+            /// <summary>
+            /// Construcator of new column which initalized by a name and a column ordinal 
+            /// </summary>
+            /// <param name="columnName"></param>
+            /// <param name="columnOrdinal"></param>
+            public Column(string columnName,int columnOrdinal)
             {
                 this.taskList = new List<Task>();
                 this.columnName = columnName;
                 limit = -1;
+                this.columnOrdinal = columnOrdinal;
             }
 
-            public Column(List<Task> taskList, int limit, string columnName)
+            /// <summary>
+            /// Construcator of new column which initalized by list of tasks,
+            /// restriction limit of tasks, name and a column ordinal. 
+            /// </summary>
+            /// <param name="columnName"></param>
+            /// <param name="columnOrdinal"></param>
+            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal)
             {
                 this.taskList = taskList;
                 this.limit = limit;
                 this.columnName = columnName;
+                this.columnOrdinal = columnOrdinal;
             }
 
+            /// <summary>
+            /// Getter of the column ordinal of this Column
+            /// </summary>
+            /// <returns>This function returns the column ordinal of this column</returns>
+            public int GetColumnOrdinal()
+            {
+                return columnOrdinal;
+            }
+
+            /// <summary>
+            /// This function change the column ordinal of this column by a new given name
+            /// </summary>
+            /// <param name="columnOrdinal"></param>
+            public void SetColumnOrdinal(int columnOrdinal)
+            {
+                this.columnOrdinal = columnOrdinal;
+            }
+
+            /// <summary>
+            /// Getter of the column ordinal of this Column
+            /// </summary>
+            /// <returns>This function returns the name of this column</returns>
             public string GetColumnName()
             {
                 return columnName;
             }
 
+            /// <summary>
+            /// This function gets details of new task(title,description, due date,task id)
+            /// to add, creates the new task and adds this task to the column tasks.
+            /// </summary>
+            /// <param name="title"></param>
+            /// <param name="description"></param>
+            /// <param name="dueDate"></param>
+            /// <param name="taskId"></param>
+            /// <returns>This function returns the added task</returns>
             public Task AddTask(string title, string description, DateTime dueDate, int taskId)
             {
                 if (taskList.Count == limit)
@@ -300,38 +513,59 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 taskList.Add(toAdd);
                 return toAdd;
             }
+            /// <summary>
+            /// This function is searching for a specific task to remove by his task id and removes him.
+            /// </summary>
+            /// <param name="taskId"></param>
+            /// <returns>This function returns the removed task</returns>
 
             public Task RemoveTask(int taskId)
             {
                 Task toRemove = taskList.Find(x => x.GetTaskId() == taskId);
                 taskList.Remove(toRemove);
-                /*
-                foreach (Task task in taskList)
-                {
-                    task.SetTaskId(taskList.IndexOf(task));
-                }
-                */
                 return toRemove;
             }
 
+            /// <summary>
+            /// This function gets the task id of a specific task which we want to update its due date
+            /// and a new due date and updates it.
+            /// </summary>
+            /// <param name="taskId"></param>
+            /// <param name="dueDate"></param>
             public void UpdateTaskDueDate(int taskId, DateTime dueDate)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDueDate(dueDate);
             }
 
+            /// <summary>
+            /// This function gets the task id of a specific task which we want to update its title
+            /// and a new title and updates it.
+            /// </summary>
+            /// <param name="taskId"></param>
+            /// <param name="title"></param>
             public void UpdateTaskTitle(int taskId, string title)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskTitle(title);
             }
 
+            /// <summary>
+            /// This function gets the task id of a specific task which we want to update its description
+            /// and a new description and updates it.
+            /// </summary>
+            /// <param name="taskId"></param>
+            /// <param name="description"></param>
             public void UpdateTaskDescription(int taskId, string description)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDescription(description);
             }
 
+            /// <summary>
+            /// This function changes the limit of tasks that this column can contains by a new limit  
+            /// </summary>
+            /// <param name="newLim"></param>
             public void SetLimit(int newLim)
             {
                 if (taskList.Count > newLim & newLim >= 0)
@@ -341,11 +575,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.limit = newLim;
             }
 
+            /// <summary>
+            /// Getter to the limit of tasks that this column can contains
+            /// </summary>
+            /// <returns>This function returns the limit of tasks that this column can contains</returns>
             public int GetLimit()
             {
                 return limit;
             }
 
+            /// <summary>
+            /// Getter to the list of tasks of this column
+            /// </summary>
+            /// <returns>This function returns the task list of this column</returns>
             public List<Task> GetTaskList()
             {
                 return taskList;
