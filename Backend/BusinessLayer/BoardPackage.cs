@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     namespace BoardPackage
     {
-        class Board : IPersistedObject<DataAccessLayer.Board>
+        class Board// : IPersistedObject<DataAccessLayer.Board>
         {
 
             private List<Column> list;
@@ -53,6 +53,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public int GetNumOfColumns()
             {
                 return list.Count;
+            }
+
+            public int getIdGiver()
+            {
+                return idGiver;
             }
 
             public Column GetColumn(string ColumnName)
@@ -160,9 +165,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return add;
             }
 
-            public DataAccessLayer.Board ToDalObject()
+            public Boolean ToDalObject()
             {
-                return new DataAccessLayer.Board(backlog.ToDalObject(), inProgress.ToDalObject(), done.ToDalObject(), idGiver);
+                foreach(Column myColumn in list)
+                {
+                    myColumn.ToDalObject().Save();
+                }
+                return true;
             }
         }
 
@@ -252,6 +261,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Task> taskList;
             private int limit;
             private string columnName;
+
             public Column()
             {
                 taskList = new List<Task>();
@@ -346,9 +356,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
                 foreach (Task task in taskList)
                 {
-                    DALList.Add(task.ToDalObject());
+                    task.ToDalObject().Save();
+                    //DALList.Add(task.ToDalObject());
                 }
-                return new DataAccessLayer.Column(DALList, limit);
+                return new DataAccessLayer.Column(Email, columnName, columnId, limit);
             }
         }
 

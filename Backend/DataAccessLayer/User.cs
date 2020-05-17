@@ -33,11 +33,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             dalController = new DalController();
         }
 
-        public User(string email, string password, string nickname)
+        public User(string email, string password, string nickname, int idGiver, int numOfColumns)
         {
             this.email = email.ToLower();
             this.password = password;
             this.nickname = nickname;
+            this.idGiver = idGiver;
+            this.numOfColumns = numOfColumns;
             dalController = new DalController();
         }
 

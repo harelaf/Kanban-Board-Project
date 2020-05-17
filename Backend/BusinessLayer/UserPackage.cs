@@ -172,21 +172,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                         temp = temp.Import();
 
                         User toAdd = new User(email, temp.password, temp.nickname);
-
-                        DataAccessLayer.Board tempBoard = temp.myBoard;
+                        List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
+                        //DataAccessLayer.Board tempBoard = temp.myBoard;
                     
                         List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
-                        foreach(DataAccessLayer.Column myColumn in tempBoard.columnList)
+                        foreach(DataAccessLayer.Column myColumn in columnListDAL)
                         {
-                            List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
-                            foreach (DataAccessLayer.Task task in myColumn.TaskList)
+                            List<DataAccessLayer.Task> TaskListDAL = myColumn.getTasks();
+                            List <BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
+                            foreach (DataAccessLayer.Task task in TaskListDAL)
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit,myColumn.Name));
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name));
                         }
 
-                        BoardPackage.Board board = new BoardPackage.Board(cl, tempBoard.idGiver);
+                        BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
 
                         toAdd.SetBoard(board);
                         UserList.Add(email, toAdd);
@@ -247,7 +248,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.User ToDalObject()
             {
-                return new DataAccessLayer.User(email, password, nickname, myBoard.ToDalObject());
+                myBoard.ToDalObject().save();
+                return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
     }
