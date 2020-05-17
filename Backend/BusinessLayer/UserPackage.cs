@@ -164,30 +164,34 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void LoadData()
             {
                 registeredemails = registeredemails.Import();
-                foreach (string email in registeredemails.Emails)
+                if(registeredemails.Emails == null)
                 {
-                    DataAccessLayer.User temp = new DataAccessLayer.User(email);
-                    temp = temp.Import();
-
-                    User toAdd = new User(email, temp.password, temp.nickname);
-
-                    DataAccessLayer.Board tempBoard = temp.myBoard;
-                    
-                    List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
-                    foreach(DataAccessLayer.Column myColumn in tempBoard.columnList)
+                    foreach (string email in registeredemails.Emails)
                     {
-                        List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
-                        foreach (DataAccessLayer.Task task in myColumn.TaskList)
+                        DataAccessLayer.User temp = new DataAccessLayer.User(email);
+                        temp = temp.Import();
+
+                        User toAdd = new User(email, temp.password, temp.nickname);
+
+                        DataAccessLayer.Board tempBoard = temp.myBoard;
+                    
+                        List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
+                        foreach(DataAccessLayer.Column myColumn in tempBoard.columnList)
                         {
-                            myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                            List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
+                            foreach (DataAccessLayer.Task task in myColumn.TaskList)
+                            {
+                                myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                            }
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit,myColumn.Name));
                         }
-                        cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit,myColumn.Name));
+
+                        BoardPackage.Board board = new BoardPackage.Board(cl, tempBoard.idGiver);
+
+                        toAdd.SetBoard(board);
+                        UserList.Add(email, toAdd);
                     }
-
-                    BoardPackage.Board board = new BoardPackage.Board(cl, tempBoard.idGiver);
-
-                    toAdd.SetBoard(board);
-                    UserList.Add(email, toAdd);
+                
                 }
             }
 

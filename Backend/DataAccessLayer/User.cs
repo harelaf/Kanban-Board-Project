@@ -13,24 +13,31 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public string email { get; set; }
         public string password { get; set; }
         public string nickname { get; set; }
-        public Board myBoard { get; set; }
+        public int idGiver { get; set; }
+        public int numOfColumns { get; set; }
         public DalController dalController;
+
+
+        const string colEmail = "Email";
+        const string colPassword = "password";
+        const string colNickname = "nickName";
+        const string colIdGiver = "idGiver";
+        const string colNumOfColumns = "NumOfColumns";
+
 
         public User()
         {
             email = null;
             password = null;
             nickname = null;
-            myBoard = null;
             dalController = new DalController();
         }
 
-        public User(string email, string password, string nickname, Board myBoard)
+        public User(string email, string password, string nickname)
         {
             this.email = email.ToLower();
             this.password = password;
             this.nickname = nickname;
-            this.myBoard = myBoard;
             dalController = new DalController();
         }
 
@@ -39,7 +46,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.email = email.ToLower();
             password = null;
             nickname = null;
-            myBoard = null;
             dalController = new DalController();
         }
 
@@ -54,14 +60,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             string sql_query = null;
             string database_name = "kanbanDB.sqlite";
             SQLiteConnection connection;
-            SQLiteCommand command;
+            SQLiteCommand command = null;
 
             connetion_string = $"Data Source={database_name};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
             int idGiver = 0, NumOfColumns = 0, i = 0;
-            List<Column> columnList = new List<Column>();
-            List<Task> taskList;
             try
             {
                 connection.Open();
@@ -70,30 +74,16 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
-                    email = (string)dataReader["Email"];
-                    password = (string)dataReader["password"];
-                    nickname = (string)dataReader["nickName"];
-                    idGiver = (int)dataReader["idGiver"];
-                    NumOfColumns = (int)dataReader["NumOfColumns"];
+                    email = (string)dataReader[colEmail];
+                    password = (string)dataReader[colPassword];
+                    nickname = (string)dataReader[colNickname];
+                    idGiver = (int)dataReader[colIdGiver];
+                    NumOfColumns = (int)dataReader[colNumOfColumns];
                 }
-                while (i < NumOfColumns)
-                {
-                    sql_query = $"SELECT * FROM tbTasks WHERE Email = {email} AND ColumnId = {i};";
-                    command = new SQLiteCommand(sql_query, connection);
-                    dataReader = command.ExecuteReader();
-                    while (dataReader.Read())
-                    {
-                        //Task toAdd = new Task((string)dataReader["title"], (string)dataReader["description"],
-                            //new DateTime((string)dataReader["creationDate"]), dataReader["dueDate"]));
-                    }
-                }
-                //myBoard = new Board(, idGiver);
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("Error");
-                Console.WriteLine(ex.ToString());
+                email = null;
             }
             finally
             {
@@ -102,6 +92,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             
             return this;
+        }
+
+        public List<Column> GetColumns()
+        {
+            int i = 0;
+            List<Column> colList = new List<Column>(numOfColumns);
+            Column col;
+            while (i < numOfColumns)
+            {
+                col = new Column(email, i);
+                colList.Add(col.Import());
+            }
+            return colList;
         }
     }
 }
