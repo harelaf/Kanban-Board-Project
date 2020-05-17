@@ -248,17 +248,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return add;
             }
 
-            public Boolean ToDalObject()
-
             /// <summary>
             /// This function passing the board to the DAL for saving the data of the board
             /// </summary>
             /// <returns>This function returns other board that represents this board in the DAL</returns>
-	public Boolean ToDalObject()
+	        public Boolean ToDalObject()
             {
                 foreach(Column myColumn in list)
                 {
-                    myColumn.ToDalObject().Save();                }
+                    myColumn.ToDalObject().Save();
+                }
                 return true;
             }
         }
@@ -426,6 +425,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private int limit;
             private string columnName;
             private int columnOrdinal;
+            private string Email;
 
             /// <summary>
             /// an empty constructor of a new empty column 
@@ -601,7 +601,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     task.ToDalObject().Save();
                     //DALList.Add(task.ToDalObject());
                 }
-                return new DataAccessLayer.Column(Email, columnName, columnId, limit);
+                return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
         }
 
