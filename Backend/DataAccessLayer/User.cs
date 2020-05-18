@@ -31,6 +31,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             password = null;
             nickname = null;
             dalController = new DalController();
+            numOfColumns = 0;
+            idGiver = 0;
+            dalController = new DalController();
         }
 
         public User(string email, string password, string nickname, int idGiver, int numOfColumns)
@@ -48,6 +51,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.email = email.ToLower();
             password = null;
             nickname = null;
+            idGiver = 0;
+            numOfColumns = 0;
             dalController = new DalController();
         }
 
@@ -72,8 +77,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "UPDATE tbUsers SET IdGiver = @idGiver, numOfColumns = @numOfColumns WHERE Email = @Email";
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", myBoard.idGiver);
-                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", myBoard.columnList.Count);
+                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", idGiver);
+                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", numOfColumns);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
 
                     command.Parameters.Add(IdGiverParam);
@@ -88,8 +93,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "INSERT INTO tbUsers VALUES(@Email,@nickName,@password,@IdGiver,@numOfColumns)";
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", myBoard.idGiver);
-                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", myBoard.columnList.Count);
+                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", idGiver);
+                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", numOfColumns);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
                     SQLiteParameter NicknameParam = new SQLiteParameter(@"nickName", nickname);
                     SQLiteParameter PasswordParam = new SQLiteParameter(@"password", password);
@@ -166,6 +171,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 colList.Add(col.Import());
             }
             return colList;
+        }
+
+        public override void Delete()
+        {
+            throw new NotImplementedException();
         }
     }
 }

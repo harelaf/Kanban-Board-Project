@@ -345,8 +345,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         private void CheckToSave(Response response)
         {
-            if (!response.ErrorOccured)
+            if (response.ErrorOccured)
+            {
                 userService.Save();
+            }
         }
     }
 }

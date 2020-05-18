@@ -181,7 +181,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id));
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id, email));
                         }
 
                         BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
@@ -245,7 +245,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.User ToDalObject(string Email, int colOrdinal)
             {
-                myBoard.ToDalObject();
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
