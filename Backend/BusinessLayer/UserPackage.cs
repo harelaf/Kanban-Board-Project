@@ -18,6 +18,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private RegisteredEmails registeredemails;
             private DalController DalController = new DalController();
 
+            const int MIN_LENGTH_OF_PASSWORD = 5;
+            const int MAX_LENGTH_OF_PASSWORD = 25;
+            const int MIN_UCASE_LETTER = 1;
+            const int MIN_LCASE_LETTER = 1;
+            const int MIN_DIGITS = 1;
+
             public UserController()
             {
                 UserList = new Dictionary<string, User>();
@@ -25,6 +31,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 registeredemails = new RegisteredEmails();
             }
 
+            /// <summary>
+            /// This function gets the email of the user and the password
+            /// and login to the system if the details are correct 
+            /// </summary>
+            /// <param name="Email"></param>
+            /// <param name="Password"></param>
+            /// <returns>returns the user that logged in</returns>
             public User Login(string Email, string Password)
             {
                 if (UserList.ContainsKey(Email))
@@ -43,6 +56,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("there is no such user. please register.");
             }
 
+            /// <summary>
+            /// This function logges out the active user from the system
+            /// by giving the email of the active user 
+            /// </summary>
+            /// <param name="Email"></param>
             public void Logout(string Email)
             {
                 if (!CurrentUser.GetEmail().Equals(Email))
@@ -51,46 +69,50 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     CurrentUser = null;
             }
 
+            /// <summary>
+            /// This function gets a password and checks if this password is legal to register with
+            /// according to the next demands : a user password must be in length of 5 to 25 characters and must include at
+            ///least one uppercase letter, one small character and a number.
+            /// </summary>
+            /// <param name="password"></param>
+            /// <returns>returns true if this password is proper to register or false if not</returns>
             private bool CheckProperPassToRegister(string password)
             {
-                if (password.Length > 20 | password.Length < 4)
-                    throw new Exception("This password is not between 4-20 characters");
-                bool isExistSmallChar = false;
-                bool isExistCapitalLetter = false;
-                bool isExistNumber = false;
-                for (int index = 0; index < password.Length & (!isExistCapitalLetter | !isExistSmallChar | !isExistNumber); index++)
+                if (password.Length > MAX_LENGTH_OF_PASSWORD | password.Length < MIN_LENGTH_OF_PASSWORD)
+                    throw new Exception("This password is not between"+MIN_LENGTH_OF_PASSWORD+"-"+MAX_LENGTH_OF_PASSWORD+"characters");
+                int AmountOfUpperCase = MIN_UCASE_LETTER;
+                int AmountOfLowerCase = MIN_LCASE_LETTER;
+                int AmountOfDigits = MIN_DIGITS;
+
+                for (int index = 0; index < password.Length & (AmountOfDigits!=0|AmountOfLowerCase!=0|AmountOfUpperCase!=0); index++)
                 {
-                    for (char i = 'a'; i <= 'z' & !isExistSmallChar; i++)
-                    {
+                    for (char i = 'a'; i <= 'z' & AmountOfLowerCase!=0; i++)
                         if (password[index] == i)
-                        {
-                            isExistSmallChar = true;
-                        }
-                    }
-
-                    for (char i = 'A'; i <= 'Z' & !isExistCapitalLetter; i++)
-                    {
+                            AmountOfLowerCase--;
+                        
+                    for (char i = 'A'; i <= 'Z' & AmountOfUpperCase!=0; i++)
                         if (password[index] == i)
-                        {
-                            isExistCapitalLetter = true;
-                        }
-                    }
-
-                    for (char i = '0'; i <= '9' & !isExistNumber; i++)
-                    {
+                            AmountOfUpperCase--;
+                        
+                    for (char i = '0'; i <= '9' & AmountOfDigits!=0; i++)
                         if (password[index] == i)
-                        {
-                            isExistNumber = true;
-                        }
-                    }
+                            AmountOfDigits--;
                 }
 
-                if (isExistNumber == false | isExistCapitalLetter == false | isExistSmallChar == false)
+                if (AmountOfDigits != 0 | AmountOfUpperCase !=0 | AmountOfLowerCase!=0)
                     throw new Exception("The password does not contains at least one small character, one Capital letter and one digit");
                 return true;
 
             }
 
+            /// <summary>
+            /// This function gets an email,password and nickname and registers to the system
+            /// if the email is not already taken, the password is proper the email is legal 
+            /// and the nickname is not null
+            /// </summary>
+            /// <param name="Email"></param>
+            /// <param name="Password"></param>
+            /// <param name="NickName"></param>
             public void Register(string Email, string Password, string NickName)
             {
                 if (UserList.ContainsKey(Email))
@@ -111,7 +133,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     //registeredEmails.Emails.Add(Email);
                     //registeredEmails.Save();
-                    MyUser.ToDalObject(Email,0).Save();
+                    MyUser.ToDalObject(Email,"").Save();
                 }
                 else
                 {
@@ -119,6 +141,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
             }
 
+            /// <summary>
+            /// This function gets an email adress and checks if this email adress is legal
+            /// </summary>
+            /// <param name="Email"></param>
+            /// <returns>returns true if the email adress is legal and false if not</returns>
             private bool IsLegalEmailAdress(string Email)
             {
                 try
@@ -152,12 +179,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     return false;
                 }
             }
-
+            /// <summary>
+            /// This function delete all the data of the users from the data base
+            /// </summary>
             public void DeleteData()
             {
                 DalController.Delete();
             }
 
+            /// <summary>
+            /// This function loads the data of the all users from the data base 
+            /// </summary>
             public void LoadData()
             {
                 registeredemails = registeredemails.Import();
@@ -181,7 +213,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id, email));
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name, myColumn.ordinal, email));
                         }
 
                         BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
@@ -193,10 +225,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
             }
 
+            /// <summary>
+            /// This function saves the changes that accured to the data base
+            /// </summary>
             public void Save()
             {
                 if (CurrentUser != null)
-                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), 0).Save();
+                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), "").Save();
                 else
                     throw new Exception("No user is currently logged in");
             }
@@ -218,35 +253,66 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 myBoard = new BoardPackage.Board();
             }
 
+            /// <summary>
+            /// this function gets a password and checks if the given password is same as the user password 
+            /// </summary>
+            /// <param name="password"></param>
+            /// <returns>returns true if the password is correct and false if not</returns>
             public Boolean ValidatePassword(string password)
             {
                 return this.password.Equals(password);
             }
 
+            /// <summary>
+            /// Getter to the email adress
+            /// </summary>
+            /// <returns>returns the email adress</returns>
             public string GetEmail()
             {
                 return email;
             }
 
+            /// <summary>
+            /// Getter to the board
+            /// </summary>
+            /// <returns>returns the board</returns>
             public BoardPackage.Board GetBoard()
             {
                 return myBoard;
             }
 
+            /// <summary>
+            /// Getter to the nickname of the user
+            /// </summary>
+            /// <returns>returns the nuckname of the user</returns>
             public string GetNickname()
             {
                 return nickname;
             }
 
+            /// <summary>
+            /// Setter to the board, this function gets new board and change the existing board to the new one
+            /// </summary>
+            /// <param name="newBoard"></param>
             public void SetBoard(BoardPackage.Board newBoard)
             {
                 myBoard = newBoard;
             }
 
-            public DataAccessLayer.User ToDalObject(string Email, int colOrdinal)
-            {
+
+            /// <summary>
+            /// This function gets an email and a column ordinal and convert the user 
+            /// to a DAL user 
+            /// </summary>
+            /// <param name="Email"></param>
+            /// <param name="colOrdinal"></param>
+            /// <returns>returns a Dal user that represent this user</returns>
+
+            public DataAccessLayer.User ToDalObject(string Email, string column)
+
+	    {
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
-    }
+    
 }

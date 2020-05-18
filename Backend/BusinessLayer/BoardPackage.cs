@@ -16,9 +16,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Column> list;
             private int idGiver;
 
-            /// <summary>
-            /// an empty constractor of new board 
-            /// </summary>
             public Board()
             {
                 for (int i = 0; i < 3; i++)
@@ -26,11 +23,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 idGiver = 0;
             }
 
-            /// <summary>
-            /// Constractor of new board which gets list of columns and idGiver and initializing the fields
-            /// </summary>
-            /// <param name="list"></param>
-            /// <param name="idGiver"></param>
             public Board(List<Column> list, int idGiver)
             {
                 this.list = list;
@@ -79,6 +71,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return list.Count;
             }
+            /// <summary>
+            /// Getter to the idGiver 
+            /// </summary>
+            /// <returns>This function returns the idGiver field</returns>
 
             public int getIdGiver()
             {
@@ -110,7 +106,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 throw new Exception("This Column does not exist");
             }
             /// <summary>
-            /// This function searches a specific column by his column ordinal  
+            /// This function searches a specific column by his column ordinal and returns it 
             /// </summary>
             /// <param name="columnOrdinal"></param>
             /// <returns>returns the fit column</returns>
@@ -309,18 +305,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         }
 
-
         class BoardController
         {
             private Board activeBoard;
 
-            /// <summary>
-            /// Constactor of an empty BoardController
-            /// </summary>
+       
             public BoardController()
             {
                 activeBoard = null;
             }
+
             /// <summary>
             /// This function initalizing the active board 
             /// </summary>
@@ -478,9 +472,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private int columnOrdinal;
             private string Email;
 
-            /// <summary>
-            /// an empty constructor of a new empty column 
-            /// </summary>
             public Column()
             {
                 taskList = new List<Task>();
@@ -570,7 +561,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     description = "";
                 Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
-                toAdd.ToDalObject(Email, columnOrdinal).Save();
+                toAdd.ToDalObject(Email, columnName).Save();
                 return toAdd;
             }
 
@@ -669,7 +660,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return taskList;
             }
 
-            public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
+            /// <summary>
+            /// This function transfers a column of Buisness layer to a column of the DAL 
+            /// and saves this column in the data base
+            /// </summary>
+            /// <returns>This function returns a column of the DAL that represnt this column </returns
+            public DataAccessLayer.Column ToDalObject(string Email, string column)
             { 
                 return new DataAccessLayer.Column(Email, columnName, colOrdinal, limit);
             }
@@ -706,43 +702,74 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.taskId = taskId;
             }
 
+            /// <summary>
+            /// Getter to the creation date of the task
+            /// </summary>
+            /// <returns>returns the creation date</returns>
             public DateTime GetCreationDate()
             {
                 return creationDate;
             }
 
+            /// <summary>
+            /// Getter to the id of the task
+            /// </summary>
+            /// <returns>returns the task id</returns>
             public int GetTaskId()
             {
                 return taskId;
             }
 
+            /// <summary>
+            /// Setter to the task id, this function get a new task id and updates the old one to this new task id.
+            /// </summary>
+            /// <param name="id"></param>
             public void SetTaskId(int id)
             {
                 this.taskId = id;
             }
 
+            /// <summary>
+            /// Getter to the title of the task
+            /// </summary>
+            /// <returns>returns the title of the task</returns>
             public string GetTitle()
             {
                 return title;
             }
 
+            /// <summary>
+            /// Getter to the description of the task 
+            /// </summary>
+            /// <returns>returns the description of the task</returns>
             public string GetDescription()
             {
                 return description;
             }
 
+            /// <summary>
+            /// Getter to the due date of the task
+            /// </summary>
+            /// <returns>returns the due date of the task</returns>
             public DateTime GetDueDate()
             {
                 return dueDate;
             }
 
+            /// <summary>
+            /// This function gets a new due date and updates the older one to the new due date
+            /// </summary>
+            /// <param name="dueDate"></param>
             public void UpdateTaskDueDate(DateTime dueDate)
             {
                 if (!ValidateDueDate(dueDate))
                     throw new Exception("The dueDate is Illegal(Date already passed)");
                 this.dueDate = dueDate;
             }
-
+            /// <summary>
+            /// This function gets a new title and updates the older one to the new title
+            /// </summary>
+            /// <param name="title"></param>
             public void UpdateTaskTitle(string title)
             {
                 if (!ValidateTitle(title))
@@ -750,6 +777,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.title = title;
             }
 
+            /// <summary>
+            /// This function gets a new description and updates the older one to the new description
+            /// </summary>
+            /// <param name="description"></param>
             public void UpdateTaskDescription(string description)
             {
                 if (description == null)
@@ -759,24 +790,42 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.description = description;
             }
 
+            /// <summary>
+            /// This function gets a title and checks if the title is validate
+            /// (the title can't be empty and must contains at most 50 characters)
+            /// </summary>
+            /// <param name="title"></param>
+            /// <returns>returns true if the title is validate or false if not</returns>
             private bool ValidateTitle(string title)
             {
                 return title != null && title.Length <= 50 & title.Length > 0;
             }
 
+            /// <summary>
+            /// This function gets a description and checks if the description is validate
+            /// (the description contains at most 300 characters)
+            /// </summary>
+            /// <param name="newDesc"></param>
+            /// <returns>returns true if the description is validate or false if not</returns>
             private bool ValidateDescription(string newDesc)
             {
                 return newDesc.Length <= 300;
             }
 
+            /// <summary>
+            /// This function gets a new due date and checks if this new due date is possible
+            /// (not passed yet)
+            /// </summary>
+            /// <param name="newDue"></param>
+            /// <returns>returns true if the due date is validate or false if not</returns>
             private bool ValidateDueDate(DateTime newDue)
             {
                 return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
-            public DataAccessLayer.Task ToDalObject(string Email, int colOrdinal)
+            public DataAccessLayer.Task ToDalObject(string Email, string column)
             {
-                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, colOrdinal, Email);
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email);
             }
         }
     }
