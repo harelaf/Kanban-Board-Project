@@ -119,7 +119,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     //registeredEmails.Emails.Add(Email);
                     //registeredEmails.Save();
-                    MyUser.ToDalObject().Save();
+                    MyUser.ToDalObject(Email,0).Save();
                 }
                 else
                 {
@@ -184,7 +184,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name));
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id));
                         }
 
                         BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
@@ -199,7 +199,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void Save()
             {
                 if (CurrentUser != null)
-                    CurrentUser.ToDalObject().Save();
+                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), 0).Save();
                 else
                     throw new Exception("No user is currently logged in");
             }
@@ -246,9 +246,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 myBoard = newBoard;
             }
 
-            public DataAccessLayer.User ToDalObject()
+            public DataAccessLayer.User ToDalObject(string Email, int colOrdinal)
             {
-                myBoard.ToDalObject().save();
+                myBoard.ToDalObject();
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }

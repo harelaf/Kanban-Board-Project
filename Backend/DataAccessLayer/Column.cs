@@ -62,6 +62,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             SQLiteConnection connection;
             SQLiteCommand command = null;
 
+
             connetion_string = $"Data Source={database_name};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
@@ -108,11 +109,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskId} = {Id} ORDER BY {colTaskCreationDate};";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                while (dataReader.Read())
                 {
                     DateTime creationDate = DateTime.Parse((string)dataReader[colTaskCreationDate]);
                     DateTime dueDate = DateTime.Parse((string)dataReader[colTaskDueDate]);
-                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId]));
+                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId], (int)dataReader[colTaskId], (string)dataReader[colTaskEmail]));
                 }
             }
             catch (Exception)

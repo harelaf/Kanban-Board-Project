@@ -254,9 +254,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns other board that represents this board in the DAL</returns>
 	        public Boolean ToDalObject()
             {
+                int i = 0;
                 foreach(Column myColumn in list)
                 {
-                    myColumn.ToDalObject().Save();
+                    myColumn.ToDalObject(myColumn.getEmail(), i++).Save();
                 }
                 return true;
             }
@@ -474,6 +475,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return columnOrdinal;
             }
 
+            public string getEmail()
+            {
+                return Email;
+            }
             /// <summary>
             /// This function change the column ordinal of this column by a new given name
             /// </summary>
@@ -593,12 +598,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return taskList;
             }
 
-            public DataAccessLayer.Column ToDalObject()
+            public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
             {
-                List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
+                //List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
                 foreach (Task task in taskList)
                 {
-                    task.ToDalObject().Save();
+                    task.ToDalObject(Email, colOrdinal).Save();
                     //DALList.Add(task.ToDalObject());
                 }
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
@@ -704,9 +709,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
-            public DataAccessLayer.Task ToDalObject()
+            public DataAccessLayer.Task ToDalObject(string Email, int colOrdinal)
             {
-                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId);
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, colOrdinal, Email);
             }
         }
     }
