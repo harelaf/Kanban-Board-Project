@@ -34,6 +34,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
+        public Response DeleteData()
+        {
+            Response response = new Response();
+            try
+            {
+                userController.DeleteData();
+                log.Debug("Deleted the database succssefully");
+            }
+            catch(Exception e)
+            {
+                response = new Response(e.Message);
+                log.Warn("Wasn't able to delete data from the database, error: \n" + e.Message);
+            }
+            return response;
+        }
+
         public Response LoadData()
         {
             Response response = new Response();

@@ -16,6 +16,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private Dictionary<string, User> UserList;
             private User CurrentUser;
             private RegisteredEmails registeredemails;
+            private DalController DalController = new DalController();
 
             public UserController()
             {
@@ -98,15 +99,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
-                    /* //Un-needed test for same nicknames
-                    foreach (User item in UserList.Values)
-                    {
-                        if (item.GetNickname().Equals(NickName))
-                        { 
-                            throw new Exception("This nickname is already in use"); 
-                        }
-                    }
-                    */
                     if(NickName == null)
                     {
                         throw new Exception("A null value was entered for the nickname");
@@ -159,6 +151,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     return false;
                 }
+            }
+
+            public void DeleteData()
+            {
+                DalController.Delete();
             }
 
             public void LoadData()
