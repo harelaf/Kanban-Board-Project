@@ -50,7 +50,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     }
                     else
                         throw new Exception("your password is incorrect");
-                    
+
                 }
                 else
                     throw new Exception("there is no such user. please register.");
@@ -79,27 +79,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private bool CheckProperPassToRegister(string password)
             {
                 if (password.Length > MAX_LENGTH_OF_PASSWORD | password.Length < MIN_LENGTH_OF_PASSWORD)
-                    throw new Exception("This password is not between"+MIN_LENGTH_OF_PASSWORD+"-"+MAX_LENGTH_OF_PASSWORD+"characters");
+                    throw new Exception("This password is not between" + MIN_LENGTH_OF_PASSWORD + "-" + MAX_LENGTH_OF_PASSWORD + "characters");
                 int AmountOfUpperCase = MIN_UCASE_LETTER;
                 int AmountOfLowerCase = MIN_LCASE_LETTER;
                 int AmountOfDigits = MIN_DIGITS;
 
-                for (int index = 0; index < password.Length & (AmountOfDigits!=0|AmountOfLowerCase!=0|AmountOfUpperCase!=0); index++)
+                for (int index = 0; index < password.Length & (AmountOfDigits != 0 | AmountOfLowerCase != 0 | AmountOfUpperCase != 0); index++)
                 {
-                    for (char i = 'a'; i <= 'z' & AmountOfLowerCase!=0; i++)
+                    for (char i = 'a'; i <= 'z' & AmountOfLowerCase != 0; i++)
                         if (password[index] == i)
                             AmountOfLowerCase--;
-                        
-                    for (char i = 'A'; i <= 'Z' & AmountOfUpperCase!=0; i++)
+
+                    for (char i = 'A'; i <= 'Z' & AmountOfUpperCase != 0; i++)
                         if (password[index] == i)
                             AmountOfUpperCase--;
-                        
-                    for (char i = '0'; i <= '9' & AmountOfDigits!=0; i++)
+
+                    for (char i = '0'; i <= '9' & AmountOfDigits != 0; i++)
                         if (password[index] == i)
                             AmountOfDigits--;
                 }
 
-                if (AmountOfDigits != 0 | AmountOfUpperCase !=0 | AmountOfLowerCase!=0)
+                if (AmountOfDigits != 0 | AmountOfUpperCase != 0 | AmountOfLowerCase != 0)
                     throw new Exception("The password does not contains at least one small character, one Capital letter and one digit");
                 return true;
 
@@ -121,11 +121,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
-                    if(NickName == null)
+                    if (NickName == null)
                     {
                         throw new Exception("A null value was entered for the nickname");
                     }
-                    else if(NickName == "")
+                    else if (NickName == "")
                     {
                         throw new Exception("An empty nickname was entered");
                     }
@@ -133,7 +133,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     //registeredEmails.Emails.Add(Email);
                     //registeredEmails.Save();
-                    MyUser.ToDalObject(Email,"").Save();
+                    MyUser.ToDalObject(Email, "").Save();
                 }
                 else
                 {
@@ -193,7 +193,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void LoadData()
             {
                 registeredemails = registeredemails.Import();
-                if(registeredemails.Emails == null)
+                if (registeredemails.Emails == null)
                 {
                     foreach (string email in registeredemails.Emails)
                     {
@@ -203,12 +203,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                         User toAdd = new User(email, temp.password, temp.nickname);
                         List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
                         //DataAccessLayer.Board tempBoard = temp.myBoard;
-                    
+
                         List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
-                        foreach(DataAccessLayer.Column myColumn in columnListDAL)
+                        foreach (DataAccessLayer.Column myColumn in columnListDAL)
                         {
                             List<DataAccessLayer.Task> TaskListDAL = myColumn.getTasks();
-                            List <BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
+                            List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
                             foreach (DataAccessLayer.Task task in TaskListDAL)
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
@@ -221,7 +221,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                         toAdd.SetBoard(board);
                         UserList.Add(email, toAdd);
                     }
-                
+
                 }
             }
 
@@ -310,9 +310,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.User ToDalObject(string Email, string column)
 
-	    {
+            {
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
-    
+    }
 }
