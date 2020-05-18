@@ -54,5 +54,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return this;
         }
+
     }
 }

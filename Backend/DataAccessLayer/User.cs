@@ -53,7 +53,66 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override void Save()
         {
-            throw new NotImplementedException();
+            string connetion_string = null;
+            string sql_query = null;
+            string database_name = "kanbanDB.sqlite";
+            SQLiteConnection connection;
+            SQLiteCommand command = new SQLiteCommand();
+
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+            SQLiteDataReader dataReader;
+
+            try
+            {
+                sql_query = $"SELECT * FROM tbUsers WHERE Email = {email}";
+                command = new SQLiteCommand(sql_query, connection);
+                dataReader = command.ExecuteReader();
+                if (dataReader.Read())
+                {
+                    command = new SQLiteCommand(null, connection);
+                    command.CommandText = "UPDATE tbUsers SET IdGiver = @idGiver, numOfColumns = @numOfColumns WHERE Email = @Email";
+                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", myBoard.idGiver);
+                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", myBoard.columnList.Count);
+                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+
+                    command.Parameters.Add(IdGiverParam);
+                    command.Parameters.Add(numOfColumnsParam);
+                    command.Parameters.Add(EmailParam);
+
+                    command.Prepare();
+                    int num_rows_changed = command.ExecuteNonQuery();
+                    command.Dispose();
+                }
+                else
+                {
+                    command = new SQLiteCommand(null, connection);
+                    command.CommandText = "INSERT INTO tbUsers VALUES(@Email,@nickName,@password,@IdGiver,@numOfColumns)";
+                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", myBoard.idGiver);
+                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", myBoard.columnList.Count);
+                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+                    SQLiteParameter NicknameParam = new SQLiteParameter(@"nickName", nickname);
+                    SQLiteParameter PasswordParam = new SQLiteParameter(@"password", password);
+
+                    command.Parameters.Add(IdGiverParam);
+                    command.Parameters.Add(numOfColumnsParam);
+                    command.Parameters.Add(EmailParam);
+                    command.Parameters.Add(NicknameParam);
+                    command.Parameters.Add(PasswordParam);
+
+                    command.Prepare();
+                    int num_rows_changed = command.ExecuteNonQuery();
+                    command.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public override User Import()
@@ -63,6 +122,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             string database_name = "kanbanDB.sqlite";
             SQLiteConnection connection;
             SQLiteCommand command = null;
+
 
             connetion_string = $"Data Source={database_name};Version=3;";
             connection = new SQLiteConnection(connetion_string);
@@ -92,7 +152,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 connection.Close();
                 command.Dispose();
             }
-            
             return this;
         }
 
