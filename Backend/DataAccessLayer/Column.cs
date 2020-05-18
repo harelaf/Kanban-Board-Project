@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,19 +29,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public Column(string Email, int colId)
         {
-            this.email = email;
+            this.email = Email;
             this.Id = colId;
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Column(string Email, string Name, int Id, int Limit)
         {
-            this.email = email;
+            this.email = Email;
             this.Name = Name;
             this.Id = Id;
             this.Limit = Limit;
         }
-
+        
         public Column()
         {
             email = "";
@@ -51,7 +52,67 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public override void Save()
         {
-            throw new NotImplementedException();
+            string connetion_string = null;
+            string sql_query = null;
+            string database_name = "kanbanDB.sqlite";
+            SQLiteConnection connection;
+            SQLiteCommand command = new SQLiteCommand();
+
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+            SQLiteDataReader dataReader;
+
+            try
+            {
+                sql_query = $"SELECT * FROM tbColumns WHERE Email = {email} AND columnId = {Id}";
+                command = new SQLiteCommand(sql_query, connection);
+                dataReader = command.ExecuteReader();
+                if (dataReader.Read())
+                {
+                    command = new SQLiteCommand(null, connection);
+                    command.CommandText = "UPDATE tbColumns SET columnId = @columnId, columnName = @columnName, limit = @limit WHERE Email = @Email AND columnId = @columnId";
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                    SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
+                    SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
+                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+
+                    command.Parameters.Add(columnIdParam);
+                    command.Parameters.Add(columnNameParam);
+                    command.Parameters.Add(limitParam);
+                    command.Parameters.Add(EmailParam);
+
+                    command.Prepare();
+                    int num_rows_changed = command.ExecuteNonQuery();
+                    command.Dispose();
+                }
+                else
+                {
+                    command = new SQLiteCommand(null, connection);
+                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnId,@columnName,@limit)";
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+                    SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
+                    SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
+
+                    command.Parameters.Add(columnIdParam);
+                    command.Parameters.Add(EmailParam);
+                    command.Parameters.Add(columnNameParam);
+                    command.Parameters.Add(limitParam);
+
+                    command.Prepare();
+                    int num_rows_changed = command.ExecuteNonQuery();
+                    command.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public override Column Import()
@@ -61,6 +122,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             string database_name = "kanbanDB.sqlite";
             SQLiteConnection connection;
             SQLiteCommand command = null;
+
 
             connetion_string = $"Data Source={database_name};Version=3;";
             connection = new SQLiteConnection(connetion_string);
@@ -108,11 +170,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskId} = {Id} ORDER BY {colTaskCreationDate};";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                while (dataReader.Read())
                 {
                     DateTime creationDate = DateTime.Parse((string)dataReader[colTaskCreationDate]);
                     DateTime dueDate = DateTime.Parse((string)dataReader[colTaskDueDate]);
-                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId]));
+                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId], (int)dataReader[colTaskId], (string)dataReader[colTaskEmail]));
                 }
             }
             catch (Exception)
@@ -126,6 +188,40 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             
             return taskList;
+        }
+
+        public override void Delete()
+        {
+            string connetion_string = null;
+            string database_name = "kanbanDB.sqlite";
+            SQLiteConnection connection;
+            SQLiteCommand command = new SQLiteCommand();
+
+            connetion_string = $"Data Source={database_name};Version=3;";
+            connection = new SQLiteConnection(connetion_string);
+
+            try
+            {
+                command = new SQLiteCommand(null, connection);
+                command.CommandText = "DELETE FROM tbColumns WHERE Email = @Email AND columnId = @columnId";
+                SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+                SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+
+                command.Parameters.Add(EmailParam);
+                command.Parameters.Add(columnIdParam);
+
+                command.Prepare();
+                int num_rows_changed = command.ExecuteNonQuery();
+                command.Dispose();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }

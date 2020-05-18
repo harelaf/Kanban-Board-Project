@@ -414,7 +414,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 taskList = new List<Task>();
                 limit = -1;
                 columnName = "";
-                this.columnOrdinal = 0;
+                columnOrdinal = 0;
+                Email = "";
             }
             
             public Column(string columnName,int columnOrdinal)
@@ -423,14 +424,26 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.columnName = columnName;
                 limit = -1;
                 this.columnOrdinal = columnOrdinal;
+                Email = "";
             }
 
+<<<<<<< HEAD
             public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal)
+=======
+            /// <summary>
+            /// Construcator of new column which initalized by list of tasks,
+            /// restriction limit of tasks, name and a column ordinal. 
+            /// </summary>
+            /// <param name="columnName"></param>
+            /// <param name="columnOrdinal"></param>
+            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal, string email)
+>>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
             {
                 this.taskList = taskList;
                 this.limit = limit;
                 this.columnName = columnName;
                 this.columnOrdinal = columnOrdinal;
+                this.Email = email;
             }
 
             /// <summary>
@@ -442,6 +455,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return columnOrdinal;
             }
 
+            public string getEmail()
+            {
+                return Email;
+            }
             /// <summary>
             /// This function change the column ordinal of this column by a new given name
             /// </summary>
@@ -479,6 +496,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     description = "";
                 Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
+                toAdd.ToDalObject(Email, columnOrdinal).Save();
                 return toAdd;
             }
             /// <summary>
@@ -560,6 +578,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return taskList;
             }
+<<<<<<< HEAD
             /// <summary>
             /// This function transfers a column of Buisness layer to a column of the DAL 
             /// and saves this column in the data base
@@ -572,6 +591,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     task.ToDalObject().Save();
                 }
+=======
+
+            public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
+            { 
+>>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
         }
@@ -728,14 +752,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
+<<<<<<< HEAD
             /// <summary>
             /// This function convert a task to a new task of the DAL that represent the exact task
             /// and save its details on the data base.
             /// </summary>
             /// <returns>returns the converted task of the DAL</returns>
             public DataAccessLayer.Task ToDalObject()
+=======
+            public DataAccessLayer.Task ToDalObject(string Email, int colOrdinal)
+>>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
             {
-                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId);
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, colOrdinal, Email);
             }
         }
     }
