@@ -162,7 +162,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public DataAccessLayer.Board ToDalObject()
             {
-                return new DataAccessLayer.Board(backlog.ToDalObject(), inProgress.ToDalObject(), done.ToDalObject(), idGiver);
+                List<DataAccessLayer.Column> dalColumns = new List<DataAccessLayer.Column>();
+                foreach(Column c in list)
+                {
+                    dalColumns.Add(c.ToDalObject());
+                }
+                return new DataAccessLayer.Board(dalColumns, idGiver);
+            }
+
+            public List<Column> GetColumns()
+            {
+                return list;
             }
         }
 
@@ -348,7 +358,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 {
                     DALList.Add(task.ToDalObject());
                 }
-                return new DataAccessLayer.Column(DALList, limit);
+                return new DataAccessLayer.Column(DALList, limit, columnName);
             }
         }
 
