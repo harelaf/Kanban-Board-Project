@@ -69,13 +69,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = $"UPDATE tbColumns SET {colName} = @columnName, {colLimit} = @limit, {colOrdinal} = @columnOrdinal WHERE {colEmail} = @Email AND {colOrdinal} = @columnId";
-                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
                     SQLiteParameter columnOrdinalParam = new SQLiteParameter(@"columnOrdinal", ordinal);
 
-                    command.Parameters.Add(columnIdParam);
                     command.Parameters.Add(columnNameParam);
                     command.Parameters.Add(limitParam);
                     command.Parameters.Add(EmailParam);
@@ -88,8 +86,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 else
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnId,@columnOrdinal,@columnName,@limit)";
-                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
+                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnOrdinal,@columnName,@limit)";
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
@@ -170,6 +167,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 connection.Open();
                 sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskColumn} = {Name} ORDER BY {colTaskCreationDate};";
+
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 while (dataReader.Read())
