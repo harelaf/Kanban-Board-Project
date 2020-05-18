@@ -47,7 +47,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response AdvanceTask(int columnOrdinal, int taskId)
+        public Response AdvanceTask(int columnOrdinal, int taskId, string Email)
         {
             Response response;
             if (boardController.GetBoard() == null)
@@ -58,7 +58,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                boardController.AdvanceTask(columnOrdinal, taskId);
+                boardController.AdvanceTask(columnOrdinal, taskId, Email);
                 response = new Response();
                 log.Debug("Task has advanced successfully");
             }
@@ -70,7 +70,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+        public Response UpdateTaskTitle(int columnOrdinal, int taskId, string title, string Email)
         {
             Response response;
             if (boardController.GetBoard() == null)
@@ -81,7 +81,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                boardController.UpdateTaskTitle(columnOrdinal, taskId, title);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskTitle(columnOrdinal, taskId, title);
+                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's title successfully");
             }
@@ -93,7 +94,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+        public Response UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate, string Email)
         {
             Response response;
             if (boardController.GetBoard() == null)
@@ -104,7 +105,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                boardController.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's due date successfully");
             }
@@ -116,7 +118,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+        public Response UpdateTaskDescription(int columnOrdinal, int taskId, string description, string Email)
         {
             Response response;
             if (boardController.GetBoard() == null)
@@ -127,7 +129,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                boardController.UpdateTaskDescription(columnOrdinal, taskId, description);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDescription(columnOrdinal, taskId, description);
+                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's description successfully");
             }
@@ -151,6 +154,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.SetLimit(columnOrdinal, limit);
+                BusinessLayer.BoardPackage.Column toSave = boardController.GetColumn(columnOrdinal);
+                toSave.ToDalObject(toSave.getEmail(),columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a column's task limit successfully");
             }
@@ -242,12 +247,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response<Column> AddColumn(int columnOrdinal,string name)
+        public Response<Column> AddColumn(int columnOrdinal,string name, string email)
         {
             
             try
             {
-                BusinessLayer.BoardPackage.Column column = new BusinessLayer.BoardPackage.Column(name, columnOrdinal);
+                BusinessLayer.BoardPackage.Column column = boardController.AddColumn(columnOrdinal, name, email);
 
                 List<Task> tasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
