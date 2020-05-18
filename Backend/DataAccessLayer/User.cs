@@ -162,7 +162,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             Column col;
             while (i < numOfColumns)
             {
-                col = new Column(email, i);
+                col = new Column(email,i);
                 colList.Add(col.Import());
             }
             return colList;
