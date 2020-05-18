@@ -42,7 +42,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
-            throw new NotImplementedException();
+            return userService.DeleteData();
         }
 
         /// <summary>
@@ -62,6 +62,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
             return userService.Register(email, password, nickname);  
         }
+        
 
         /// <summary>
         /// Log in an existing user
@@ -290,21 +291,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveColumn(string email, int columnOrdinal)
         {
-            if (activeUser.Email == null)
-            {
-                log.Warn("Tried to remove column of the user when no user was logged in");
-                return new Response<Column>("No user is active");
-            }
-            if (activeUser.Nickname == null)
-            {
-                return new Response<Column>("The nickName of the user can't be null");
-            }
-            if (!activeUser.Email.Equals(email.ToLower()))
-            {
-                log.Warn("Tried to remove column of other user");
-                return new Response<Column>("Other user is active");
-            }
-            return boardService.RemoveColumn(columnOrdinal);
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+                return boardService.RemoveColumn(columnOrdinal);
+            else
+                return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
         
         /// <summary>
@@ -317,21 +307,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the new Column, the response should contain a error message in case of an error</returns>
         public Response<Column> AddColumn(string email, int columnOrdinal, string Name)
         {
-            if (activeUser.Email == null)
-            {
-                log.Warn("Tried to add column to the user when no user was logged in");
-                return new Response<Column>("No user is active");
-            }
-            if (activeUser.Nickname == null)
-            {
-                return new Response<Column>("The nickName of the user can't be null");
-            }
-            if (!activeUser.Email.Equals(email.ToLower()))
-            {
-                log.Warn("Tried to add column to other user");
-                return new Response<Column>("Other user is active");
-            }
-            return boardService.AddColumn(columnOrdinal,Name);
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+                return boardService.AddColumn(columnOrdinal, Name);
+            else
+                return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
         
         /// <summary>
@@ -343,21 +322,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnRight(string email, int columnOrdinal)
         {
-            if (activeUser.Email == null)
-            {
-                log.Warn("Tried to move column right of a user when no user was logged in");
-                return new Response<Column>("No user is active");
-            }
-            if (activeUser.Nickname == null)
-            {
-                return new Response<Column>("The nickName of the user can't be null");
-            }
-            if (!activeUser.Email.Equals(email.ToLower()))
-            {
-                log.Warn("Tried to move column right of other user");
-                return new Response<Column>("Other user is active");
-            }
-            return boardService.MoveColumnRight(columnOrdinal);
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+                return boardService.MoveColumnRight(columnOrdinal);
+            else
+                return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
         
         /// <summary>
@@ -369,27 +337,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the moved Column, the response should contain a error message in case of an error</returns>
         public Response<Column> MoveColumnLeft(string email, int columnOrdinal)
         {
-            if (activeUser.Email == null)
-            {
-                log.Warn("Tried to move column left of a user when no user was logged in");
-                return new Response<Column>("No user is active");
-            }
-            if (activeUser.Nickname == null)
-            {
-                return new Response<Column>("The nickName of the user can't be null");
-            }
-            if (!activeUser.Email.Equals(email.ToLower()))
-            {
-                log.Warn("Tried to move column left of other user");
-                return new Response<Column>("Other user is active");
-            }
-            return boardService.MoveColumnLeft(columnOrdinal);
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+                return boardService.MoveColumnLeft(columnOrdinal);
+            else
+                return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
 
         private void CheckToSave(Response response)
         {
-            if (!response.ErrorOccured)
+            if (response.ErrorOccured)
+            {
                 userService.Save();
+            }
         }
     }
 }

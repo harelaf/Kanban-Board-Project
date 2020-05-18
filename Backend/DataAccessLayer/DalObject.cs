@@ -12,5 +12,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public abstract void Save();
 
         public abstract T Import();
+
+        public abstract void Delete();
     }
 }

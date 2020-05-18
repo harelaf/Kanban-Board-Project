@@ -45,8 +45,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             catch(Exception ex)
             {
-                Console.WriteLine("Error");
-                Console.WriteLine(ex.ToString());
+                Emails = null;
             }
             finally
             {
@@ -55,5 +54,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return this;
         }
+
     }
 }

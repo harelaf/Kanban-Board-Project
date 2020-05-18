@@ -16,6 +16,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private Dictionary<string, User> UserList;
             private User CurrentUser;
             private RegisteredEmails registeredemails;
+            private DalController DalController = new DalController();
 
             public UserController()
             {
@@ -98,15 +99,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
                 if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
                 {
-                    /* //Un-needed test for same nicknames
-                    foreach (User item in UserList.Values)
-                    {
-                        if (item.GetNickname().Equals(NickName))
-                        { 
-                            throw new Exception("This nickname is already in use"); 
-                        }
-                    }
-                    */
                     if(NickName == null)
                     {
                         throw new Exception("A null value was entered for the nickname");
@@ -119,7 +111,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     //registeredEmails.Emails.Add(Email);
                     //registeredEmails.Save();
-                    MyUser.ToDalObject().Save();
+                    MyUser.ToDalObject(Email,0).Save();
                 }
                 else
                 {
@@ -161,40 +153,50 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 }
             }
 
+            public void DeleteData()
+            {
+                DalController.Delete();
+            }
+
             public void LoadData()
             {
                 registeredemails = registeredemails.Import();
-                foreach (string email in registeredemails.Emails)
+                if(registeredemails.Emails == null)
                 {
-                    DataAccessLayer.User temp = new DataAccessLayer.User(email);
-                    temp = temp.Import();
-
-                    User toAdd = new User(email, temp.password, temp.nickname);
-
-                    DataAccessLayer.Board tempBoard = temp.myBoard;
-                    
-                    List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
-                    foreach(DataAccessLayer.Column myColumn in tempBoard.columnList)
+                    foreach (string email in registeredemails.Emails)
                     {
-                        List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
-                        foreach (DataAccessLayer.Task task in myColumn.TaskList)
+                        DataAccessLayer.User temp = new DataAccessLayer.User(email);
+                        temp = temp.Import();
+
+                        User toAdd = new User(email, temp.password, temp.nickname);
+                        List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
+                        //DataAccessLayer.Board tempBoard = temp.myBoard;
+                    
+                        List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
+                        foreach(DataAccessLayer.Column myColumn in columnListDAL)
                         {
-                            myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                            List<DataAccessLayer.Task> TaskListDAL = myColumn.getTasks();
+                            List <BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
+                            foreach (DataAccessLayer.Task task in TaskListDAL)
+                            {
+                                myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                            }
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id, email));
                         }
-                        cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit,myColumn.Name));
+
+                        BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
+
+                        toAdd.SetBoard(board);
+                        UserList.Add(email, toAdd);
                     }
-
-                    BoardPackage.Board board = new BoardPackage.Board(cl, tempBoard.idGiver);
-
-                    toAdd.SetBoard(board);
-                    UserList.Add(email, toAdd);
+                
                 }
             }
 
             public void Save()
             {
                 if (CurrentUser != null)
-                    CurrentUser.ToDalObject().Save();
+                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), 0).Save();
                 else
                     throw new Exception("No user is currently logged in");
             }
@@ -241,9 +243,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 myBoard = newBoard;
             }
 
-            public DataAccessLayer.User ToDalObject()
+            public DataAccessLayer.User ToDalObject(string Email, int colOrdinal)
             {
-                return new DataAccessLayer.User(email, password, nickname, myBoard.ToDalObject());
+                return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
     }

@@ -209,14 +209,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
                 }
                 Column responseColumn;
-                if (columnOrdinal == 0)
-                    responseColumn = new Column(serviceTasks, "backlog", column.GetLimit());
-                else if(columnOrdinal == 1)
-                    responseColumn = new Column(serviceTasks, "in progress", column.GetLimit());
-                else
-                    responseColumn = new Column(serviceTasks, "done", column.GetLimit());
-              
-                    response = new Response<Column>(responseColumn);
+                responseColumn = new Column(serviceTasks, column.GetColumnName(), column.GetLimit());
+                response = new Response<Column>(responseColumn);
             }
             catch (Exception e)
             {
@@ -229,16 +223,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<Board> GetBoard()
         {
             Response<Board> response;
-            if (boardController.GetBoard() == null)
+            BusinessLayer.BoardPackage.Board activeBoard = boardController.GetBoard();
+            if (activeBoard == null)
             {
                 log.Warn("Tried finding a board without a user connected");
                 response = new Response<Board>("No user is logged in");
                 return response;
             }
             List<string> names = new List<string>();
-            names.Add("backlog");
-            names.Add("in progress");
-            names.Add("done");
+            
+            foreach(BusinessLayer.BoardPackage.Column c in activeBoard.GetColumns())
+            {
+                names.Add(c.GetColumnName());
+            }
+
             Board responseBoard = new Board(names);
             response = new Response<Board>(responseBoard);
             return response;
@@ -249,7 +247,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             
             try
             {
-                BusinessLayer.BoardPackage.Column column = new BusinessLayer.BoardPackage.Column(name);
+                BusinessLayer.BoardPackage.Column column = new BusinessLayer.BoardPackage.Column(name, columnOrdinal);
 
                 List<Task> tasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
