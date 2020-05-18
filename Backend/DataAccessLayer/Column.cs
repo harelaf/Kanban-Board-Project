@@ -4,7 +4,6 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -12,40 +11,39 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public string email { get; set; }
         public string Name { get; set; }
-        public int Id { get; set; }
+        public int ordinal { get; set; }
         public int Limit { get; set; }
 
         const string colEmail = "Email";
         const string colName = "Name";
-        const string colId = "Id";
+        const string colOrdinal = "Ordinal";
         const string colLimit = "Limit";
         const string colTaskEmail = "Email";
         const string colTaskTitle = "Title";
-        const string colTaskId = "taskId";
-        const string colTaskDesc = "description";
-        const string colTaskCreationDate = "creationDate";
-        const string colTaskDueDate = "dueDate";
+        const string colTaskColumn = "ColumnOrdinal";
+        const string colTaskId = "TaskId";
+        const string colTaskDesc = "Description";
+        const string colTaskCreationDate = "CreationDate";
+        const string colTaskDueDate = "DueDate";
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public Column(string Email, int colId)
+        public Column(string Email, int ordinal)
         {
             this.email = Email;
-            this.Id = colId;
+            this.ordinal = ordinal;
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public Column(string Email, string Name, int Id, int Limit)
+        public Column(string Email, string Name, int ordinal, int Limit)
         {
             this.email = Email;
             this.Name = Name;
-            this.Id = Id;
+            this.ordinal = ordinal;
             this.Limit = Limit;
         }
         
         public Column()
         {
             email = "";
-            Id = 0;
+            ordinal = 0;
             Limit = 0;
             Name = "";
         }
@@ -64,23 +62,24 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             try
             {
-                sql_query = $"SELECT * FROM tbColumns WHERE Email = {email} AND columnId = {Id}";
+                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colName} = {Name}";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "UPDATE tbColumns SET columnId = @columnId, columnName = @columnName, limit = @limit WHERE Email = @Email AND columnId = @columnId";
-                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                    command.CommandText = $"UPDATE tbColumns SET {colName} = @columnName, {colLimit} = @limit, {colOrdinal} = @columnOrdinal WHERE {colEmail} = @Email AND {colOrdinal} = @columnId";
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
-                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                    SQLiteParameter columnOrdinalParam = new SQLiteParameter(@"columnOrdinal", ordinal);
 
                     command.Parameters.Add(columnIdParam);
                     command.Parameters.Add(columnNameParam);
                     command.Parameters.Add(limitParam);
                     command.Parameters.Add(EmailParam);
+                    command.Parameters.Add(columnOrdinalParam);
 
                     command.Prepare();
                     int num_rows_changed = command.ExecuteNonQuery();
@@ -89,16 +88,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 else
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnId,@columnName,@limit)";
-                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnId,@columnOrdinal,@columnName,@limit)";
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
+                    SQLiteParameter columnOrdinalParam = new SQLiteParameter(@"columnOrdinal", ordinal);
 
                     command.Parameters.Add(columnIdParam);
                     command.Parameters.Add(EmailParam);
                     command.Parameters.Add(columnNameParam);
                     command.Parameters.Add(limitParam);
+                    command.Parameters.Add(columnOrdinalParam);
 
                     command.Prepare();
                     int num_rows_changed = command.ExecuteNonQuery();
@@ -130,13 +131,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colId} = {Id};";
+                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colOrdinal} = {ordinal};";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     Name = (string)dataReader[colName];
                     Limit = (int)dataReader[colLimit];
+                    ordinal = (int)dataReader[colOrdinal];
                 }
             }
             catch (Exception)
@@ -167,14 +169,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskId} = {Id} ORDER BY {colTaskCreationDate};";
+                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskColumn} = {Name} ORDER BY {colTaskCreationDate};";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
                     DateTime creationDate = DateTime.Parse((string)dataReader[colTaskCreationDate]);
                     DateTime dueDate = DateTime.Parse((string)dataReader[colTaskDueDate]);
-                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId], (int)dataReader[colTaskId], (string)dataReader[colTaskEmail]));
+                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId], (string)dataReader[colTaskColumn], (string)dataReader[colTaskEmail]));
                 }
             }
             catch (Exception)
@@ -203,9 +205,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             try
             {
                 command = new SQLiteCommand(null, connection);
-                command.CommandText = "DELETE FROM tbColumns WHERE Email = @Email AND columnId = @columnId";
+                command.CommandText = $"DELETE FROM tbColumns WHERE {colEmail} = @Email AND {colOrdinal} = @columnId";
                 SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
-                SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", Id);
+                SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
 
                 command.Parameters.Add(EmailParam);
                 command.Parameters.Add(columnIdParam);

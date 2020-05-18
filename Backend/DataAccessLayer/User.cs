@@ -70,13 +70,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             try
             {
-                sql_query = $"SELECT * FROM tbUsers WHERE Email = {email}";
+                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = {email}";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "UPDATE tbUsers SET IdGiver = @idGiver, numOfColumns = @numOfColumns WHERE Email = @Email";
+                    command.CommandText = $"UPDATE tbUsers SET {colIdGiver} = @idGiver, {colNumOfColumns} = @numOfColumns WHERE {colEmail} = @Email";
                     SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", idGiver);
                     SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", numOfColumns);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
@@ -136,7 +136,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbUsers WHERE Email = {email};";
+                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = {email};";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())

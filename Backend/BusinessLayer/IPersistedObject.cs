@@ -9,6 +9,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     interface IPersistedObject<T> where T : DalObject<T>
     {
-        T ToDalObject(string Email, int colOrdinal);
+        T ToDalObject(string Email, string column);
     }
 }

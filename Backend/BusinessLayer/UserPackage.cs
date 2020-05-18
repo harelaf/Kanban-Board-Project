@@ -133,7 +133,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     UserList.Add(Email, MyUser);
                     //registeredEmails.Emails.Add(Email);
                     //registeredEmails.Save();
-                    MyUser.ToDalObject(Email,0).Save();
+                    MyUser.ToDalObject(Email,"").Save();
                 }
                 else
                 {
@@ -213,7 +213,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name,myColumn.Id, email));
+                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name, myColumn.ordinal, email));
                         }
 
                         BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
@@ -231,7 +231,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void Save()
             {
                 if (CurrentUser != null)
-                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), 0).Save();
+                    CurrentUser.ToDalObject(CurrentUser.GetEmail(), "").Save();
                 else
                     throw new Exception("No user is currently logged in");
             }
@@ -299,6 +299,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 myBoard = newBoard;
             }
 
+
             /// <summary>
             /// This function gets an email and a column ordinal and convert the user 
             /// to a DAL user 
@@ -306,10 +307,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="Email"></param>
             /// <param name="colOrdinal"></param>
             /// <returns>returns a Dal user that represent this user</returns>
-            public DataAccessLayer.User ToDalObject(string Email, int colOrdinal)
-            {
+
+            public DataAccessLayer.User ToDalObject(string Email, string column)
+
+	    {
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
         }
-    }
+    
 }
