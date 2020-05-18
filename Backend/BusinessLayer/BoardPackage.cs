@@ -248,19 +248,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return add;
             }
 
-            /// <summary>
-            /// This function passing the board to the DAL for saving the data of the board
-            /// </summary>
-            /// <returns>This function returns other board that represents this board in the DAL</returns>
-	        public Boolean ToDalObject()
-            {
-                int i = 0;
-                foreach(Column myColumn in list)
-                {
-                    myColumn.ToDalObject(myColumn.getEmail(), i++).Save();
-                }
-                return true;
-            }
         }
 
 
@@ -436,7 +423,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 taskList = new List<Task>();
                 limit = -1;
                 columnName = "";
-                this.columnOrdinal = 0;
+                columnOrdinal = 0;
+                Email = "";
             }
             
             /// <summary>
@@ -450,6 +438,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.columnName = columnName;
                 limit = -1;
                 this.columnOrdinal = columnOrdinal;
+                Email = "";
             }
 
             /// <summary>
@@ -458,12 +447,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="columnName"></param>
             /// <param name="columnOrdinal"></param>
-            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal)
+            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal, string email)
             {
                 this.taskList = taskList;
                 this.limit = limit;
                 this.columnName = columnName;
                 this.columnOrdinal = columnOrdinal;
+                this.Email = email;
             }
 
             /// <summary>
@@ -516,6 +506,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     description = "";
                 Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
+                toAdd.ToDalObject(Email, columnOrdinal).Save();
                 return toAdd;
             }
             /// <summary>
@@ -599,13 +590,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
 
             public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
-            {
-                //List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
-                foreach (Task task in taskList)
-                {
-                    task.ToDalObject(Email, colOrdinal).Save();
-                    //DALList.Add(task.ToDalObject());
-                }
+            { 
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
         }
