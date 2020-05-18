@@ -26,13 +26,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         const string colTaskCreationDate = "CreationDate";
         const string colTaskDueDate = "DueDate";
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public Column(string Email, int ordinal)
         {
             this.email = Email;
             this.ordinal = ordinal;
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Column(string Email, string Name, int ordinal, int Limit)
         {
@@ -64,7 +62,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             try
             {
-                sql_query = $"SELECT * FROM tbColumns WHERE Email = {email} AND columnId = {ordinal}";
+                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colName} = {Name}";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())

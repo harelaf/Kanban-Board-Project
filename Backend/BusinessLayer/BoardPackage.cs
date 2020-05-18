@@ -427,9 +427,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 Email = "";
             }
 
-<<<<<<< HEAD
-            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal)
-=======
             /// <summary>
             /// Construcator of new column which initalized by list of tasks,
             /// restriction limit of tasks, name and a column ordinal. 
@@ -437,7 +434,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnName"></param>
             /// <param name="columnOrdinal"></param>
             public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal, string email)
->>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
             {
                 this.taskList = taskList;
                 this.limit = limit;
@@ -496,7 +492,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     description = "";
                 Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
-                toAdd.ToDalObject(Email, columnOrdinal).Save();
+                toAdd.ToDalObject(Email, columnName).Save();
                 return toAdd;
             }
             /// <summary>
@@ -578,24 +574,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return taskList;
             }
-<<<<<<< HEAD
+
             /// <summary>
             /// This function transfers a column of Buisness layer to a column of the DAL 
             /// and saves this column in the data base
             /// </summary>
-            /// <returns>This function returns a column of the DAL that represnt this column </returns>
-            public DataAccessLayer.Column ToDalObject()
-            {
-                List<DataAccessLayer.Task> DALList = new List<DataAccessLayer.Task>();
-                foreach (Task task in taskList)
-                {
-                    task.ToDalObject().Save();
-                }
-=======
-
-            public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
+            /// <returns>This function returns a column of the DAL that represnt this column </returns
+            public DataAccessLayer.Column ToDalObject(string Email, string column)
             { 
->>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
         }
@@ -752,18 +738,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
-<<<<<<< HEAD
-            /// <summary>
-            /// This function convert a task to a new task of the DAL that represent the exact task
-            /// and save its details on the data base.
-            /// </summary>
-            /// <returns>returns the converted task of the DAL</returns>
-            public DataAccessLayer.Task ToDalObject()
-=======
-            public DataAccessLayer.Task ToDalObject(string Email, int colOrdinal)
->>>>>>> a068d22c46b8f0cb9cc6ebd61c3209df384a8d31
+            public DataAccessLayer.Task ToDalObject(string Email, string column)
             {
-                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, colOrdinal, Email);
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email);
             }
         }
     }
