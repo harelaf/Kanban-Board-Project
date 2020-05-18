@@ -14,17 +14,25 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public DateTime CreationDate { get; set; }
         public DateTime DueDate { get; set; }
         public int TaskId { get; set; }
-        public int colOrdinal { get; set; }
+        public String columnName { get; set; }
         public string Email { get; set; }
 
-        public Task(string Title,string Description,DateTime CreationDate,DateTime DueDate,int TaskId, int colOrdinal, string Email)
+        const string colTaskId = "TaskId";
+        const string colTaskEmail = "Email";
+        const string colTaskTitle = "Title";
+        const string colTaskColumn = "ColumnName";
+        const string colTaskDesc = "description";
+        const string colTaskCreationDate = "creationDate";
+        const string colTaskDueDate = "dueDate";
+
+        public Task(string Title,string Description,DateTime CreationDate,DateTime DueDate,int TaskId, string columnName, string Email)
         {
             this.Title = Title;
             this.Description = Description;
             this.CreationDate = CreationDate;
             this.DueDate = DueDate;
             this.TaskId = TaskId;
-            this.colOrdinal = colOrdinal;
+            this.columnName = columnName;
             this.Email = Email;
         }
 
@@ -36,7 +44,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             DueDate = new DateTime();
             TaskId = 0;
             Email = "";
-            colOrdinal = 0;
+            columnName = "";
         }
 
         public override void Save()
@@ -53,14 +61,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             try
             {
-                sql_query = $"SELECT * FROM tbTasks WHERE Email = {Email} AND taskId = {TaskId}";
+                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {Email} AND {colTaskId} = {TaskId}";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "UPDATE tbTasks SET column = @column, title = @title, descrption = @description, creationDate = @creationDate, dueDate = @dueDate WHERE Email = @Email AND taskId = @taskId";
-                    SQLiteParameter columnParam = new SQLiteParameter(@"column", colOrdinal);
+                    command.CommandText = $"UPDATE tbTasks SET {colTaskColumn} = @column, {colTaskTitle} = @title, {colTaskDesc} = @description, {colTaskCreationDate} = @creationDate, {colTaskDueDate} = @dueDate WHERE {colTaskEmail} = @Email AND {colTaskId} = @taskId";
+                    SQLiteParameter columnParam = new SQLiteParameter(@"column", columnName);
                     SQLiteParameter titleParam = new SQLiteParameter(@"title", Title);
                     SQLiteParameter descrptionParam = new SQLiteParameter(@"description", Description);
                     SQLiteParameter creationDateParam = new SQLiteParameter(@"creationDate", CreationDate.ToString());
@@ -85,7 +93,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@column,@Email,@title,@description,@creationDate,@dueDate)";
                     SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
-                    SQLiteParameter columnParam = new SQLiteParameter(@"column", colOrdinal);
+                    SQLiteParameter columnParam = new SQLiteParameter(@"column", columnName);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
                     SQLiteParameter titleParam = new SQLiteParameter(@"title", Title);
                     SQLiteParameter descrptionParam = new SQLiteParameter(@"description", Description);
@@ -133,7 +141,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             try
             {
                 command = new SQLiteCommand(null, connection);
-                command.CommandText = "DELETE FROM tbTasks WHERE Email = @Email AND taskId = @taskId";
+                command.CommandText = $"DELETE FROM tbTasks WHERE {colTaskEmail} = @Email AND {colTaskId} = @taskId";
                 SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
                 SQLiteParameter taskIdParam = new SQLiteParameter(@"taskId", TaskId);
 
