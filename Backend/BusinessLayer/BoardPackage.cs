@@ -18,8 +18,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public Board()
             {
-                for (int i = 0; i < 3; i++)
-                    list[i] = new Column();
+                list = new List<Column>();
+                idGiver = 0;
+            }
+
+            public Board(string email)
+            {
+                list = new List<Column>();
+                AddColumn(0, "backlog", email);
+                AddColumn(1, "in progress", email);
+                AddColumn(2, "done", email);
                 idGiver = 0;
             }
 
@@ -43,9 +51,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("This columnOrdinal is illegal");
 
                 Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == taskId);
-                list[ColumnOrdinal + 1].AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
+                Column toAddto = list[ColumnOrdinal + 1];
+                toAddto.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
                 Task removed = list[ColumnOrdinal].RemoveTask(taskId);
-                toRemove.ToDalObject(Email, ColumnOrdinal).Save();
+                toRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
             }
 
             /// <summary>
@@ -93,11 +102,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="ColumnName"></param>
             /// <returns>returns the fit column</returns>
 
-<<<<<<< HEAD
-            public Column GetColumn(string ColumnName)
-=======
 	        public Column GetColumn(string ColumnName)
->>>>>>> aa3e7949062134494312405435234c7b34b45ebc
             {
                 bool isFound = false;
                 int index = 0;
@@ -132,7 +137,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
                 if (columnId > list.Count - 1 | columnId < 0)
                     throw new Exception("This columnOrdinal does not exist");
-                GetColumn(columnId).SetLimit(limit);
+                Column toUpdate = GetColumn(columnId);
+                toUpdate.SetLimit(limit);
+                toUpdate.ToDalObject(toUpdate.getEmail(), "").Save();
             }
             /// <summary>
             /// This function updates the description of a specific task 
@@ -210,32 +217,39 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal == 0)
                 {
                     toAddTo = GetColumn(columnOrdinal + 1);
-                    if(removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
                     {
                         throw new Exception("There isn't enough available space in the right column");
                     }
                     foreach (Task toMove in removed.GetTaskList())
                     {
                         toAddTo.MoveExistingTaskHere(toMove);
-                        toMove.ToDalObject(removed.getEmail(), list.IndexOf(toAddTo)).Save();
+                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
                     }
                 }
                 else
                 {
                     toAddTo = GetColumn(columnOrdinal - 1);
-                    if (removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
                     {
                         throw new Exception("There isn't enough available space in the left column");
                     }
                     foreach (Task toMove in removed.GetTaskList())
                     {
                         toAddTo.MoveExistingTaskHere(toMove);
-                        toMove.ToDalObject(removed.getEmail(), list.IndexOf(toAddTo)).Save();
+                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
                     }
                 }
                 list.Remove(removed);
-                removed.ToDalObject(removed.getEmail(), removed.GetColumnOrdinal()).Delete();
-                toAddTo.ToDalObject(toAddTo.getEmail(), list.IndexOf(toAddTo)).Save();
+                foreach (Column col in list)
+                {
+                    if (col.GetColumnOrdinal() >= removed.GetColumnOrdinal())
+                    {
+                        col.SetColumnOrdinal(list.IndexOf(col));
+                        col.ToDalObject(col.getEmail(), "").Save();
+                    }
+                }
+                removed.ToDalObject(removed.getEmail(), "").Delete();
                 return removed;
             }
             /// <summary>
@@ -253,8 +267,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 Column Moved = GetColumn(columnOrdinal - 1);
                 list.Remove(toMove);
                 list.Insert(columnOrdinal - 1, toMove);
-                toMove.ToDalObject(toMove.getEmail(), columnOrdinal - 1).Save();
-                Moved.ToDalObject(Moved.getEmail(), list.IndexOf(Moved)).Save();
+                toMove.SetColumnOrdinal(list.IndexOf(toMove));
+                Moved.SetColumnOrdinal(list.IndexOf(Moved));
+                toMove.ToDalObject(toMove.getEmail(), "").Save();
+                Moved.ToDalObject(Moved.getEmail(), "").Save();
                 return toMove;
             }
             /// <summary>
@@ -272,8 +288,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 Column Moved = GetColumn(columnOrdinal + 1);
                 list.Remove(toMove);
                 list.Insert(columnOrdinal + 1, toMove);
-                toMove.ToDalObject(toMove.getEmail(), columnOrdinal + 1).Save();
-                Moved.ToDalObject(Moved.getEmail(), list.IndexOf(Moved)).Save();
+                toMove.SetColumnOrdinal(list.IndexOf(toMove));
+                Moved.SetColumnOrdinal(list.IndexOf(Moved));
+                toMove.ToDalObject(toMove.getEmail(), "").Save();
+                Moved.ToDalObject(Moved.getEmail(), "").Save();
                 return toMove;
             }
             /// <summary>
@@ -283,13 +301,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="name"></param>
             /// <returns>This function returns the new column that added to the board</returns>
-<<<<<<< HEAD
-            public Column AddColumn(int columnOrdinal, string name)
-            {
-                if (columnOrdinal < 0 | columnOrdinal > list.Count)
-                    throw new Exception("The columnOrdinal is ilegal");
-                Column add = new Column(name, columnOrdinal);
-=======
+
             public Column AddColumn(int columnOrdinal, string name, string email)
             {
                 if (columnOrdinal < 0 | columnOrdinal > list.Count)
@@ -302,14 +314,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     }
                 }
                 Column add = new Column(name,columnOrdinal,email);
->>>>>>> aa3e7949062134494312405435234c7b34b45ebc
                 list.Insert(columnOrdinal, add);
-                add.ToDalObject(email, columnOrdinal).Save();
+                add.ToDalObject(email, "").Save();
                 foreach (Column toUpdate in list)
                 {
-                    if(toUpdate.GetColumnOrdinal() > columnOrdinal)
+                    if(toUpdate.GetColumnOrdinal() >= columnOrdinal)
                     {
-                        toUpdate.ToDalObject(email, list.IndexOf(toUpdate)).Save();
+                        toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
+                        toUpdate.ToDalObject(email, "").Save();
                     }
                 }
                 return add;
@@ -472,11 +484,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns the added column</returns>
             public Column AddColumn(int columnOrdinal, string name, string email)
             {
-<<<<<<< HEAD
-                return activeBoard.AddColumn(columnOrdinal, name);
-=======
                 return activeBoard.AddColumn(columnOrdinal,name,email);
->>>>>>> aa3e7949062134494312405435234c7b34b45ebc
             }
         }
 
@@ -498,10 +506,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 columnOrdinal = 0;
                 Email = "";
             }
-<<<<<<< HEAD
-
-            public Column(string columnName, int columnOrdinal)
-=======
             
             /// <summary>
             /// Construcator of new column which initalized by a name and a column ordinal 
@@ -510,7 +514,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="email"></param>
             public Column(string columnName,int columnOrdinal, string email)
->>>>>>> aa3e7949062134494312405435234c7b34b45ebc
             {
                 if (columnName.Length > MAX_LENGTH_NAME)
                     throw new Exception("This column name length is over than " + MAX_LENGTH_NAME + " characters");
@@ -594,10 +597,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             public void MoveExistingTaskHere(Task toAdd)
             {
-                if (taskList.Count == limit)
-                {
-                    throw new Exception("Can't add new task, column has a limit of " + limit);
-                }
                 taskList.Add(toAdd);
             }
 
@@ -625,6 +624,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDueDate(dueDate);
+                toUpdate.ToDalObject(Email, columnName).Save();
                 return toUpdate;
             }
 
@@ -639,6 +639,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskTitle(title);
+                toUpdate.ToDalObject(Email, columnName).Save();
                 return toUpdate;
             }
 
@@ -653,6 +654,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDescription(description);
+                toUpdate.ToDalObject(Email, columnName).Save();
                 return toUpdate;
             }
 
@@ -693,13 +695,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <returns>This function returns a column of the DAL that represnt this column </returns
             public DataAccessLayer.Column ToDalObject(string Email, string column)
-<<<<<<< HEAD
             {
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
-=======
-            { 
-                return new DataAccessLayer.Column(Email, columnName, colOrdinal, limit);
->>>>>>> aa3e7949062134494312405435234c7b34b45ebc
             }
         }
 

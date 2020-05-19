@@ -13,16 +13,20 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public void Delete()
         {
             string connetion_string = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = new SQLiteCommand();
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             try
             {
+                connection.Open();
+
                 command = new SQLiteCommand(null, connection);
-                command.CommandText = "DELETE FROM tbColumns ;DELETE FROM tbUsers ;DELETE FROM tbTasks ;";
+                command.CommandText = "DELETE FROM tbColumns; DELETE FROM tbUsers; DELETE FROM tbTasks;";
 
                 command.Prepare();
                 int num_rows_changed = command.ExecuteNonQuery();

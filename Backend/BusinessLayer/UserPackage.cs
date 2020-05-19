@@ -193,14 +193,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void LoadData()
             {
                 registeredemails = registeredemails.Import();
-                if (registeredemails.Emails == null)
+                if (registeredemails.Emails != null)
                 {
                     foreach (string email in registeredemails.Emails)
                     {
                         DataAccessLayer.User temp = new DataAccessLayer.User(email);
                         temp = temp.Import();
-
-                        User toAdd = new User(email, temp.password, temp.nickname);
+                        
+                        User toAdd = new User(null, temp.password, temp.nickname);
+                        toAdd.SetEmail(email);
                         List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
                         //DataAccessLayer.Board tempBoard = temp.myBoard;
 
@@ -213,10 +214,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                             {
                                 myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                             }
-                            cl.Add(new BoardPackage.Column(myTaskList, myColumn.Limit, myColumn.Name, myColumn.ordinal, email));
+                            cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.ordinal, email));
                         }
 
-                        BoardPackage.Board board = new BoardPackage.Board(cl, temp.idGiver);
+                        Board board = new Board(cl, (int)temp.idGiver);
 
                         toAdd.SetBoard(board);
                         UserList.Add(email, toAdd);
@@ -243,14 +244,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private string password;
             private string nickname;
             private BoardPackage.Board myBoard;
-            private int numOfColumns;
 
             public User(string email, string password, string nickname)
             {
                 this.email = email;
                 this.password = password;
                 this.nickname = nickname;
-                myBoard = new BoardPackage.Board();
+                if(email != null)
+                {
+                    myBoard = new Board(email);
+                }
+                else
+                {
+                    myBoard = new Board();
+                }
+            }
+
+            public void SetEmail(string Email)
+            {
+                this.email = Email;
             }
 
             /// <summary>
@@ -309,7 +321,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>returns a Dal user that represent this user</returns>
 
             public DataAccessLayer.User ToDalObject(string Email, string column)
-
             {
                 return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
             }
