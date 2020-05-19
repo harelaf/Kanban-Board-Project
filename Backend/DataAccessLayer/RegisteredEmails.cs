@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class RegisteredEmails
     {
         public List<string> Emails { get; set; }
-        string connetion_string = null;
-        string sql_query = null;
-        string database_name = "kanbanDB.sqlite";
-        SQLiteConnection connection;
-        SQLiteCommand command;
+        public string connetion_string = null;
+        public string database_name = "kanbanDB.db";
+        public SQLiteConnection connection;
         
         public RegisteredEmails(List<string> Emails)
         {
@@ -28,7 +27,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public RegisteredEmails Import()
         {
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
             try
@@ -37,20 +38,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 string sql = "SELECT Email FROM tbUsers;";
                 SQLiteCommand c = new SQLiteCommand(sql, connection);
                 dataReader = c.ExecuteReader();
-                Emails.Clear();
+                Emails = new List<string>();
                 while (dataReader.Read())
                 {
-                    Emails.Add((string)dataReader["Email"]);
+                    Emails.Add(((string)dataReader["Email"]));
                 }
+                dataReader.Close();
+                c.Dispose();
             }
             catch(Exception ex)
             {
-                Emails = null;
+                throw ex;
             }
             finally
             {
                 connection.Close();
-                command.Dispose();
             }
             return this;
         }

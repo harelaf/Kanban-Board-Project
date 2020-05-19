@@ -16,21 +16,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Column> list;
             private int idGiver;
 
-            /// <summary>
-            /// an empty constractor of new board 
-            /// </summary>
             public Board()
             {
-                for (int i = 0; i < 3; i++)
-                    list[i] = new Column();
+                list = new List<Column>();
                 idGiver = 0;
             }
 
-            /// <summary>
-            /// Constractor of new board which gets list of columns and idGiver and initializing the fields
-            /// </summary>
-            /// <param name="list"></param>
-            /// <param name="idGiver"></param>
+            public Board(string email)
+            {
+                list = new List<Column>();
+                AddColumn(0, "backlog", email);
+                AddColumn(1, "in progress", email);
+                AddColumn(2, "done", email);
+                idGiver = 0;
+            }
+
             public Board(List<Column> list, int idGiver)
             {
                 this.list = list;
@@ -42,7 +42,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="ColumnOrdinal"></param>
             /// <param name="taskId"></param>
-            public void AdvanceTask(int ColumnOrdinal, int taskId)
+            public void AdvanceTask(int ColumnOrdinal, int taskId, string Email)
             {
                 if (ColumnOrdinal == list.Count - 1)//cannot advance further than 'done'.
                     throw new Exception("Can't advance mission that is already done");
@@ -51,9 +51,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     throw new Exception("This columnOrdinal is illegal");
 
                 Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == taskId);
-                list[ColumnOrdinal + 1].AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
+                Column toAddto = list[ColumnOrdinal + 1];
+                toAddto.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
                 Task removed = list[ColumnOrdinal].RemoveTask(taskId);
-
+                toRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
             }
 
             /// <summary>
@@ -79,10 +80,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return list.Count;
             }
+            /// <summary>
+            /// Getter to the idGiver 
+            /// </summary>
+            /// <returns>This function returns the idGiver field</returns>
 
             public int getIdGiver()
             {
                 return idGiver;
+            }
+
+            public List<Column> GetColumns()
+            {
+                return list;
             }
 
 
@@ -92,7 +102,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="ColumnName"></param>
             /// <returns>returns the fit column</returns>
 
-	    public Column GetColumn(string ColumnName)
+	        public Column GetColumn(string ColumnName)
             {
                 bool isFound = false;
                 int index = 0;
@@ -105,7 +115,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 throw new Exception("This Column does not exist");
             }
             /// <summary>
-            /// This function searches a specific column by his column ordinal  
+            /// This function searches a specific column by his column ordinal and returns it 
             /// </summary>
             /// <param name="columnOrdinal"></param>
             /// <returns>returns the fit column</returns>
@@ -127,7 +137,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
                 if (columnId > list.Count - 1 | columnId < 0)
                     throw new Exception("This columnOrdinal does not exist");
-                GetColumn(columnId).SetLimit(limit);
+                Column toUpdate = GetColumn(columnId);
+                toUpdate.SetLimit(limit);
+                toUpdate.ToDalObject(toUpdate.getEmail(), "").Save();
             }
             /// <summary>
             /// This function updates the description of a specific task 
@@ -137,7 +149,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="description"></param>
-            public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                     throw new Exception("This columnOrdinal does not exist");
@@ -145,7 +158,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
 
-                GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
+                return GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
             }
 
             /// <summary>
@@ -156,7 +169,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="title"></param>
-            public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
                 if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
@@ -164,7 +178,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                     throw new Exception("This columnOrdinal does not exist");
 
-                GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
+                return GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
             }
 
             /// <summary>
@@ -175,7 +189,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="title"></param>
-            public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
                 if (columnOrdinal == list.Count - 1)
                     throw new Exception("Cannot change tasks that are in the done column");
@@ -183,7 +198,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                     throw new Exception("This columnOrdinal does not exist");
 
-                GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
+                return GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
             }
             /// <summary>
             /// This function removes a column from the board by using the column ordinal of the unwanted column 
@@ -193,10 +208,48 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public Column RemoveColumn(int columnOrdinal)
             {
                 if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+                {
                     throw new Exception("This columnOrdinal does not exist");
+                }
 
                 Column removed = GetColumn(columnOrdinal);
+                Column toAddTo;
+                if (columnOrdinal == 0)
+                {
+                    toAddTo = GetColumn(columnOrdinal + 1);
+                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                    {
+                        throw new Exception("There isn't enough available space in the right column");
+                    }
+                    foreach (Task toMove in removed.GetTaskList())
+                    {
+                        toAddTo.MoveExistingTaskHere(toMove);
+                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
+                    }
+                }
+                else
+                {
+                    toAddTo = GetColumn(columnOrdinal - 1);
+                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                    {
+                        throw new Exception("There isn't enough available space in the left column");
+                    }
+                    foreach (Task toMove in removed.GetTaskList())
+                    {
+                        toAddTo.MoveExistingTaskHere(toMove);
+                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
+                    }
+                }
                 list.Remove(removed);
+                foreach (Column col in list)
+                {
+                    if (col.GetColumnOrdinal() >= removed.GetColumnOrdinal())
+                    {
+                        col.SetColumnOrdinal(list.IndexOf(col));
+                        col.ToDalObject(col.getEmail(), "").Save();
+                    }
+                }
+                removed.ToDalObject(removed.getEmail(), "").Delete();
                 return removed;
             }
             /// <summary>
@@ -210,11 +263,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal == 0)
                     throw new Exception("You can't move the first column left");
 
-                Column res = GetColumn(columnOrdinal);
-                list.Remove(res);
-                list.Insert(columnOrdinal - 1, res);
-
-                return res;
+                Column toMove = GetColumn(columnOrdinal);
+                Column Moved = GetColumn(columnOrdinal - 1);
+                list.Remove(toMove);
+                list.Insert(columnOrdinal - 1, toMove);
+                toMove.SetColumnOrdinal(list.IndexOf(toMove));
+                Moved.SetColumnOrdinal(list.IndexOf(Moved));
+                toMove.ToDalObject(toMove.getEmail(), "").Save();
+                Moved.ToDalObject(Moved.getEmail(), "").Save();
+                return toMove;
             }
             /// <summary>
             /// This function is shifting a specific column, one column right by using the column ordinal
@@ -227,10 +284,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (columnOrdinal == list.Count-1)
                     throw new Exception("You can't move the last column right");
 
-                Column res = GetColumn(columnOrdinal);
-                list.Remove(res);
-                list.Insert(columnOrdinal + 1, res);
-                return res;
+                Column toMove = GetColumn(columnOrdinal);
+                Column Moved = GetColumn(columnOrdinal + 1);
+                list.Remove(toMove);
+                list.Insert(columnOrdinal + 1, toMove);
+                toMove.SetColumnOrdinal(list.IndexOf(toMove));
+                Moved.SetColumnOrdinal(list.IndexOf(Moved));
+                toMove.ToDalObject(toMove.getEmail(), "").Save();
+                Moved.ToDalObject(Moved.getEmail(), "").Save();
+                return toMove;
             }
             /// <summary>
             /// This function creates a new column with new name and column ordinal 
@@ -239,29 +301,43 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="name"></param>
             /// <returns>This function returns the new column that added to the board</returns>
-            public Column AddColumn(int columnOrdinal,string name)
+            public Column AddColumn(int columnOrdinal, string name, string email)
             {
                 if (columnOrdinal < 0 | columnOrdinal > list.Count)
                     throw new Exception("The columnOrdinal is ilegal");
-                Column add = new Column(name,columnOrdinal);
+                foreach (Column col in list)
+                {
+                    if (col.GetColumnName() == name)
+                    {
+                        throw new Exception("There is already a column with that name");
+                    }
+                }
+                Column add = new Column(name,columnOrdinal,email);
                 list.Insert(columnOrdinal, add);
+                add.ToDalObject(email, "").Save();
+                foreach (Column toUpdate in list)
+                {
+                    if(toUpdate.GetColumnOrdinal() >= columnOrdinal)
+                    {
+                        toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
+                        toUpdate.ToDalObject(email, "").Save();
+                    }
+                }
                 return add;
             }
 
         }
 
-
         class BoardController
         {
             private Board activeBoard;
 
-            /// <summary>
-            /// Constactor of an empty BoardController
-            /// </summary>
+       
             public BoardController()
             {
                 activeBoard = null;
             }
+
             /// <summary>
             /// This function initalizing the active board 
             /// </summary>
@@ -314,9 +390,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
-            public void AdvanceTask(int columnOrdinal, int taskId)
+            public void AdvanceTask(int columnOrdinal, int taskId, string Email)
             {
-                activeBoard.AdvanceTask(columnOrdinal, taskId);
+                activeBoard.AdvanceTask(columnOrdinal, taskId, Email);
             }
 
             /// <summary>
@@ -326,9 +402,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="dueDate"></param>
-            public void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
             {
-                activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+                return activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
             }
 
             /// <summary>
@@ -338,9 +415,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="title"></param>
-            public void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+            /// <returns><returns>returns the updated task</returns></returns>
+            public Task UpdateTaskTitle(int columnOrdinal, int taskId, string title)
             {
-                activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
+                return activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
             }
 
             /// <summary>
@@ -360,9 +438,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="taskId"></param>
             /// <param name="description"></param>
-            public void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDescription(int columnOrdinal, int taskId, string description)
             {
-                activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
+                return activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
             }
 
             /// <summary>
@@ -400,10 +479,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="columnOrdinal"></param>
             /// <param name="name"></param>
+            /// <param name="email"></param>
             /// <returns>This function returns the added column</returns>
-            public Column AddColumn(int columnOrdinal, string name)
+            public Column AddColumn(int columnOrdinal, string name, string email)
             {
-                return activeBoard.AddColumn(columnOrdinal,name);
+                return activeBoard.AddColumn(columnOrdinal,name,email);
             }
         }
 
@@ -415,9 +495,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private int columnOrdinal;
             private string Email;
 
-            /// <summary>
-            /// an empty constructor of a new empty column 
-            /// </summary>
             public Column()
             {
                 taskList = new List<Task>();
@@ -432,13 +509,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="columnName"></param>
             /// <param name="columnOrdinal"></param>
-            public Column(string columnName,int columnOrdinal)
+            /// <param name="email"></param>
+            public Column(string columnName,int columnOrdinal, string email)
             {
-                this.taskList = new List<Task>();
+                taskList = new List<Task>();
                 this.columnName = columnName;
                 limit = -1;
                 this.columnOrdinal = columnOrdinal;
-                Email = "";
+                Email = email;
             }
 
             /// <summary>
@@ -506,9 +584,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     description = "";
                 Task toAdd = new Task(title, description, dueDate, taskId);
                 taskList.Add(toAdd);
-                toAdd.ToDalObject(Email, columnOrdinal).Save();
+                toAdd.ToDalObject(Email, columnName).Save();
                 return toAdd;
             }
+
+            public void MoveExistingTaskHere(Task toAdd)
+            {
+                taskList.Add(toAdd);
+            }
+
             /// <summary>
             /// This function is searching for a specific task to remove by his task id and removes him.
             /// </summary>
@@ -528,10 +612,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="taskId"></param>
             /// <param name="dueDate"></param>
-            public void UpdateTaskDueDate(int taskId, DateTime dueDate)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDueDate(int taskId, DateTime dueDate)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDueDate(dueDate);
+                toUpdate.ToDalObject(Email, columnName).Save();
+                return toUpdate;
             }
 
             /// <summary>
@@ -540,10 +627,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="taskId"></param>
             /// <param name="title"></param>
-            public void UpdateTaskTitle(int taskId, string title)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskTitle(int taskId, string title)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskTitle(title);
+                toUpdate.ToDalObject(Email, columnName).Save();
+                return toUpdate;
             }
 
             /// <summary>
@@ -552,10 +642,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="taskId"></param>
             /// <param name="description"></param>
-            public void UpdateTaskDescription(int taskId, string description)
+            /// <returns>returns the updated task</returns>
+            public Task UpdateTaskDescription(int taskId, string description)
             {
                 Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
                 toUpdate.UpdateTaskDescription(description);
+                toUpdate.ToDalObject(Email, columnName).Save();
+                return toUpdate;
             }
 
             /// <summary>
@@ -589,7 +682,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 return taskList;
             }
 
-            public DataAccessLayer.Column ToDalObject(string Email, int colOrdinal)
+            /// <summary>
+            /// This function transfers a column of Buisness layer to a column of the DAL 
+            /// and saves this column in the data base
+            /// </summary>
+            /// <returns>This function returns a column of the DAL that represnt this column </returns
+            public DataAccessLayer.Column ToDalObject(string Email, string column)
             { 
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
@@ -626,43 +724,74 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.taskId = taskId;
             }
 
+            /// <summary>
+            /// Getter to the creation date of the task
+            /// </summary>
+            /// <returns>returns the creation date</returns>
             public DateTime GetCreationDate()
             {
                 return creationDate;
             }
 
+            /// <summary>
+            /// Getter to the id of the task
+            /// </summary>
+            /// <returns>returns the task id</returns>
             public int GetTaskId()
             {
                 return taskId;
             }
 
+            /// <summary>
+            /// Setter to the task id, this function get a new task id and updates the old one to this new task id.
+            /// </summary>
+            /// <param name="id"></param>
             public void SetTaskId(int id)
             {
                 this.taskId = id;
             }
 
+            /// <summary>
+            /// Getter to the title of the task
+            /// </summary>
+            /// <returns>returns the title of the task</returns>
             public string GetTitle()
             {
                 return title;
             }
 
+            /// <summary>
+            /// Getter to the description of the task 
+            /// </summary>
+            /// <returns>returns the description of the task</returns>
             public string GetDescription()
             {
                 return description;
             }
 
+            /// <summary>
+            /// Getter to the due date of the task
+            /// </summary>
+            /// <returns>returns the due date of the task</returns>
             public DateTime GetDueDate()
             {
                 return dueDate;
             }
 
+            /// <summary>
+            /// This function gets a new due date and updates the older one to the new due date
+            /// </summary>
+            /// <param name="dueDate"></param>
             public void UpdateTaskDueDate(DateTime dueDate)
             {
                 if (!ValidateDueDate(dueDate))
                     throw new Exception("The dueDate is Illegal(Date already passed)");
                 this.dueDate = dueDate;
             }
-
+            /// <summary>
+            /// This function gets a new title and updates the older one to the new title
+            /// </summary>
+            /// <param name="title"></param>
             public void UpdateTaskTitle(string title)
             {
                 if (!ValidateTitle(title))
@@ -670,6 +799,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.title = title;
             }
 
+            /// <summary>
+            /// This function gets a new description and updates the older one to the new description
+            /// </summary>
+            /// <param name="description"></param>
             public void UpdateTaskDescription(string description)
             {
                 if (description == null)
@@ -679,24 +812,42 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 this.description = description;
             }
 
+            /// <summary>
+            /// This function gets a title and checks if the title is validate
+            /// (the title can't be empty and must contains at most 50 characters)
+            /// </summary>
+            /// <param name="title"></param>
+            /// <returns>returns true if the title is validate or false if not</returns>
             private bool ValidateTitle(string title)
             {
                 return title != null && title.Length <= 50 & title.Length > 0;
             }
 
+            /// <summary>
+            /// This function gets a description and checks if the description is validate
+            /// (the description contains at most 300 characters)
+            /// </summary>
+            /// <param name="newDesc"></param>
+            /// <returns>returns true if the description is validate or false if not</returns>
             private bool ValidateDescription(string newDesc)
             {
                 return newDesc.Length <= 300;
             }
 
+            /// <summary>
+            /// This function gets a new due date and checks if this new due date is possible
+            /// (not passed yet)
+            /// </summary>
+            /// <param name="newDue"></param>
+            /// <returns>returns true if the due date is validate or false if not</returns>
             private bool ValidateDueDate(DateTime newDue)
             {
                 return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
             }
 
-            public DataAccessLayer.Task ToDalObject(string Email, int colOrdinal)
+            public DataAccessLayer.Task ToDalObject(string Email, string column)
             {
-                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, colOrdinal, Email);
+                return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email);
             }
         }
     }
