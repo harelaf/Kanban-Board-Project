@@ -165,7 +165,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Warn("Not able to add a task, no user connected");
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -314,9 +317,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Warn("Wasnt able to add the column: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
-        
+
         /// <summary>
         /// Moves a column to the right, swapping it with the column wich is currently located there.
         /// The first column is identified by 0, the ID increases by 1 for each column        
@@ -327,11 +333,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<Column> MoveColumnRight(string email, int columnOrdinal)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+            {
                 return boardService.MoveColumnRight(columnOrdinal);
+            }
             else
+            {
+                log.Warn("Wasnt able to move the column right: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
-        
         /// <summary>
         /// Moves a column to the left, swapping it with the column wich is currently located there.
         /// The first column is identified by 0, the ID increases by 1 for each column.
@@ -342,14 +352,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response<Column> MoveColumnLeft(string email, int columnOrdinal)
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+            {
                 return boardService.MoveColumnLeft(columnOrdinal);
+            }
             else
+            {
+                log.Warn("Wasnt able to move the column left: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         private void CheckToSave(Response response)
         {
-            if (response.ErrorOccured)
+            if (!response.ErrorOccured)
             {
                 userService.Save();
             }

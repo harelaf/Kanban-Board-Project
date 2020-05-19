@@ -82,7 +82,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskTitle(columnOrdinal, taskId, title);
-                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's title successfully");
             }
@@ -106,7 +105,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
-                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's due date successfully");
             }
@@ -130,7 +128,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDescription(columnOrdinal, taskId, description);
-                toSave.ToDalObject(Email, columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a task's description successfully");
             }
@@ -155,7 +152,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 boardController.SetLimit(columnOrdinal, limit);
                 BusinessLayer.BoardPackage.Column toSave = boardController.GetColumn(columnOrdinal);
-                toSave.ToDalObject(toSave.getEmail(),columnOrdinal).Save();
                 response = new Response();
                 log.Debug("Updated a column's task limit successfully");
             }
@@ -262,6 +258,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
 
                 Column responseColumn = new Column(tasks, name, column.GetLimit());
+                log.Debug("Added the column successfully");
                 return new Response<Column>(responseColumn);
             }
             catch (Exception e)
@@ -285,6 +282,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 }
 
                 Column responseColumn = new Column(tasks, removed.GetColumnName(), removed.GetLimit());
+                log.Debug("Removed the column successfully");
                 return new Response<Column>(responseColumn);
             }
             catch(Exception e)
@@ -306,6 +304,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     tasks.Add(add);
                 }
                 Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());
+                log.Debug("Moved the column right successfully");
                 return new Response<Column>(responseColumn);
             }catch(Exception e)
             {
@@ -326,6 +325,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                     tasks.Add(add);
                 }
                 Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());
+                log.Debug("Moved the column left successfully");
                 return new Response<Column>(responseColumn);
             }
             catch (Exception e)

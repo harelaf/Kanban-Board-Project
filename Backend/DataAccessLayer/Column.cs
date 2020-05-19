@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,16 +12,16 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public string email { get; set; }
         public string Name { get; set; }
-        public int ordinal { get; set; }
-        public int Limit { get; set; }
+        public long ordinal { get; set; }
+        public long Limit { get; set; }
 
         const string colEmail = "Email";
-        const string colName = "Name";
-        const string colOrdinal = "Ordinal";
-        const string colLimit = "Limit";
+        const string colName = "columnName";
+        const string colOrdinal = "columnId";
+        const string colLimit = "columnLimit";
         const string colTaskEmail = "Email";
         const string colTaskTitle = "Title";
-        const string colTaskColumn = "ColumnOrdinal";
+        const string colTaskColumn = "column";
         const string colTaskId = "TaskId";
         const string colTaskDesc = "Description";
         const string colTaskCreationDate = "CreationDate";
@@ -52,23 +53,29 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             string connetion_string = null;
             string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = new SQLiteCommand();
+            string ReplacedEmail = email;
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
 
             try
             {
-                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colName} = {Name}";
+                connection.Open();
+
+                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = '{email}' AND {colName} = '{Name}'";
+
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = $"UPDATE tbColumns SET {colName} = @columnName, {colLimit} = @limit, {colOrdinal} = @columnOrdinal WHERE {colEmail} = @Email AND {colOrdinal} = @columnId";
+                    command.CommandText = $"UPDATE tbColumns SET {colLimit} = @limit, {colOrdinal} = @columnOrdinal WHERE {colEmail} = @Email AND {colName} = @columnName";
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
@@ -92,7 +99,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
                     SQLiteParameter columnOrdinalParam = new SQLiteParameter(@"columnOrdinal", ordinal);
 
-                    command.Parameters.Add(columnIdParam);
                     command.Parameters.Add(EmailParam);
                     command.Parameters.Add(columnNameParam);
                     command.Parameters.Add(limitParam);
@@ -102,6 +108,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = command.ExecuteNonQuery();
                     command.Dispose();
                 }
+                dataReader.Close();
             }
             catch (Exception e)
             {
@@ -117,30 +124,33 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             string connetion_string = null;
             string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = null;
 
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = {email} AND {colOrdinal} = {ordinal};";
+                sql_query = $"SELECT * FROM tbColumns WHERE {colEmail} = '{email}' AND {colOrdinal} = {ordinal};";
+
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
                 {
                     Name = (string)dataReader[colName];
-                    Limit = (int)dataReader[colLimit];
-                    ordinal = (int)dataReader[colOrdinal];
+                    Limit = (long)dataReader[colLimit];
+                    ordinal = (long)dataReader[colOrdinal];
                 }
+                dataReader.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                email = null;
+                throw e;
             }
             finally
             {
@@ -156,17 +166,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             List<Task> taskList = new List<Task>();
             string connetion_string = null;
             string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = null;
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = {email} AND {colTaskColumn} = {Name} ORDER BY {colTaskCreationDate};";
+                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = '{email}' AND {colTaskColumn} = '{Name}' ORDER BY {colTaskCreationDate};";
 
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
@@ -174,12 +186,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     DateTime creationDate = DateTime.Parse((string)dataReader[colTaskCreationDate]);
                     DateTime dueDate = DateTime.Parse((string)dataReader[colTaskDueDate]);
-                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)dataReader[colTaskId], (string)dataReader[colTaskColumn], (string)dataReader[colTaskEmail]));
+                    taskList.Add(new Task((string)dataReader[colTaskTitle], (string)dataReader[colTaskDesc], creationDate, dueDate, (int)((long)dataReader[colTaskId]), (string)dataReader[colTaskColumn], (string)dataReader[colTaskEmail]));
                 }
+                dataReader.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                email = null;
+                throw e;
             }
             finally
             {
@@ -193,22 +206,26 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public override void Delete()
         {
             string connetion_string = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = new SQLiteCommand();
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
 
             try
             {
+                connection.Open();
+
                 command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM tbColumns WHERE {colEmail} = @Email AND {colOrdinal} = @columnId";
+                command.CommandText = $"DELETE FROM tbColumns WHERE {colEmail} = @Email AND {colName} = @columnName";
                 SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
-                SQLiteParameter columnIdParam = new SQLiteParameter(@"columnId", ordinal);
+                SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
 
                 command.Parameters.Add(EmailParam);
-                command.Parameters.Add(columnIdParam);
+                command.Parameters.Add(columnNameParam);
 
                 command.Prepare();
                 int num_rows_changed = command.ExecuteNonQuery();

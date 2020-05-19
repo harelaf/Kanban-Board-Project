@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Data.SQLite;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -13,16 +14,16 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public string email { get; set; }
         public string password { get; set; }
         public string nickname { get; set; }
-        public int idGiver { get; set; }
-        public int numOfColumns { get; set; }
+        public long idGiver { get; set; }
+        public long numOfColumns { get; set; }
         public DalController dalController;
 
 
         const string colEmail = "Email";
         const string colPassword = "password";
         const string colNickname = "nickName";
-        const string colIdGiver = "idGiver";
-        const string colNumOfColumns = "NumOfColumns";
+        const string colIdGiver = "IdGiver";
+        const string colNumOfColumns = "numOfColumns";
 
 
         public User()
@@ -60,17 +61,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             string connetion_string = null;
             string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = new SQLiteCommand();
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
 
             try
             {
-                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = {email}";
+                connection.Open();
+
+                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = '{email}'";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
@@ -109,6 +114,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = command.ExecuteNonQuery();
                     command.Dispose();
                 }
+                dataReader.Close();
             }
             catch (Exception e)
             {
@@ -124,19 +130,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         {
             string connetion_string = null;
             string sql_query = null;
-            string database_name = "kanbanDB.sqlite";
+            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
             SQLiteCommand command = null;
 
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
 
-            connetion_string = $"Data Source={database_name};Version=3;";
+            connetion_string = $"Data Source={path};Version=3;";
             connection = new SQLiteConnection(connetion_string);
             SQLiteDataReader dataReader;
-            int idGiver = 0, NumOfColumns = 0, i = 0;
             try
             {
                 connection.Open();
-                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = {email};";
+                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = '{email}';";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
                 if (dataReader.Read())
@@ -144,13 +150,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     email = (string)dataReader[colEmail];
                     password = (string)dataReader[colPassword];
                     nickname = (string)dataReader[colNickname];
-                    idGiver = (int)dataReader[colIdGiver];
-                    NumOfColumns = (int)dataReader[colNumOfColumns];
+                    idGiver = (long)dataReader[colIdGiver];
+                    numOfColumns = (long)dataReader[colNumOfColumns];
                 }
+                dataReader.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                email = null;
+                throw e;
             }
             finally
             {
@@ -163,12 +170,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public List<Column> GetColumns()
         {
             int i = 0;
-            List<Column> colList = new List<Column>(numOfColumns);
+            List<Column> colList = new List<Column>();
             Column col;
             while (i < numOfColumns)
             {
                 col = new Column(email,i);
                 colList.Add(col.Import());
+                i++;
             }
             return colList;
         }
