@@ -281,7 +281,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnRight(int columnOrdinal)
             {
-                if (columnOrdinal == list.Count-1)
+                if (columnOrdinal == list.Count - 1)
                     throw new Exception("You can't move the last column right");
 
                 Column toMove = GetColumn(columnOrdinal);
@@ -301,6 +301,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="columnOrdinal"></param>
             /// <param name="name"></param>
             /// <returns>This function returns the new column that added to the board</returns>
+
             public Column AddColumn(int columnOrdinal, string name, string email)
             {
                 if (columnOrdinal < 0 | columnOrdinal > list.Count)
@@ -332,7 +333,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             private Board activeBoard;
 
-       
+
             public BoardController()
             {
                 activeBoard = null;
@@ -471,7 +472,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns the shifted column</returns>
             public Column MoveColumnRight(int columnOrdinal)
             {
-               return activeBoard.MoveColumnRight(columnOrdinal);
+                return activeBoard.MoveColumnRight(columnOrdinal);
             }
 
             /// <summary>
@@ -495,6 +496,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private int columnOrdinal;
             private string Email;
 
+            const int MAX_LENGTH_NAME = 15;
+
             public Column()
             {
                 taskList = new List<Task>();
@@ -512,7 +515,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <param name="email"></param>
             public Column(string columnName,int columnOrdinal, string email)
             {
-                taskList = new List<Task>();
+                if (columnName.Length > MAX_LENGTH_NAME)
+                    throw new Exception("This column name length is over than " + MAX_LENGTH_NAME + " characters");
+                this.taskList = new List<Task>();
                 this.columnName = columnName;
                 limit = -1;
                 this.columnOrdinal = columnOrdinal;
@@ -525,8 +530,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <param name="columnName"></param>
             /// <param name="columnOrdinal"></param>
-            public Column(List<Task> taskList, int limit, string columnName,int columnOrdinal, string email)
+            public Column(List<Task> taskList, int limit, string columnName, int columnOrdinal, string email)
             {
+                if (columnName.Length > MAX_LENGTH_NAME)
+                    throw new Exception("This column name length is over than " + MAX_LENGTH_NAME + " characters");
                 this.taskList = taskList;
                 this.limit = limit;
                 this.columnName = columnName;
@@ -688,7 +695,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             /// <returns>This function returns a column of the DAL that represnt this column </returns
             public DataAccessLayer.Column ToDalObject(string Email, string column)
-            { 
+            {
                 return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
             }
         }
@@ -702,6 +709,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private DateTime dueDate;
             private int taskId;
 
+            const int TITLE_MAX_LENGTH = 50;
+            const int DESC_MAX_LENGTH = 300;
             public Task(string title, string description, DateTime dueDate, int taskId)
             {
                 if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
@@ -795,7 +804,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             public void UpdateTaskTitle(string title)
             {
                 if (!ValidateTitle(title))
-                    throw new Exception("Illegal title(over 50 characters or empty)");
+                    throw new Exception("Illegal title(over "+TITLE_MAX_LENGTH+" characters or empty)");
                 this.title = title;
             }
 
@@ -808,7 +817,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 if (description == null)
                     description = "";
                 if (!ValidateDescription(description))
-                    throw new Exception("Description not fit(over than 300 character)");
+                    throw new Exception("Description not fit(over than "+DESC_MAX_LENGTH+"characters)");
                 this.description = description;
             }
 
@@ -820,7 +829,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>returns true if the title is validate or false if not</returns>
             private bool ValidateTitle(string title)
             {
-                return title != null && title.Length <= 50 & title.Length > 0;
+                return title != null && title.Length <= TITLE_MAX_LENGTH & title.Length > 0;
             }
 
             /// <summary>
@@ -831,7 +840,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>returns true if the description is validate or false if not</returns>
             private bool ValidateDescription(string newDesc)
             {
-                return newDesc.Length <= 300;
+                return newDesc.Length <= DESC_MAX_LENGTH;
             }
 
             /// <summary>
