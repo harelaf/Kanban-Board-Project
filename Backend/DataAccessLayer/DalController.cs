@@ -10,12 +10,15 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class DalController
     {
+        const string database_name = "kanbanDB.db";
+
         public void Delete()
         {
+            CreateDataBase();
+
             string connetion_string = null;
-            string database_name = "kanbanDB.db";
             SQLiteConnection connection;
-            SQLiteCommand command = new SQLiteCommand();
+            SQLiteCommand command;
 
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
 
@@ -41,6 +44,78 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 connection.Close();
             }
             
+        }
+
+        public void CreateDataBase()
+        {
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+            if (!File.Exists(path))
+            {
+                System.Data.SQLite.SQLiteConnection.CreateFile(database_name);
+
+                path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+
+                string connetion_string = null;
+                SQLiteConnection connection;
+                SQLiteCommand command;
+
+                connetion_string = $"Data Source={path};Version=3;";
+                connection = new SQLiteConnection(connetion_string);
+
+                string createtbUsers = "CREATE TABLE \"tbUsers\"(" +
+                    "\"Email\" TEXT NOT NULL," +
+                    "\"nickName\"  TEXT NOT NULL," +
+                    "\"password\"  TEXT NOT NULL," +
+                    "\"IdGiver\"   INTEGER NOT NULL," +
+                    "\"numOfColumns\"  INTEGER NOT NULL," +
+                    "PRIMARY KEY(\"Email\"))";
+
+                string createtbTasks = "CREATE TABLE \"tbTasks\"(" +
+                    "\"TaskId\"    INTEGER NOT NULL," +
+                    "\"column\"    TEXT NOT NULL," +
+                    "\"Email\" TEXT NOT NULL," +
+                    "\"title\" TEXT NOT NULL," +
+                    "\"description\"   TEXT NOT NULL," +
+                    "\"creationDate\"  TEXT NOT NULL," +
+                    "\"dueDate\"   TEXT NOT NULL," +
+                    "PRIMARY KEY(\"TaskId\", \"column\", \"Email\"))";
+
+                string createtbColumns = "CREATE TABLE \"tbColumns\"(" +
+                    "\"Email\" TEXT NOT NULL," +
+                    "\"columnId\"  INTEGER NOT NULL," +
+                    "\"columnName\"    TEXT NOT NULL," +
+                    "\"columnLimit\"   INTEGER NOT NULL," +
+                    "PRIMARY KEY(\"Email\", \"columnName\", \"columnId\"))";
+
+                try
+                {
+                    connection.Open();
+
+                    command = new SQLiteCommand(null, connection);
+
+                    command.CommandText = createtbUsers;
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = createtbTasks;
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = createtbColumns;
+                    command.Prepare();
+                    command.ExecuteNonQuery();
+
+                    command.Dispose();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
     }
 }

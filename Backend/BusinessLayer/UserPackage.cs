@@ -192,6 +192,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// </summary>
             public void LoadData()
             {
+                DalController.CreateDataBase();
                 registeredemails = registeredemails.Import();
                 if (registeredemails.Emails != null)
                 {
