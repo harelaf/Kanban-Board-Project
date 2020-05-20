@@ -84,22 +84,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 int AmountOfLowerCase = MIN_LCASE_LETTER;
                 int AmountOfDigits = MIN_DIGITS;
 
-                for (int index = 0; index < password.Length & (AmountOfDigits != 0 | AmountOfLowerCase != 0 | AmountOfUpperCase != 0); index++)
+                for (int index = 0; index < password.Length & (AmountOfDigits > 0 | AmountOfLowerCase >0 | AmountOfUpperCase > 0); index++)
                 {
-                    for (char i = 'a'; i <= 'z' & AmountOfLowerCase != 0; i++)
-                        if (password[index] == i)
-                            AmountOfLowerCase--;
 
-                    for (char i = 'A'; i <= 'Z' & AmountOfUpperCase != 0; i++)
-                        if (password[index] == i)
-                            AmountOfUpperCase--;
+                    if (password[index] >= 'a' & password[index] <= 'z')
+                        AmountOfLowerCase--;
 
-                    for (char i = '0'; i <= '9' & AmountOfDigits != 0; i++)
-                        if (password[index] == i)
-                            AmountOfDigits--;
+                    else if (password[index] >= 'A' & password[index] <= 'Z')
+                        AmountOfUpperCase--;
+
+                    else if (password[index] >= '0' & password[index] <= '9')
+                        AmountOfDigits--;
+
                 }
 
-                if (AmountOfDigits != 0 | AmountOfUpperCase != 0 | AmountOfLowerCase != 0)
+                if (AmountOfDigits > 0 | AmountOfUpperCase > 0 | AmountOfLowerCase > 0)
                     throw new Exception("The password does not contains at least one small character, one Capital letter and one digit");
                 return true;
 
@@ -158,6 +157,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
                     if (Email.Substring(index + 1).Contains("@"))
                         throw new Exception("Ilegal email, the email contains more than one @");
+
+                    if (!Email.Substring(index + 1).Contains("."))
+                        throw new Exception("Ilegal email, the email doesnt contain a '.'");
 
                     for (int i = index + 1; i < Email.Length; i++)
                     {

@@ -14,7 +14,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public void Delete()
         {
-            CreateDataBase();
 
             string connetion_string = null;
             SQLiteConnection connection;
