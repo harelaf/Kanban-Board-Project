@@ -29,6 +29,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 UserList = new Dictionary<string, User>();
                 CurrentUser = null;
                 registeredemails = new RegisteredEmails();
+                DalController.CreateDataBase();
             }
 
             /// <summary>

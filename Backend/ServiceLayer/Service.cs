@@ -28,7 +28,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             activeUser = new User(null, null);
             boardService = new BoardService();
             userService = new UserService();
-            LoadData();
         }
 
         /// <summary>        
