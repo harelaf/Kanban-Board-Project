@@ -92,9 +92,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessLayer\BoardPackage\Board.cs" />
+    <Compile Include="BusinessLayer\BoardPackage\BoardController.cs" />
+    <Compile Include="BusinessLayer\BoardPackage\Column.cs" />
+    <Compile Include="BusinessLayer\BoardPackage\Task.cs" />
     <Compile Include="BusinessLayer\IPersistedObject.cs" />
-    <Compile Include="BusinessLayer\UserPackage.cs" />
-    <Compile Include="BusinessLayer\BoardPackage.cs" />
+    <Compile Include="BusinessLayer\UserPackage\User.cs" />
+    <Compile Include="BusinessLayer\UserPackage\UserController.cs" />
     <Compile Include="DataAccessLayer\DalController.cs" />
     <Compile Include="DataAccessLayer\DalObject.cs" />
     <Compile Include="DataAccessLayer\User.cs" />
