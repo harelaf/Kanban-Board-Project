@@ -28,6 +28,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             activeUser = new User(null, null);
             boardService = new BoardService();
             userService = new UserService();
+            LoadData();
         }
 
         /// <summary>        
@@ -42,7 +43,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
-            return userService.DeleteData();
+            Response response = userService.DeleteData();
+            if (!response.ErrorOccured)
+            {
+                activeUser = new User(null, null);
+            }
+            return response;
         }
 
         /// <summary>
