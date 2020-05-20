@@ -207,7 +207,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns the removed column</returns>
             public Column RemoveColumn(int columnOrdinal)
             {
-                if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+
+                if (list.Count==1 & columnOrdinal != 0)
+                {
+                    throw new Exception("This board only has 1 column, and the columnOrdinal you entered isn't 0");
+                }
+                else if (list.Count != 1 & (columnOrdinal > list.Count - 1 | columnOrdinal < 0))
                 {
                     throw new Exception("This columnOrdinal does not exist");
                 }
@@ -216,15 +221,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 Column toAddTo;
                 if (columnOrdinal == 0)
                 {
-                    toAddTo = GetColumn(columnOrdinal + 1);
-                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                    if (list.Count != 1)
                     {
-                        throw new Exception("There isn't enough available space in the right column");
+                        toAddTo = GetColumn(columnOrdinal + 1);
+                        if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
+                        {
+                            throw new Exception("There isn't enough available space in the right column");
+                        }
+                        foreach (Task toMove in removed.GetTaskList())
+                        {
+                            toAddTo.MoveExistingTaskHere(toMove);
+                            toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
+                        }
                     }
-                    foreach (Task toMove in removed.GetTaskList())
+                    else
                     {
-                        toAddTo.MoveExistingTaskHere(toMove);
-                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
+                        if(removed.GetTaskList().Count > 0)
+                        {
+                            throw new Exception("The only column left has tasks in it and can't be removed");
+                        }
                     }
                 }
                 else
