@@ -16,7 +16,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public string nickname { get; set; }
         public long idGiver { get; set; }
         public long numOfColumns { get; set; }
-        public DalController dalController;
 
 
         const string colEmail = "Email";
@@ -31,10 +30,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             email = null;
             password = null;
             nickname = null;
-            dalController = new DalController();
             numOfColumns = 0;
             idGiver = 0;
-            dalController = new DalController();
         }
 
         public User(string email, string password, string nickname, int idGiver, int numOfColumns)
@@ -44,7 +41,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.nickname = nickname;
             this.idGiver = idGiver;
             this.numOfColumns = numOfColumns;
-            dalController = new DalController();
         }
 
         public User(string email)
@@ -54,7 +50,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             nickname = null;
             idGiver = 0;
             numOfColumns = 0;
-            dalController = new DalController();
         }
 
         public override void Save()

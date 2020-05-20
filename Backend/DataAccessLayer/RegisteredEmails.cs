@@ -11,9 +11,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     class RegisteredEmails
     {
         public List<string> Emails { get; set; }
-        public string connetion_string = null;
-        public string database_name = "kanbanDB.db";
-        public SQLiteConnection connection;
         
         public RegisteredEmails(List<string> Emails)
         {
@@ -27,6 +24,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public RegisteredEmails Import()
         {
+            string connetion_string;
+            string database_name = "kanbanDB.db";
+            SQLiteConnection connection;
+
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
 
             connetion_string = $"Data Source={path};Version=3;";

@@ -302,7 +302,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
-                return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+                return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
         
         /// <summary>
