@@ -16,6 +16,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             private List<Column> list;
             private int idGiver;
 
+            const int MAX_LENGTH_COLUMN_NAME = 15;
+
             public Board()
             {
                 list = new List<Column>();
@@ -321,6 +323,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 if (columnOrdinal < 0 | columnOrdinal > list.Count)
                     throw new Exception("The columnOrdinal is ilegal");
+                if(name == null)
+                {
+                    throw new Exception("The name you entered for the column is null");
+                }
+                else if (name.Length > MAX_LENGTH_COLUMN_NAME)
+                {
+                    throw new Exception("The name you entered for the column is too long");
+                }
+
                 foreach (Column col in list)
                 {
                     if (col.GetColumnName() == name)
