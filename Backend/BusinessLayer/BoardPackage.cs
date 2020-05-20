@@ -10,13 +10,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     namespace BoardPackage
     {
-        class Board// : IPersistedObject<DataAccessLayer.Board>
+        class Board
         {
 
             private List<Column> list;
             private int idGiver;
 
             const int MAX_LENGTH_COLUMN_NAME = 15;
+            const int MIN_AMOUNT_OF_COLUMNS = 2;
 
             public Board()
             {
@@ -209,12 +210,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             /// <returns>This function returns the removed column</returns>
             public Column RemoveColumn(int columnOrdinal)
             {
-
-                if (list.Count==1 & columnOrdinal != 0)
+                if(list.Count == MIN_AMOUNT_OF_COLUMNS)
                 {
-                    throw new Exception("This board only has 1 column, and the columnOrdinal you entered isn't 0");
+                    throw new Exception($"A board must have at least {MIN_AMOUNT_OF_COLUMNS} columns"); 
                 }
-                else if (list.Count != 1 & (columnOrdinal > list.Count - 1 | columnOrdinal < 0))
+                else if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                 {
                     throw new Exception("This columnOrdinal does not exist");
                 }
