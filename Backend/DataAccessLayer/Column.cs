@@ -93,7 +93,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 else
                 {
                     command = new SQLiteCommand(null, connection);
-                    command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnOrdinal,@columnName,@limit)";
+                    command.CommandText = $"INSERT INTO tbColumns ({colEmail},{colOrdinal},{colName},{colLimit}) VALUES(@Email,@columnOrdinal,@columnName,@limit)";
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
                     SQLiteParameter columnNameParam = new SQLiteParameter(@"columnName", Name);
                     SQLiteParameter limitParam = new SQLiteParameter(@"limit", Limit);
