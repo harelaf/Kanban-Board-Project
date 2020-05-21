@@ -216,43 +216,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
 
             Column removed = GetColumn(columnOrdinal);
-            Column toAddTo;
-            if (columnOrdinal == 0)
+            Column toAddTo = columnOrdinal == 0 ? GetColumn(columnOrdinal + 1) : GetColumn(columnOrdinal - 1);
+
+            if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
             {
-                if (list.Count != 1)
-                {
-                    toAddTo = GetColumn(columnOrdinal + 1);
-                    if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
-                    {
-                        throw new Exception("There isn't enough available space in the right column");
-                    }
-                    foreach (Task toMove in removed.GetTaskList())
-                    {
-                        toAddTo.MoveExistingTaskHere(toMove);
-                        toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
-                    }
-                }
-                else
-                {
-                    if (removed.GetTaskList().Count > 0)
-                    {
-                        throw new Exception("The only column left has tasks in it and can't be removed");
-                    }
-                }
+                throw new Exception("There isn't enough available space in the right column");
             }
-            else
+            foreach (Task toMove in removed.GetTaskList())
             {
-                toAddTo = GetColumn(columnOrdinal - 1);
-                if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
-                {
-                    throw new Exception("There isn't enough available space in the left column");
-                }
-                foreach (Task toMove in removed.GetTaskList())
-                {
-                    toAddTo.MoveExistingTaskHere(toMove);
-                    toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
-                }
+                toAddTo.MoveExistingTaskHere(toMove);
+                toMove.ToDalObject(removed.getEmail(), toAddTo.GetColumnName()).Save();
             }
+
             list.Remove(removed);
             foreach (Column col in list)
             {
@@ -336,16 +311,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
             Column add = new Column(name, columnOrdinal, email);
-            list.Insert(columnOrdinal, add);
-            add.ToDalObject(email, "").Save();
-            foreach (Column toUpdate in list)
+            if(columnOrdinal == list.Count)
             {
-                if (toUpdate.GetColumnOrdinal() >= columnOrdinal)
+                list.Add(add);
+            }
+            else
+            {
+                list.Insert(columnOrdinal, add);
+                foreach (Column toUpdate in list)
                 {
-                    toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
-                    toUpdate.ToDalObject(email, "").Save();
+                    if (toUpdate.GetColumnOrdinal() >= columnOrdinal)
+                    {
+                        toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
+                        toUpdate.ToDalObject(email, "").Save();
+                    }
                 }
             }
+            
+            add.ToDalObject(email, "").Save();
+            
             return add;
         }
 
