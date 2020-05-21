@@ -311,25 +311,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
             Column add = new Column(name, columnOrdinal, email);
-            if(columnOrdinal == list.Count)
+            list.Insert(columnOrdinal, add);
+            foreach (Column toUpdate in list)
             {
-                list.Add(add);
-            }
-            else
-            {
-                list.Insert(columnOrdinal, add);
-                foreach (Column toUpdate in list)
+                if (toUpdate.GetColumnOrdinal() >= columnOrdinal)
                 {
-                    if (toUpdate.GetColumnOrdinal() >= columnOrdinal)
-                    {
-                        toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
-                        toUpdate.ToDalObject(email, "").Save();
-                    }
+                    toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
+                    toUpdate.ToDalObject(email, "").Save();
                 }
             }
-            
-            add.ToDalObject(email, "").Save();
-            
             return add;
         }
 
