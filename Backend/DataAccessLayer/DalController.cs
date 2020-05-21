@@ -12,6 +12,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         const string database_name = "kanbanDB.db";
 
+        /// <summary>
+        /// This function deletes all of the information stored in the database
+        /// </summary>
         public void Delete()
         {
 
@@ -45,6 +48,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             
         }
 
+        /// <summary>
+        /// This function creates a new file in the bin folder of the database we use, called kanbanDB
+        /// </summary>
         public void CreateDataBase()
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));

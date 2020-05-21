@@ -90,7 +90,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public DataAccessLayer.User ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.User(email, password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
+            return new DataAccessLayer.User(email.ToLower(), password, nickname, myBoard.getIdGiver(), myBoard.GetNumOfColumns());
         }
     }
 }

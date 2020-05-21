@@ -215,7 +215,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         {
                             myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
                         }
-                        cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.ordinal, email));
+                        cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.ordinal, email.ToLower()));
                     }
 
                     Board board = new Board(cl, (int)temp.idGiver);

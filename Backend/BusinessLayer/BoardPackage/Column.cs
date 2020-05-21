@@ -214,7 +214,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns a column of the DAL that represnt this column </returns
         public DataAccessLayer.Column ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.Column(Email, columnName, columnOrdinal, limit);
+            return new DataAccessLayer.Column(Email.ToLower(), columnName, columnOrdinal, limit);
         }
     }
 }

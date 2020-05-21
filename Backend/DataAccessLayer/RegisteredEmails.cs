@@ -22,6 +22,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             Emails = new List<string>();
         }
 
+        /// <summary>
+        /// This function gets all the emails of registered emails from the database
+        /// </summary>
+        /// <returns>An object of RegisteredEmails, containing a list of emails</returns>
         public RegisteredEmails Import()
         {
             string connetion_string;

@@ -49,6 +49,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             Name = "";
         }
 
+        /// <summary>
+        /// This function saves the information of this column to the database
+        /// </summary>
         public override void Save()
         {
             string connetion_string = null;
@@ -72,7 +75,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                if (dataReader.Read()) //This if checks if the column is already in the database, and in that case we update its information
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = $"UPDATE tbColumns SET {colLimit} = @limit, {colOrdinal} = @columnOrdinal WHERE {colEmail} = @Email AND {colName} = @columnName";
@@ -90,7 +93,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = command.ExecuteNonQuery();
                     command.Dispose();
                 }
-                else
+                else //Otherwise we insert its information
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@columnOrdinal,@columnName,@limit)";
@@ -120,6 +123,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// This function retrieves the information of a column using the users email and its the columns id
+        /// </summary>
+        /// <returns>A column object with all of the information from the database</returns>
         public override Column Import()
         {
             string connetion_string = null;
@@ -161,6 +168,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return this;
         }
 
+        /// <summary>
+        /// This function retrieves all of the tasks that are in a specific column
+        /// </summary>
+        /// <returns>A list of tasks containing every task in that column</returns>
         public List<Task> getTasks()
         {
             List<Task> taskList = new List<Task>();
@@ -203,6 +214,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return taskList;
         }
 
+        /// <summary>
+        /// This function deletes a column from the database
+        /// </summary>
         public override void Delete()
         {
             string connetion_string = null;
