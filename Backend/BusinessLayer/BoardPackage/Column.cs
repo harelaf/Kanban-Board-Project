@@ -186,6 +186,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             {
                 throw new Exception("This column already has more tasks than the new limit");
             }
+            else if(newLim < -1)
+            {
+                throw new Exception("This limit is unecceptable");
+            }
             this.limit = newLim;
         }
 
