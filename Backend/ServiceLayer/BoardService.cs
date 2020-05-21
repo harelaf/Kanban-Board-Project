@@ -248,7 +248,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             
             try
             {
-                BusinessLayer.BoardPackage.Column column = boardController.AddColumn(columnOrdinal, name, email);
+                BusinessLayer.BoardPackage.Column column = boardController.AddColumn(columnOrdinal, name, email.ToLower());
 
                 List<Task> tasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
