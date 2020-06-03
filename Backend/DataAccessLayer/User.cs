@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Text.Json;
 using System.Data.SQLite;
 using System.IO;
 
@@ -11,105 +10,80 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class User : DalObject<User>
     {
-        public string email { get; set; }
-        public string password { get; set; }
-        public string nickname { get; set; }
-        public long idGiver { get; set; }
-        public long numOfColumns { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Nickname { get; set; }
+        public string HostEmail { get; set; }
 
+        const string COL_EMAIL = "Email";
+        const string COL_PASSWORD = "Password";
+        const string COL_NICKNAME = "Nickname";
+        const string COL_HOST_EMAIL = "HostEmail";
 
-        const string colEmail = "Email";
-        const string colPassword = "password";
-        const string colNickname = "nickName";
-        const string colIdGiver = "IdGiver";
-        const string colNumOfColumns = "numOfColumns";
-
+        string ConnetionString = null;
+        string SqlQuery = null;
+        SQLiteConnection Connection;
+        SQLiteCommand Command;
+        const string DATABASE_NAME = "kanbanDB.db";
+        string MyPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
 
         public User()
         {
-            email = null;
-            password = null;
-            nickname = null;
-            numOfColumns = 0;
-            idGiver = 0;
+            Email = null;
+            Password = null;
+            Nickname = null;
+            HostEmail = null;
         }
 
-        public User(string email, string password, string nickname, int idGiver, int numOfColumns)
+        public User(string Email, string Password, string Nickname, string HostEmail)
         {
-            this.email = email.ToLower();
-            this.password = password;
-            this.nickname = nickname;
-            this.idGiver = idGiver;
-            this.numOfColumns = numOfColumns;
+            this.Email = Email.ToLower();
+            this.Password = Password;
+            this.Nickname = Nickname;
+            this.HostEmail = HostEmail;
         }
 
-        public User(string email)
+        public User(string Email)
         {
-            this.email = email.ToLower();
-            password = null;
-            nickname = null;
-            idGiver = 0;
-            numOfColumns = 0;
+            this.Email = Email.ToLower();
+            Password = null;
+            Nickname = null;
+            HostEmail = null;
         }
 
         public override void Save()
         {
-            string connetion_string = null;
-            string sql_query = null;
-            string database_name = "kanbanDB.db";
-            SQLiteConnection connection;
-            SQLiteCommand command = new SQLiteCommand();
 
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
-            SQLiteDataReader dataReader;
+            ConnetionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnetionString);
+            SQLiteDataReader DataReader;
 
             try
             {
-                connection.Open();
+                Connection.Open();
 
-                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = '{email}'";
-                command = new SQLiteCommand(sql_query, connection);
-                dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                SqlQuery = $"SELECT * FROM tbUsers WHERE {COL_EMAIL} = '{Email}'";
+                Command = new SQLiteCommand(SqlQuery, Connection);
+                DataReader = Command.ExecuteReader();
+                if (!DataReader.Read())
                 {
-                    command = new SQLiteCommand(null, connection);
-                    command.CommandText = $"UPDATE tbUsers SET {colIdGiver} = @idGiver, {colNumOfColumns} = @numOfColumns WHERE {colEmail} = @Email";
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", idGiver);
-                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", numOfColumns);
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
+                    Command = new SQLiteCommand(null, Connection);
+                    Command.CommandText = "INSERT INTO tbUsers VALUES(@Email,@Nickname,@Password,@HostEmail)";
+                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
+                    SQLiteParameter NicknameParam = new SQLiteParameter(@"Nickname", Nickname);
+                    SQLiteParameter PasswordParam = new SQLiteParameter(@"Password", Password);
+                    SQLiteParameter HostEmailParam = new SQLiteParameter(@"HostEmail", HostEmail);
 
-                    command.Parameters.Add(IdGiverParam);
-                    command.Parameters.Add(numOfColumnsParam);
-                    command.Parameters.Add(EmailParam);
+                    Command.Parameters.Add(EmailParam);
+                    Command.Parameters.Add(NicknameParam);
+                    Command.Parameters.Add(PasswordParam);
+                    Command.Parameters.Add(HostEmailParam);
 
-                    command.Prepare();
-                    int num_rows_changed = command.ExecuteNonQuery();
-                    command.Dispose();
+                    Command.Prepare();
+                    int num_rows_changed = Command.ExecuteNonQuery();
+                    Command.Dispose();
                 }
-                else
-                {
-                    command = new SQLiteCommand(null, connection);
-                    command.CommandText = "INSERT INTO tbUsers VALUES(@Email,@nickName,@password,@IdGiver,@numOfColumns)";
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"idGiver", idGiver);
-                    SQLiteParameter numOfColumnsParam = new SQLiteParameter(@"numOfColumns", numOfColumns);
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", email);
-                    SQLiteParameter NicknameParam = new SQLiteParameter(@"nickName", nickname);
-                    SQLiteParameter PasswordParam = new SQLiteParameter(@"password", password);
-
-                    command.Parameters.Add(IdGiverParam);
-                    command.Parameters.Add(numOfColumnsParam);
-                    command.Parameters.Add(EmailParam);
-                    command.Parameters.Add(NicknameParam);
-                    command.Parameters.Add(PasswordParam);
-
-                    command.Prepare();
-                    int num_rows_changed = command.ExecuteNonQuery();
-                    command.Dispose();
-                }
-                dataReader.Close();
+                DataReader.Close();
             }
             catch (Exception e)
             {
@@ -117,38 +91,29 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
+                Connection.Close();
             }
         }
 
         public override User Import()
         {
-            string connetion_string = null;
-            string sql_query = null;
-            string database_name = "kanbanDB.db";
-            SQLiteConnection connection;
-            SQLiteCommand command = null;
 
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
-            SQLiteDataReader dataReader;
+            ConnetionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnetionString);
+            SQLiteDataReader DataReader;
             try
             {
-                connection.Open();
-                sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = '{email}';";
-                command = new SQLiteCommand(sql_query, connection);
-                dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                Connection.Open();
+                SqlQuery = $"SELECT * FROM tbUsers WHERE {COL_EMAIL} = '{Email}';";
+                Command = new SQLiteCommand(SqlQuery, Connection);
+                DataReader = Command.ExecuteReader();
+                if (DataReader.Read())
                 {
-                    email = (string)dataReader[colEmail];
-                    password = (string)dataReader[colPassword];
-                    nickname = (string)dataReader[colNickname];
-                    idGiver = (long)dataReader[colIdGiver];
-                    numOfColumns = (long)dataReader[colNumOfColumns];
+                    Email = (string)DataReader[COL_EMAIL];
+                    Password = (string)DataReader[COL_PASSWORD];
+                    Nickname = (string)DataReader[COL_NICKNAME];
                 }
-                dataReader.Close();
+                DataReader.Close();
             }
             catch (Exception e)
             {
@@ -156,24 +121,16 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
-                command.Dispose();
+                Connection.Close();
+                Command.Dispose();
             }
             return this;
         }
 
-        public List<Column> GetColumns()
+        public Board GetBoard()
         {
-            int i = 0;
-            List<Column> colList = new List<Column>();
-            Column col;
-            while (i < numOfColumns)
-            {
-                col = new Column(email,i);
-                colList.Add(col.Import());
-                i++;
-            }
-            return colList;
+            Board b = new Board(HostEmail);
+            return b.Import();
         }
 
         public override void Delete()

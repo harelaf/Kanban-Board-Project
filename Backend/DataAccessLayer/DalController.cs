@@ -10,29 +10,28 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     class DalController
     {
-        const string database_name = "kanbanDB.db";
+        string ConnectionString = null;
+        string sql_query = null;
+        SQLiteConnection Connection;
+        SQLiteCommand Command;
+        const string DATABASE_NAME = "kanbanDB.db";
+        string MyPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
 
         public void Delete()
         {
 
-            string connetion_string = null;
-            SQLiteConnection connection;
-            SQLiteCommand command;
-
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
+            ConnectionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnectionString);
             try
             {
-                connection.Open();
+                Connection.Open();
 
-                command = new SQLiteCommand(null, connection);
-                command.CommandText = "DELETE FROM tbColumns; DELETE FROM tbUsers; DELETE FROM tbTasks;";
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = "DELETE FROM tbColumns; DELETE FROM tbUsers; DELETE FROM tbTasks;";
 
-                command.Prepare();
-                int num_rows_changed = command.ExecuteNonQuery();
-                command.Dispose();
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
             }
             catch (Exception e)
             {
@@ -40,71 +39,74 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
+                Connection.Close();
             }
             
         }
 
         public void CreateDataBase()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-            if (!File.Exists(path))
+
+            if (!File.Exists(MyPath))
             {
-                System.Data.SQLite.SQLiteConnection.CreateFile(database_name);
+                System.Data.SQLite.SQLiteConnection.CreateFile(DATABASE_NAME);
 
-                path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+                ConnectionString = $"Data Source={MyPath};Version=3;";
+                Connection = new SQLiteConnection(ConnectionString);
 
-                string connetion_string = null;
-                SQLiteConnection connection;
-                SQLiteCommand command;
-
-                connetion_string = $"Data Source={path};Version=3;";
-                connection = new SQLiteConnection(connetion_string);
-
-                string createtbUsers = "CREATE TABLE \"tbUsers\"(" +
+                string CreatetbUsers = "CREATE TABLE \"tbUsers\"(" +
                     "\"Email\" TEXT NOT NULL," +
-                    "\"nickName\"  TEXT NOT NULL," +
-                    "\"password\"  TEXT NOT NULL," +
-                    "\"IdGiver\"   INTEGER NOT NULL," +
-                    "\"numOfColumns\"  INTEGER NOT NULL," +
+                    "\"Nickname\"  TEXT NOT NULL," +
+                    "\"Password\"  TEXT NOT NULL," +
                     "PRIMARY KEY(\"Email\"))";
 
-                string createtbTasks = "CREATE TABLE \"tbTasks\"(" +
-                    "\"TaskId\"    INTEGER NOT NULL," +
-                    "\"column\"    TEXT NOT NULL," +
-                    "\"Email\" TEXT NOT NULL," +
-                    "\"title\" TEXT NOT NULL," +
-                    "\"description\"   TEXT NOT NULL," +
-                    "\"creationDate\"  TEXT NOT NULL," +
-                    "\"dueDate\"   TEXT NOT NULL," +
-                    "PRIMARY KEY(\"TaskId\", \"column\", \"Email\"))";
+                string CreatetbBoards = "CREATE TABLE \"tbBoards\"(" +
+                    "\"CreatorEmail\" TEXT NOT NULL," +
+                    "\"IdGiver\"   INTEGER NOT NULL," +
+                    "\"NumOfColumns\"  INTEGER NOT NULL," +
+                    "PRIMARY KEY(\"CreatorEmail\"))";
 
-                string createtbColumns = "CREATE TABLE \"tbColumns\"(" +
+                string CreatetbTasks = "CREATE TABLE \"tbTasks\"(" +
+                    "\"TaskId\"    INTEGER NOT NULL," +
+                    "\"Column\"    TEXT NOT NULL," +
                     "\"Email\" TEXT NOT NULL," +
-                    "\"columnId\"  INTEGER NOT NULL," +
-                    "\"columnName\"    TEXT NOT NULL," +
-                    "\"columnLimit\"   INTEGER NOT NULL," +
-                    "PRIMARY KEY(\"Email\", \"columnName\", \"columnId\"))";
+                    "\"Title\" TEXT NOT NULL," +
+                    "\"Description\"   TEXT NOT NULL," +
+                    "\"CreationDate\"  TEXT NOT NULL," +
+                    "\"DueDate\"   TEXT NOT NULL," +
+                    "\"Assignee\" TEXT NOT NULL," +
+                    "PRIMARY KEY(\"TaskId\", \"Column\", \"Email\"))";
+
+                string CreatetbColumns = "CREATE TABLE \"tbColumns\"(" +
+                    "\"Email\" TEXT NOT NULL," +
+                    "\"ColumnId\"  INTEGER NOT NULL," +
+                    "\"ColumnName\"    TEXT NOT NULL," +
+                    "\"ColumnLimit\"   INTEGER NOT NULL," +
+                    "PRIMARY KEY(\"Email\", \"ColumnName\", \"ColumnId\"))";
 
                 try
                 {
-                    connection.Open();
+                    Connection.Open();
 
-                    command = new SQLiteCommand(null, connection);
+                    Command = new SQLiteCommand(null, Connection);
 
-                    command.CommandText = createtbUsers;
-                    command.Prepare();
-                    command.ExecuteNonQuery();
+                    Command.CommandText = CreatetbUsers;
+                    Command.Prepare();
+                    Command.ExecuteNonQuery();
 
-                    command.CommandText = createtbTasks;
-                    command.Prepare();
-                    command.ExecuteNonQuery();
+                    Command.CommandText = CreatetbBoards;
+                    Command.Prepare();
+                    Command.ExecuteNonQuery();
 
-                    command.CommandText = createtbColumns;
-                    command.Prepare();
-                    command.ExecuteNonQuery();
+                    Command.CommandText = CreatetbTasks;
+                    Command.Prepare();
+                    Command.ExecuteNonQuery();
 
-                    command.Dispose();
+                    Command.CommandText = CreatetbColumns;
+                    Command.Prepare();
+                    Command.ExecuteNonQuery();
+
+                    Command.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -112,7 +114,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 finally
                 {
-                    connection.Close();
+                    Connection.Close();
                 }
             }
         }
