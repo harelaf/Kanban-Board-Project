@@ -102,6 +102,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
+        public Response Register(string email, string password, string nickname, string emailHost)
+        {
+            Response response = new Response();
+            try
+            {
+                userController.Register(email.ToLower(), password, nickname, emailHost);
+                log.Debug($"User {email} registered successfully to {emailHost}'s board");
+            }
+            catch (Exception e)
+            {
+                log.Warn($"Failed to register user {email}: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
         public void Save()
         {
             userController.Save();

@@ -63,6 +63,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return activeBoard.AddTask(title, description, dueDate);
         }
 
+        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            activeBoard.AssignTask(email, columnOrdinal, taskId, emailAssignee);
+        }
+
+        public void DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+            activeBoard.DeleteTask(email, columnOrdinal, taskId);
+        }
+
+        public void ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            activeBoard.ChangeColumnName(email, columnOrdinal, newName);
+        }
+
         /// <summary>
         /// This function is advancing a task by giving the identify details of the task(column ordinal,task id) 
         /// </summary>

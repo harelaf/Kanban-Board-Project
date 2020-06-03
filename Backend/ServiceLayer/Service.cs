@@ -61,10 +61,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (email == null | password == null | nickname == null)
             {
-                log.Warn("The email used to register is null");
-                return new Response<User>("The email/password/nickname used to register is null");
+                log.Warn("The email/password/nickname used to register is null");
+                return new Response("The email/password/nickname used to register is null");
             }
-
             return userService.Register(email, password, nickname);  
         }
         
@@ -78,7 +77,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 		/// <returns>A response object. The response should contain a error message in case of an error<returns>
 		public Response Register(string email, string password, string nickname, string emailHost)
         {
-            throw new NotImplementedException();
+            if(email == null | password == null | nickname == null)
+            {
+                log.Warn("The email/password/nickname used to register is null");
+                return new Response("The email/password/nickname used to register is null");
+            }
+            return userService.Register(email, password, nickname, emailHost);
         }
         
         /// <summary>
@@ -91,7 +95,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+            {
+                Response response = boardService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
+                return response;
+            }
+            else
+                return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
         
         /// <summary>
@@ -103,7 +113,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response DeleteTask(string email, int columnOrdinal, int taskId)
         {
-            throw new NotImplementedException();
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+            {
+                Response response = boardService.DeleteTask(email, columnOrdinal, taskId);
+                return response;
+            }
+            else
+                return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }	
 
         /// <summary>
@@ -197,9 +213,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="newName">The new name.</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        Response ChangeColumnName(string email, int columnOrdinal, string newName)
+        public Response ChangeColumnName(string email, int columnOrdinal, string newName)
 		{
-            throw new NotImplementedException();
+            if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
+            {
+                Response response = boardService.ChangeColumnName(email, columnOrdinal, newName);
+                return response;
+            }
+            else
+                return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
 
         /// <summary>
@@ -422,6 +444,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 userService.Save();
             }
+        }
+
+        Response IService.ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            throw new NotImplementedException();
         }
     }
 }
