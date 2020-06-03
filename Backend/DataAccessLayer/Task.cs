@@ -59,6 +59,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.Assignee = "";
         }
 
+        /// <summary>
+        /// This function saves the information of this task to the database
+        /// </summary>
         public override void Save()
         {
             
@@ -100,7 +103,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = Command.ExecuteNonQuery();
                     Command.Dispose();
                 }
-                else
+                else //Otherwise, we need to insert its information to the database
                 {
                     Command = new SQLiteCommand(null, Connection);
                     Command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@Column,@Email,@Title,@Description,@CreationDate,@DueDate,@Assignee)";
@@ -143,6 +146,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// This function deletes a task from the database, currently not in use
+        /// </summary>
         public override void Delete()
         {
             ConnetionString = $"Data Source={Path};Version=3;";

@@ -51,6 +51,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             HostEmail = null;
         }
 
+        /// <summary>
+        /// This function saves the information of the user that called it to the database
+        /// </summary>
         public override void Save()
         {
 
@@ -95,6 +98,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// This function retrieves the information of a user from the database, using its email
+        /// </summary>
+        /// <returns>Using the users email, retrieve the information, store it in the fields and return this user</returns>
         public override User Import()
         {
 
@@ -132,6 +139,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             Board b = new Board(HostEmail);
             return b.Import();
         }
+
 
         public override void Delete()
         {

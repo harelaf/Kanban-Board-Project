@@ -45,7 +45,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             catch(Exception e)
             {
                 response = new Response(e.Message);
-                log.Warn("Wasn't able to delete data from the database, error: \n" + e.Message);
+                log.Fatal("Wasn't able to delete data from the database, error: \n" + e.Message);
             }
             return response;
         }
@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
-                log.Warn("Failed to load the data: " + e.Message);
+                log.Fatal("Failed to load the data: " + e.Message);
                 response = new Response(e.Message);
             }
             return response;
