@@ -54,13 +54,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <summary>
         /// This function gets new details of task to add to the column (title, description and due date) 
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="dueDate"></param>
+        /// <param name="Title"></param>
+        /// <param name="Description"></param>
+        /// <param name="DueDate"></param>
         /// <returns>This function returns the new added task</returns>
-        public Task AddTask(string title, string description, DateTime dueDate)
+        public Task AddTask(string Email, string Title, string Description, DateTime DueDate)
         {
-            return activeBoard.AddTask(title, description, dueDate);
+            return activeBoard.AddTask(Email, Title, Description, DueDate);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <param name="taskId"></param>
-        public void AdvanceTask(int columnOrdinal, int taskId, string Email)
+        public void AdvanceTask(int ColumnOrdinal, int TaskId, string Email)
         {
-            activeBoard.AdvanceTask(columnOrdinal, taskId, Email);
+            activeBoard.AdvanceTask(ColumnOrdinal, TaskId, Email);
         }
 
         /// <summary>
@@ -81,9 +81,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="dueDate"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+        public Task UpdateTaskDueDate(string Email,int ColumnOrdinal, int TaskId, DateTime DueDate)
         {
-            return activeBoard.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+            return activeBoard.UpdateTaskDueDate(Email,ColumnOrdinal, TaskId, DueDate);
         }
 
         /// <summary>
@@ -94,9 +94,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="title"></param>
         /// <returns><returns>returns the updated task</returns></returns>
-        public Task UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+        public Task UpdateTaskTitle(string Email,int ColumnOrdinal, int TaskId, string Title)
         {
-            return activeBoard.UpdateTaskTitle(columnOrdinal, taskId, title);
+            return activeBoard.UpdateTaskTitle(Email,ColumnOrdinal, TaskId, Title);
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnId"></param>
         /// <param name="limit"></param>
-        public void SetLimit(int columnId, int limit)
+        public void SetLimit(string Email,int ColumnId, int Limit)
         {
-            activeBoard.SetLimit(columnId, limit);
+            activeBoard.SetLimit(Email,ColumnId, Limit);
         }
 
         /// <summary>
@@ -117,9 +117,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="description"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+        public Task UpdateTaskDescription(string Email,int ColumnOrdinal, int TaskId, string Description)
         {
-            return activeBoard.UpdateTaskDescription(columnOrdinal, taskId, description);
+            return activeBoard.UpdateTaskDescription(Email,ColumnOrdinal, TaskId, Description);
         }
 
         /// <summary>
@@ -127,9 +127,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the removed column</returns>
-        public Column RemoveColumn(int columnOrdinal)
+        /// ////////////////////to complete/////////////////////////////
+        public Column RemoveColumn(string Email,int ColumnOrdinal)
         {
-            return activeBoard.RemoveColumn(columnOrdinal);
+            return activeBoard.RemoveColumn(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -137,9 +138,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
-        public Column MoveColumnLeft(int columnOrdinal)
+        public Column MoveColumnLeft(string Email,int ColumnOrdinal)
         {
-            return activeBoard.MoveColumnLeft(columnOrdinal);
+            return activeBoard.MoveColumnLeft(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -147,9 +148,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
-        public Column MoveColumnRight(int columnOrdinal)
+        public Column MoveColumnRight(string Email,int ColumnOrdinal)
         {
-            return activeBoard.MoveColumnRight(columnOrdinal);
+            return activeBoard.MoveColumnRight(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -159,9 +160,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="name"></param>
         /// <param name="email"></param>
         /// <returns>This function returns the added column</returns>
-        public Column AddColumn(int columnOrdinal, string name, string email)
+        public Column AddColumn(int ColumnOrdinal, string Name, string Email)
         {
-            return activeBoard.AddColumn(columnOrdinal, name, email);
+            return activeBoard.AddColumn(ColumnOrdinal, Name, Email);
+        }
+
+        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
+        {
+            activeBoard.DeleteTask(Email, ColumnOrdinal, TaskId);
         }
     }
 }

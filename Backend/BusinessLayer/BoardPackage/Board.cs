@@ -11,7 +11,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         private List<Column> list;
         private int idGiver;
-
         const int MAX_LENGTH_COLUMN_NAME = 15;
         const int MIN_AMOUNT_OF_COLUMNS = 2;
 
@@ -41,7 +40,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="ColumnOrdinal"></param>
         /// <param name="taskId"></param>
-        public void AdvanceTask(int ColumnOrdinal, int taskId, string Email)
+        public void AdvanceTask(int ColumnOrdinal, int TaskId, string Email)
         {
             if (ColumnOrdinal == list.Count - 1)//cannot advance further than 'done'.
                 throw new Exception("Can't advance mission that is already done");
@@ -49,10 +48,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                 throw new Exception("This columnOrdinal is illegal");
 
-            Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == taskId);
+            Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == TaskId);
             Column toAddto = list[ColumnOrdinal + 1];
-            toAddto.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), taskId);//first tries to add to the next column and removes after if adding succeeded
-            Task removed = list[ColumnOrdinal].RemoveTask(taskId);
+            
+            toAddto.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
+            Task removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
+          
             toRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
         }
 
@@ -64,9 +65,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="dueDate"></param>
         /// <returns> This function returns the added task </returns>
 
-        public Task AddTask(string title, string description, DateTime dueDate)
+        public Task AddTask(string Email,string Title, string Description, DateTime DueDate)
         {
-            Task toAdd = list[0].AddTask(title, description, dueDate, idGiver);
+            Task toAdd = list[0].AddTask(Title, Description, DueDate, idGiver,Email);
             idGiver++;
             return toAdd;
         }
@@ -129,15 +130,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnId"></param>
         /// <param name="limit"></param>
-        public void SetLimit(int columnId, int limit)
+        public void SetLimit(string Email,int ColumnId, int Limit)
         {
             //Un-needed test for limiting columns 1 and 3
             //if (columnId == 2 | columnId == 0)
             //  throw new Exception("Can not limit the amount of tasks in the first and third columns");
-            if (columnId > list.Count - 1 | columnId < 0)
+            if (ColumnId > list.Count - 1 | ColumnId < 0)
                 throw new Exception("This columnOrdinal does not exist");
-            Column toUpdate = GetColumn(columnId);
-            toUpdate.SetLimit(limit);
+            if (!GetColumn(ColumnId).getEmail().Equals(Email))
+                throw new Exception("This Column Limit can't changed because this user is not the creator of the column");
+            Column toUpdate = GetColumn(ColumnId);
+            toUpdate.SetLimit(Limit);
             toUpdate.ToDalObject(toUpdate.getEmail(), "").Save();
         }
         /// <summary>
@@ -149,15 +152,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="description"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDescription(int columnOrdinal, int taskId, string description)
+        public Task UpdateTaskDescription(string Email,int ColumnOrdinal, int TaskId, string Description)
         {
-            if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+            if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                 throw new Exception("This columnOrdinal does not exist");
 
-            if (columnOrdinal == list.Count - 1)
+            if (ColumnOrdinal == list.Count - 1)
                 throw new Exception("Cannot change tasks that are in the done column");
 
-            return GetColumn(columnOrdinal).UpdateTaskDescription(taskId, description);
+            return GetColumn(ColumnOrdinal).UpdateTaskDescription(Email,TaskId, Description);
         }
 
         /// <summary>
@@ -169,7 +172,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="title"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskTitle(int columnOrdinal, int taskId, string title)
+        public Task UpdateTaskTitle(string Email,int columnOrdinal, int taskId, string title)
         {
             if (columnOrdinal == list.Count - 1)
                 throw new Exception("Cannot change tasks that are in the done column");
@@ -177,7 +180,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                 throw new Exception("This columnOrdinal does not exist");
 
-            return GetColumn(columnOrdinal).UpdateTaskTitle(taskId, title);
+            return GetColumn(columnOrdinal).UpdateTaskTitle(Email,taskId, title);
         }
 
         /// <summary>
@@ -189,39 +192,43 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="title"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
+        public Task UpdateTaskDueDate(string Email,int ColumnOrdinal, int TaskId, DateTime DueDate)
         {
-            if (columnOrdinal == list.Count - 1)
+            if (ColumnOrdinal == list.Count - 1)
                 throw new Exception("Cannot change tasks that are in the done column");
 
-            if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+            if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                 throw new Exception("This columnOrdinal does not exist");
 
-            return GetColumn(columnOrdinal).UpdateTaskDueDate(taskId, dueDate);
+            return GetColumn(ColumnOrdinal).UpdateTaskDueDate(Email,TaskId, DueDate);
         }
         /// <summary>
         /// This function removes a column from the board by using the column ordinal of the unwanted column 
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the removed column</returns>
-        public Column RemoveColumn(int columnOrdinal)
+        public Column RemoveColumn(string Email,int ColumnOrdinal)
         {
             if (list.Count == MIN_AMOUNT_OF_COLUMNS)
             {
                 throw new Exception($"A board must have at least {MIN_AMOUNT_OF_COLUMNS} columns");
             }
-            else if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
+            else if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
             {
                 throw new Exception("This columnOrdinal does not exist");
             }
 
-            Column removed = GetColumn(columnOrdinal);
-            Column toAddTo = columnOrdinal == 0 ? GetColumn(columnOrdinal + 1) : GetColumn(columnOrdinal - 1);
+            Column removed = GetColumn(ColumnOrdinal);
+            Column toAddTo = ColumnOrdinal == 0 ? GetColumn(ColumnOrdinal + 1) : GetColumn(ColumnOrdinal - 1);
 
             if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
             {
                 throw new Exception("There isn't enough available space in the right column");
             }
+
+            if (!Email.Equals(removed.getEmail()))
+                throw new Exception("This user can't remove this column because he is not the creator of this column");
+
             foreach (Task toMove in removed.GetTaskList())
             {
                 toAddTo.MoveExistingTaskHere(toMove);
@@ -246,15 +253,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
-        public Column MoveColumnLeft(int columnOrdinal)
+        public Column MoveColumnLeft(string Email,int ColumnOrdinal)
         {
-            if (columnOrdinal == 0)
+            if (ColumnOrdinal == 0)
                 throw new Exception("You can't move the first column left");
+            if (!Email.Equals(GetColumn(ColumnOrdinal).getEmail()))
+                throw new Exception("This user cant move this column left because he is not the creator of the column");
 
-            Column toMove = GetColumn(columnOrdinal);
-            Column Moved = GetColumn(columnOrdinal - 1);
+            Column toMove = GetColumn(ColumnOrdinal);
+            Column Moved = GetColumn(ColumnOrdinal - 1);
             list.Remove(toMove);
-            list.Insert(columnOrdinal - 1, toMove);
+            list.Insert(ColumnOrdinal - 1, toMove);
             toMove.SetColumnOrdinal(list.IndexOf(toMove));
             Moved.SetColumnOrdinal(list.IndexOf(Moved));
             toMove.ToDalObject(toMove.getEmail(), "").Save();
@@ -267,15 +276,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
-        public Column MoveColumnRight(int columnOrdinal)
+        public Column MoveColumnRight(string Email,int ColumnOrdinal)
         {
-            if (columnOrdinal == list.Count - 1)
+            if (ColumnOrdinal == list.Count - 1)
                 throw new Exception("You can't move the last column right");
-
-            Column toMove = GetColumn(columnOrdinal);
-            Column Moved = GetColumn(columnOrdinal + 1);
+            if (!Email.Equals(GetColumn(ColumnOrdinal).getEmail()))
+                throw new Exception("This user cant move this column right because he is not the creator of the column");
+            Column toMove = GetColumn(ColumnOrdinal);
+            Column Moved = GetColumn(ColumnOrdinal + 1);
             list.Remove(toMove);
-            list.Insert(columnOrdinal + 1, toMove);
+            list.Insert(ColumnOrdinal + 1, toMove);
             toMove.SetColumnOrdinal(list.IndexOf(toMove));
             Moved.SetColumnOrdinal(list.IndexOf(Moved));
             toMove.ToDalObject(toMove.getEmail(), "").Save();
@@ -290,37 +300,49 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="name"></param>
         /// <returns>This function returns the new column that added to the board</returns>
 
-        public Column AddColumn(int columnOrdinal, string name, string email)
+        public Column AddColumn(int ColumnOrdinal, string Name, string Email)
         {
-            if (columnOrdinal < 0 | columnOrdinal > list.Count)
+            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
                 throw new Exception("The columnOrdinal is ilegal");
-            if (name == null)
+            if (Name == null)
             {
                 throw new Exception("The name you entered for the column is null");
             }
-            else if (name.Length > MAX_LENGTH_COLUMN_NAME)
+            else if (Name.Length > MAX_LENGTH_COLUMN_NAME)
             {
                 throw new Exception("The name you entered for the column is too long");
             }
 
+            if (list.Count != 0 & !list[0].getEmail().Equals(Email))
+                throw new Exception("This user can't add a new column because he is not the creator");
+
             foreach (Column col in list)
             {
-                if (col.GetColumnName() == name)
+                if (col.GetColumnName().Equals(Name))
                 {
                     throw new Exception("There is already a column with that name");
                 }
             }
-            Column add = new Column(name, columnOrdinal, email);
-            list.Insert(columnOrdinal, add);
+            Column add = new Column(Name, ColumnOrdinal, Email);
+            list.Insert(ColumnOrdinal, add);
             foreach (Column toUpdate in list)
             {
-                if (toUpdate.GetColumnOrdinal() >= columnOrdinal)
+                if (toUpdate.GetColumnOrdinal() >= ColumnOrdinal)
                 {
                     toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
-                    toUpdate.ToDalObject(email, "").Save();
+                    toUpdate.ToDalObject(Email, "").Save();
                 }
             }
             return add;
+        }
+
+        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
+        {
+            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
+                throw new Exception("The columnOrdinal is ilegal");
+            Column column = list[ColumnOrdinal];
+            column.RemoveTask(TaskId, Email);
+            list[ColumnOrdinal] = column;
         }
 
     }
