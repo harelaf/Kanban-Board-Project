@@ -48,6 +48,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             columnName = "";
         }
 
+        /// <summary>
+        /// This function saves the information of this task to the database
+        /// </summary>
         public override void Save()
         {
             string connetion_string = null;
@@ -69,7 +72,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = '{Email}' AND {colTaskId} = '{TaskId}'";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                if (dataReader.Read()) //This if statement checks if the task is already in the database, and in that case wee need to update it
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = $"UPDATE tbTasks SET {colTaskColumn} = @column, {colTaskTitle} = @title, {colTaskDesc} = @description, {colTaskCreationDate} = @creationDate, {colTaskDueDate} = @dueDate WHERE {colTaskEmail} = @Email AND {colTaskId} = @taskId";
@@ -93,7 +96,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = command.ExecuteNonQuery();
                     command.Dispose();
                 }
-                else
+                else //Otherwise, we need to insert its information to the database
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@column,@Email,@title,@description,@creationDate,@dueDate)";
@@ -134,6 +137,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// This function deletes a task from the database, currently not in use
+        /// </summary>
         public override void Delete()
         {
             string connetion_string = null;

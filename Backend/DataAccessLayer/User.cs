@@ -16,7 +16,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public string nickname { get; set; }
         public long idGiver { get; set; }
         public long numOfColumns { get; set; }
-        public DalController dalController;
 
 
         const string colEmail = "Email";
@@ -31,10 +30,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             email = null;
             password = null;
             nickname = null;
-            dalController = new DalController();
             numOfColumns = 0;
             idGiver = 0;
-            dalController = new DalController();
         }
 
         public User(string email, string password, string nickname, int idGiver, int numOfColumns)
@@ -44,7 +41,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.nickname = nickname;
             this.idGiver = idGiver;
             this.numOfColumns = numOfColumns;
-            dalController = new DalController();
         }
 
         public User(string email)
@@ -54,9 +50,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             nickname = null;
             idGiver = 0;
             numOfColumns = 0;
-            dalController = new DalController();
         }
 
+        /// <summary>
+        /// This function saves the information of the user that called it to the database
+        /// </summary>
         public override void Save()
         {
             string connetion_string = null;
@@ -78,7 +76,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 sql_query = $"SELECT * FROM tbUsers WHERE {colEmail} = '{email}'";
                 command = new SQLiteCommand(sql_query, connection);
                 dataReader = command.ExecuteReader();
-                if (dataReader.Read())
+                if (dataReader.Read()) //This if statement checks if the user already exists in the database, in that case we need to update its information
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = $"UPDATE tbUsers SET {colIdGiver} = @idGiver, {colNumOfColumns} = @numOfColumns WHERE {colEmail} = @Email";
@@ -94,7 +92,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     int num_rows_changed = command.ExecuteNonQuery();
                     command.Dispose();
                 }
-                else
+                else //This else is if the user isnt in the database, and in the case we need to insert its information to the database
                 {
                     command = new SQLiteCommand(null, connection);
                     command.CommandText = "INSERT INTO tbUsers VALUES(@Email,@nickName,@password,@IdGiver,@numOfColumns)";
@@ -126,6 +124,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// This function retrieves the information of a user from the database, using its email
+        /// </summary>
+        /// <returns>Using the users email, retrieve the information, store it in the fields and return this user</returns>
         public override User Import()
         {
             string connetion_string = null;
@@ -167,6 +169,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return this;
         }
 
+        /// <summary>
+        /// This function retrieves the columns of the users board from the database
+        /// </summary>
+        /// <returns>A list of columns, that are essentially the users board</returns>
         public List<Column> GetColumns()
         {
             int i = 0;
@@ -180,6 +186,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return colList;
         }
+
 
         public override void Delete()
         {
