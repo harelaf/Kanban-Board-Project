@@ -28,28 +28,29 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// <returns>An object of RegisteredEmails, containing a list of emails</returns>
         public RegisteredEmails Import()
         {
-            string connetion_string;
-            string database_name = "kanbanDB.db";
-            SQLiteConnection connection;
+            string ConnectionString;
+            string DATABASE_NAME = "kanbanDB.db";
+            SQLiteConnection Connection;
+            SQLiteCommand Command;
 
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
+            string MyPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
 
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
-            SQLiteDataReader dataReader;
+            ConnectionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnectionString);
+            SQLiteDataReader DataReader;
             try
             {
-                connection.Open();
+                Connection.Open();
                 string sql = "SELECT Email FROM tbUsers;";
-                SQLiteCommand c = new SQLiteCommand(sql, connection);
-                dataReader = c.ExecuteReader();
+                Command = new SQLiteCommand(sql, Connection);
+                DataReader = Command.ExecuteReader();
                 Emails = new List<string>();
-                while (dataReader.Read())
+                while (DataReader.Read())
                 {
-                    Emails.Add(((string)dataReader["Email"]));
+                    Emails.Add(((string)DataReader["Email"]));
                 }
-                dataReader.Close();
-                c.Dispose();
+                DataReader.Close();
+                Command.Dispose();
             }
             catch(Exception ex)
             {
@@ -57,7 +58,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
+                Connection.Close();
             }
             return this;
         }

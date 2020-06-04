@@ -201,10 +201,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     DataAccessLayer.User temp = new DataAccessLayer.User(email);
                     temp = temp.Import();
 
-                    User toAdd = new User(null, temp.password, temp.nickname);
+                    User toAdd = new User(null, temp.Password, temp.Nickname);
                     toAdd.SetEmail(email);
-                    List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
-                    //DataAccessLayer.Board tempBoard = temp.myBoard;
+                    
+                    DataAccessLayer.Board tempBoard = temp.GetBoard();
+                    List<DataAccessLayer.Column> columnListDAL = tempb.GetColumns();
 
                     List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
                     foreach (DataAccessLayer.Column myColumn in columnListDAL)
@@ -218,7 +219,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.ordinal, email.ToLower()));
                     }
 
-                    Board board = new Board(cl, (int)temp.idGiver);
+                    BoardPackage.Board board = new BoardPackage.Board(cl,IdGiver);
 
                     toAdd.SetBoard(board);
                     UserList.Add(email, toAdd);

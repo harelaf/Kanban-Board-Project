@@ -99,6 +99,7 @@
     <Compile Include="BusinessLayer\IPersistedObject.cs" />
     <Compile Include="BusinessLayer\UserPackage\User.cs" />
     <Compile Include="BusinessLayer\UserPackage\UserController.cs" />
+    <Compile Include="DataAccessLayer\Board.cs" />
     <Compile Include="DataAccessLayer\DalController.cs" />
     <Compile Include="DataAccessLayer\DalObject.cs" />
     <Compile Include="DataAccessLayer\User.cs" />
