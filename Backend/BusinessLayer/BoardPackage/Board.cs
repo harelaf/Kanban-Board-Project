@@ -358,5 +358,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             list[ColumnOrdinal] = MyColumn;
         }
 
+        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
+        {
+            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
+                throw new Exception("The columnOrdinal is ilegal");
+            if (!Email.Equals(list[ColumnOrdinal].getEmail()))
+                throw new Exception("This user can't change the name of this column because he is not the creator");
+            foreach (Column column in list)
+            {
+                if (NewName.Equals(column.GetColumnName()))
+                    throw new Exception("you can't change the name of this column to this name because its name already exists");
+            }
+            list[ColumnOrdinal].SetColumnName(NewName);
+        }
+
     }
 }

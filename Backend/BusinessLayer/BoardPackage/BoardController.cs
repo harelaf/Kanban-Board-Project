@@ -169,5 +169,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             ActiveBoard.DeleteTask(Email, ColumnOrdinal, TaskId);
         }
+
+        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
+        {
+            activeBoard.ChangeColumnName(Email, ColumnOrdinal, NewName);
+        }
     }
 }
