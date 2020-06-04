@@ -170,7 +170,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower());
+            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower(), emailAssignee);
         }
     }
 }
