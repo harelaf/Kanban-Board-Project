@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
-    class Board
+    class Board : IPersistedObject<DataAccessLayer.Board>
     {
 
         private List<Column> list;
-        private int idGiver;
+        private int IdGiver;
 
         const int MAX_LENGTH_COLUMN_NAME = 15;
         const int MIN_AMOUNT_OF_COLUMNS = 2;
@@ -18,7 +18,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Board()
         {
             list = new List<Column>();
-            idGiver = 0;
+            IdGiver = 0;
         }
 
         public Board(string email)
@@ -27,13 +27,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             AddColumn(0, "backlog", email);
             AddColumn(1, "in progress", email);
             AddColumn(2, "done", email);
-            idGiver = 0;
+            IdGiver = 0;
         }
 
-        public Board(List<Column> list, int idGiver)
+        public Board(List<Column> list, int IdGiver)
         {
             this.list = list;
-            this.idGiver = idGiver;
+            this.IdGiver = IdGiver;
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Task AddTask(string title, string description, DateTime dueDate)
         {
-            Task toAdd = list[0].AddTask(title, description, dueDate, idGiver);
-            idGiver++;
+            Task toAdd = list[0].AddTask(title, description, dueDate, IdGiver);
+            IdGiver++;
             return toAdd;
         }
         /// <summary>
@@ -86,7 +86,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public int getIdGiver()
         {
-            return idGiver;
+            return IdGiver;
         }
 
         public List<Column> GetColumns()
@@ -321,6 +321,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
             return add;
+        }
+
+        /// <summary>
+        /// implements the method ToDalObject as promised. turn current board to dal board who is ready to save.
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        public DataAccessLayer.Board ToDalObject(string Email, string column)
+        {
+            DataAccessLayer.Board DalBoard = new DataAccessLayer.Board(Email, IdGiver, GetNumOfColumns());///////////////////////////////////////
+            return new DataAccessLayer.Board();
         }
 
     }

@@ -14,6 +14,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DateTime creationDate;
         private DateTime dueDate;
         private int taskId;
+        private string Assignee;
 
         const int TITLE_MAX_LENGTH = 50;
         const int DESC_MAX_LENGTH = 300;
@@ -162,7 +163,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower());
+            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower(), Assignee);
         }
     }
 }

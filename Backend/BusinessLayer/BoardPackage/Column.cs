@@ -72,6 +72,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             return Email;
         }
+
+        internal Task AddTask(string title, string description, DateTime dueDate, long idGiver)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// This function change the column ordinal of this column by a new given name
         /// </summary>
