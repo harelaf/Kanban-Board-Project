@@ -14,7 +14,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     {
         public string CreatorEmail {get; set;}
         public int NumOfColumns { get; set; }
-        public long IdGiver { get; set; }
+        public int IdGiver { get; set; }
 
         const string COL_CREATOR_EMAIL = "CreatorEmail";
         const string COL_NUM_OF_COLUMNS = "NumOfColumns";
@@ -106,7 +106,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 if (DataReader.Read())
                 {
                     NumOfColumns = (int)DataReader[COL_NUM_OF_COLUMNS];
-                    IdGiver = (long)DataReader[COL_ID_GIVER];
+                    IdGiver = (int)DataReader[COL_ID_GIVER];
                 }
                 DataReader.Close();
             }

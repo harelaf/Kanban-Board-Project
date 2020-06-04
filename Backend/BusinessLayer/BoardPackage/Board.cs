@@ -68,7 +68,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public Task AddTask(string Email,string Title, string Description, DateTime DueDate)
         {
-            Task toAdd = list[0].AddTask(Title, Description, DueDate, idGiver,Email);
+            Task toAdd = list[0].AddTask(Title, Description, DueDate, IdGiver, Email);
             IdGiver++;
             return toAdd;
         }
