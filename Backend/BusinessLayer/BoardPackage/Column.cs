@@ -210,6 +210,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.limit = newLim;
         }
 
+        public void SetColumnName(string name)
+        {
+            this.columnName = name;
+        }
+
         /// <summary>
         /// Getter to the limit of tasks that this column can contains
         /// </summary>

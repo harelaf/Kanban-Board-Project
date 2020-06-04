@@ -392,7 +392,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Warn("Wasnt able to move the column right: No user is logged in the system, or the email doesn't match the current logged in user");
+                log.Warn("Wasn't able to move the column right: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
             }
         }
