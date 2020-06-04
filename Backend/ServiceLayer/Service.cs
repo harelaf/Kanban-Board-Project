@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BoardService boardService;
         private UserService userService;
         private log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        
         /// <summary>
         /// Simple public constructor.
         /// </summary>

@@ -15,11 +15,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private string Email;
 
         const int MAX_LENGTH_NAME = 15;
-
+        const int MAX_NUM_OF_TASKS = 100;
         public Column()
         {
             taskList = new List<Task>();
-            limit = -1;
+            limit = MAX_NUM_OF_TASKS;
             columnName = "";
             columnOrdinal = 0;
             Email = "";
@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("This column name length is over than " + MAX_LENGTH_NAME + " characters");
             this.taskList = new List<Task>();
             this.columnName = columnName;
-            limit = -1;
+            limit = MAX_NUM_OF_TASKS;
             this.columnOrdinal = columnOrdinal;
             Email = email;
         }
@@ -73,11 +73,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return Email;
         }
 
-        internal Task AddTask(string title, string description, DateTime dueDate, long idGiver)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// This function change the column ordinal of this column by a new given name
         /// </summary>
@@ -105,7 +100,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="dueDate"></param>
         /// <param name="taskId"></param>
         /// <returns>This function returns the added task</returns>
-        public Task AddTask(string title, string description, DateTime dueDate, int taskId)
+        public Task AddTask(string title, string description, DateTime dueDate, int taskId,string emailAssignee)
         {
             if (taskList.Count == limit)
             {
@@ -113,7 +108,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
             if (description == null)
                 description = "";
-            Task toAdd = new Task(title, description, dueDate, taskId);
+            Task toAdd = new Task(title, description, dueDate, taskId, emailAssignee);
             taskList.Add(toAdd);
             toAdd.ToDalObject(Email, columnName).Save();
             return toAdd;
@@ -130,10 +125,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <returns>This function returns the removed task</returns>
 
-        public Task RemoveTask(int taskId)
+        public Task RemoveTask(int TaskId,string Email)
         {
-            Task toRemove = taskList.Find(x => x.GetTaskId() == taskId);
-            taskList.Remove(toRemove);
+            Task toRemove = taskList.Find(x => x.GetTaskId() == TaskId);
+            if (Email.Equals(taskList[TaskId].GetEmailAssignee()))
+                taskList.Remove(toRemove);
+            else
+                throw new Exception($"The user with this email:{Email} can't remove this task because he is not the assignee");
             return toRemove;
         }
 
@@ -144,14 +142,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="dueDate"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDueDate(int taskId, DateTime dueDate)
+        public Task UpdateTaskDueDate(string Email, int TaskId, DateTime DueDate)
         {
-            Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
-            toUpdate.UpdateTaskDueDate(dueDate);
-            toUpdate.ToDalObject(Email, columnName).Save();
+            Task toUpdate = taskList.Find(x => x.GetTaskId() == TaskId);
+            if (Email.Equals(taskList[TaskId].GetEmailAssignee()))
+            {
+                toUpdate.UpdateTaskDueDate(DueDate);
+                toUpdate.ToDalObject(Email, columnName).Save();
+            }
+            else
+                throw new Exception($"The user with this email:{Email} can't update this task due date  because he is not the assignee");
             return toUpdate;
-        }
 
+        }
         /// <summary>
         /// This function gets the task id of a specific task which we want to update its title
         /// and a new title and updates it.
@@ -159,11 +162,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="title"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskTitle(int taskId, string title)
+        public Task UpdateTaskTitle(string Email,int TaskId, string Title)
         {
-            Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
-            toUpdate.UpdateTaskTitle(title);
-            toUpdate.ToDalObject(Email, columnName).Save();
+            Task toUpdate = taskList.Find(x => x.GetTaskId() == TaskId);
+            if (Email.Equals(taskList[TaskId].GetEmailAssignee()))
+            {
+                toUpdate.UpdateTaskTitle(Title);
+                toUpdate.ToDalObject(Email, columnName).Save();
+            }
+            else
+                throw new Exception($"The user with this email:{Email} can't update this task title because he is not the assignee");
             return toUpdate;
         }
 
@@ -174,11 +182,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <param name="description"></param>
         /// <returns>returns the updated task</returns>
-        public Task UpdateTaskDescription(int taskId, string description)
+        public Task UpdateTaskDescription(string Email,int TaskId, string Description)
         {
-            Task toUpdate = taskList.Find(x => x.GetTaskId() == taskId);
-            toUpdate.UpdateTaskDescription(description);
-            toUpdate.ToDalObject(Email, columnName).Save();
+            Task toUpdate = taskList.Find(x => x.GetTaskId() == TaskId);
+            if (Email.Equals(taskList[TaskId].GetEmailAssignee()))
+            {
+                toUpdate.UpdateTaskDescription(Description);
+                toUpdate.ToDalObject(Email, columnName).Save();
+            }
+            else
+                throw new Exception($"The user with this email:{Email} can't update this task description because he is not the assignee");
             return toUpdate;
         }
 
@@ -188,14 +201,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="newLim"></param>
         public void SetLimit(int newLim)
         {
+            if (newLim == -1)
+                limit = -1;
             if (taskList.Count > newLim & newLim >= 0)
-            {
                 throw new Exception("This column already has more tasks than the new limit");
-            }
             else if(newLim < -1)
-            {
                 throw new Exception("This limit is unecceptable");
-            }
             this.limit = newLim;
         }
 
