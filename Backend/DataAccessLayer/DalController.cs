@@ -124,5 +124,37 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
             }
         }
+
+        public List<string> ImportRegisteredEmails()
+        {
+
+            List<string> Emails = new List<string>();
+
+            ConnectionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnectionString);
+            SQLiteDataReader DataReader;
+            try
+            {
+                Connection.Open();
+                string sql = "SELECT Email FROM tbUsers;";
+                Command = new SQLiteCommand(sql, Connection);
+                DataReader = Command.ExecuteReader();
+                while (DataReader.Read())
+                {
+                    Emails.Add(((string)DataReader["Email"]));
+                }
+                DataReader.Close();
+                Command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return Emails;
+        }
     }
 }

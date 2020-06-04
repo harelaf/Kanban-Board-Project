@@ -12,7 +12,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
     {
         private Dictionary<string, User> UserList;
         private User CurrentUser;
-        private RegisteredEmails RegisteredEmails;
         private DalController DalController = new DalController();
 
         const int MIN_LENGTH_OF_Password = 5;
@@ -25,7 +24,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             UserList = new Dictionary<string, User>();
             CurrentUser = null;
-            RegisteredEmails = new RegisteredEmails();
             DalController.CreateDataBase();
         }
 
@@ -193,36 +191,36 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void LoadData()
         {
             DalController.CreateDataBase();
-            RegisteredEmails = RegisteredEmails.Import();
-            if (RegisteredEmails.Emails != null)
+            List<string> EmailList = DalController.ImportRegisteredEmails();
+            if (EmailList != null)
             {
-                foreach (string email in RegisteredEmails.Emails)
+                foreach (string CurrEmail in EmailList)
                 {
-                    DataAccessLayer.User Temp = new DataAccessLayer.User(email);
+                    DataAccessLayer.User Temp = new DataAccessLayer.User(CurrEmail);
                     Temp = Temp.Import();
 
                     User toAdd = new User(null, Temp.Password, Temp.Nickname);
-                    toAdd.SetEmail(email);
+                    toAdd.SetEmail(CurrEmail);
                     
                     DataAccessLayer.Board TempBoard = Temp.GetBoard();
-                    List<DataAccessLayer.Column> columnListDAL = TempBoard.GetColumns();
+                    List<DataAccessLayer.Column> ColumnListDAL = TempBoard.GetColumns();
 
-                    List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
-                    foreach (DataAccessLayer.Column myColumn in columnListDAL)
+                    List<BoardPackage.Column> MyColumnList = new List<BoardPackage.Column>();
+                    foreach (DataAccessLayer.Column DalColumn in ColumnListDAL)
                     {
-                        List<DataAccessLayer.Task> TaskListDAL = myColumn.getTasks();
+                        List<DataAccessLayer.Task> TaskListDAL = DalColumn.getTasks();
                         List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
-                        foreach (DataAccessLayer.Task MyTask in TaskListDAL)
+                        foreach (DataAccessLayer.Task DalTask in TaskListDAL)
                         {
-                            myTaskList.Add(new BoardPackage.Task(MyTask.Title, MyTask.Description, MyTask.DueDate, MyTask.TaskId, MyTask.CreationDate, MyTask.Assignee));
+                            myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.CreationDate, DalTask.Assignee));
                         }
-                        cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.Ordinal, email.ToLower()));
+                        MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, CurrEmail.ToLower()));
                     }
 
-                    BoardPackage.Board board = new BoardPackage.Board(cl,TempBoard.IdGiver);
+                    BoardPackage.Board board = new BoardPackage.Board(MyColumnList, TempBoard.IdGiver);
 
                     toAdd.SetBoard(board);
-                    UserList.Add(email, toAdd);
+                    UserList.Add(CurrEmail, toAdd);
                 }
 
             }

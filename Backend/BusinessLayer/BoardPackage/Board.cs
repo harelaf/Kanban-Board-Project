@@ -21,12 +21,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             IdGiver = 0;
         }
 
-        public Board(string email)
+        public Board(string Email)
         {
             list = new List<Column>();
-            AddColumn(0, "backlog", email);
-            AddColumn(1, "in progress", email);
-            AddColumn(2, "done", email);
+            AddColumn(0, "backlog", Email);
+            AddColumn(1, "in progress", Email);
+            AddColumn(2, "done", Email);
             IdGiver = 0;
         }
 
@@ -49,13 +49,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                 throw new Exception("This columnOrdinal is illegal");
 
-            Task toRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == TaskId);
+            Task ToRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == TaskId);
             Column toAddto = list[ColumnOrdinal + 1];
             
-            toAddto.AddTask(toRemove.GetTitle(), toRemove.GetDescription(), toRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
-            Task removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
-          
-            toRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
+            toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
+            Task Removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
+
+            ToRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
         }
 
         /// <summary>
@@ -353,9 +353,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
                 throw new Exception("The columnOrdinal is ilegal");
-            Column column = list[ColumnOrdinal];
-            column.RemoveTask(TaskId, Email);
-            list[ColumnOrdinal] = column;
+            Column MyColumn = list[ColumnOrdinal];
+            MyColumn.RemoveTask(TaskId, Email);
+            list[ColumnOrdinal] = MyColumn;
         }
 
     }

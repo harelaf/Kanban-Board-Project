@@ -9,42 +9,42 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
     class Task : IPersistedObject<DataAccessLayer.Task>
     {
 
-        private string title;
-        private string description;
-        private DateTime creationDate;
-        private DateTime dueDate;
-        private int taskId;
-        private string emailAssignee;
+        private string Title;
+        private string Description;
+        private DateTime CreationDate;
+        private DateTime DueDate;
+        private int TaskId;
+        private string EmailAssignee;
 
-        const int TITLE_MAX_LENGTH = 50;
+        const int Title_MAX_LENGTH = 50;
         const int DESC_MAX_LENGTH = 300;
-        public Task(string title, string description, DateTime dueDate, int taskId,string emailAssignee)
+        public Task(string Title, string Description, DateTime DueDate, int TaskId,string EmailAssignee)
         {
-            if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
+            if (!ValidateTitle(Title) | !ValidateDescription(Description) | !ValidateDueDate(DueDate))
                 throw new Exception("One or more of the parameters illegal");
-            this.title = title;
-            this.description = description;
-            this.creationDate = DateTime.Now;
-            this.dueDate = dueDate;
-            this.taskId = taskId;
-            this.emailAssignee = emailAssignee;
+            this.Title = Title;
+            this.Description = Description;
+            this.CreationDate = DateTime.Now;
+            this.DueDate = DueDate;
+            this.TaskId = TaskId;
+            this.EmailAssignee = EmailAssignee;
         }
 
-        public Task(string title, string description, DateTime dueDate, int taskId, DateTime creationDate,string emailAssignee)
+        public Task(string Title, string Description, DateTime DueDate, int TaskId, DateTime CreationDate,string EmailAssignee)
         {
-            if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
+            if (!ValidateTitle(Title) | !ValidateDescription(Description) | !ValidateDueDate(DueDate))
                 throw new Exception("One or more of the parameters illegal");
-            this.title = title;
-            this.description = description;
-            this.creationDate = creationDate;
-            this.dueDate = dueDate;
-            this.taskId = taskId;
-            this.emailAssignee = emailAssignee;
+            this.Title = Title;
+            this.Description = Description;
+            this.CreationDate = CreationDate;
+            this.DueDate = DueDate;
+            this.TaskId = TaskId;
+            this.EmailAssignee = EmailAssignee;
         }
 
         public string GetEmailAssignee()
         {
-            return emailAssignee;
+            return EmailAssignee;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns the creation date</returns>
         public DateTime GetCreationDate()
         {
-            return creationDate;
+            return CreationDate;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns the task id</returns>
         public int GetTaskId()
         {
-            return taskId;
+            return TaskId;
         }
 
         /// <summary>
@@ -71,25 +71,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="id"></param>
         public void SetTaskId(int id)
         {
-            this.taskId = id;
+            this.TaskId = id;
         }
 
         /// <summary>
-        /// Getter to the title of the task
+        /// Getter to the Title of the task
         /// </summary>
-        /// <returns>returns the title of the task</returns>
+        /// <returns>returns the Title of the task</returns>
         public string GetTitle()
         {
-            return title;
+            return Title;
         }
 
         /// <summary>
-        /// Getter to the description of the task 
+        /// Getter to the Description of the task 
         /// </summary>
-        /// <returns>returns the description of the task</returns>
+        /// <returns>returns the Description of the task</returns>
         public string GetDescription()
         {
-            return description;
+            return Description;
         }
 
         /// <summary>
@@ -98,60 +98,60 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns the due date of the task</returns>
         public DateTime GetDueDate()
         {
-            return dueDate;
+            return DueDate;
         }
 
         /// <summary>
         /// This function gets a new due date and updates the older one to the new due date
         /// </summary>
-        /// <param name="dueDate"></param>
-        public void UpdateTaskDueDate(DateTime dueDate)
+        /// <param name="DueDate"></param>
+        public void UpdateTaskDueDate(DateTime DueDate)
         {
-            if (!ValidateDueDate(dueDate))
-                throw new Exception("The dueDate is Illegal(Date already passed)");
-            this.dueDate = dueDate;
+            if (!ValidateDueDate(DueDate))
+                throw new Exception("The DueDate is Illegal(Date already passed)");
+            this.DueDate = DueDate;
         }
         /// <summary>
-        /// This function gets a new title and updates the older one to the new title
+        /// This function gets a new Title and updates the older one to the new Title
         /// </summary>
-        /// <param name="title"></param>
-        public void UpdateTaskTitle(string title)
+        /// <param name="Title"></param>
+        public void UpdateTaskTitle(string Title)
         {
-            if (!ValidateTitle(title))
-                throw new Exception("Illegal title(over " + TITLE_MAX_LENGTH + " characters or empty)");
-            this.title = title;
+            if (!ValidateTitle(Title))
+                throw new Exception("Illegal Title(over " + Title_MAX_LENGTH + " characters or empty)");
+            this.Title = Title;
         }
 
         /// <summary>
-        /// This function gets a new description and updates the older one to the new description
+        /// This function gets a new Description and updates the older one to the new Description
         /// </summary>
-        /// <param name="description"></param>
-        public void UpdateTaskDescription(string description)
+        /// <param name="Description"></param>
+        public void UpdateTaskDescription(string Description)
         {
-            if (description == null)
-                description = "";
-            if (!ValidateDescription(description))
+            if (Description == null)
+                Description = "";
+            if (!ValidateDescription(Description))
                 throw new Exception("Description not fit(over than " + DESC_MAX_LENGTH + "characters)");
-            this.description = description;
+            this.Description = Description;
         }
 
         /// <summary>
-        /// This function gets a title and checks if the title is validate
-        /// (the title can't be empty and must contains at most 50 characters)
+        /// This function gets a Title and checks if the Title is validate
+        /// (the Title can't be empty and must contains at most 50 characters)
         /// </summary>
-        /// <param name="title"></param>
-        /// <returns>returns true if the title is validate or false if not</returns>
-        private bool ValidateTitle(string title)
+        /// <param name="Title"></param>
+        /// <returns>returns true if the Title is validate or false if not</returns>
+        private bool ValidateTitle(string Title)
         {
-            return title != null && title.Length <= TITLE_MAX_LENGTH & title.Length > 0;
+            return Title != null && Title.Length <= Title_MAX_LENGTH & Title.Length > 0;
         }
 
         /// <summary>
-        /// This function gets a description and checks if the description is validate
-        /// (the description contains at most 300 characters)
+        /// This function gets a Description and checks if the Description is validate
+        /// (the Description contains at most 300 characters)
         /// </summary>
         /// <param name="newDesc"></param>
-        /// <returns>returns true if the description is validate or false if not</returns>
+        /// <returns>returns true if the Description is validate or false if not</returns>
         private bool ValidateDescription(string newDesc)
         {
             return newDesc.Length <= DESC_MAX_LENGTH;
@@ -170,7 +170,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower(), emailAssignee);
+            return new DataAccessLayer.Task(Title, Description, CreationDate, DueDate, TaskId, column, Email.ToLower(), EmailAssignee);
         }
     }
 }
