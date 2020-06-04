@@ -172,7 +172,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
         {
-            activeBoard.ChangeColumnName(Email, ColumnOrdinal, NewName);
+            ActiveBoard.ChangeColumnName(Email, ColumnOrdinal, NewName);
         }
     }
 }

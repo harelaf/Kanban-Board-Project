@@ -8,48 +8,48 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
     class User : IPersistedObject<DataAccessLayer.User>
     {
-        private String email;
-        private string password;
-        private string nickname;
-        private BoardPackage.Board myBoard;
+        private String Email;
+        private string Password;
+        private string Nickname;
+        private BoardPackage.Board MyBoard;
 
-        public User(string email, string password, string nickname)
+        public User(string Email, string Password, string Nickname)
         {
-            this.email = email;
-            this.password = password;
-            this.nickname = nickname;
-            if (email != null)
+            this.Email = Email;
+            this.Password = Password;
+            this.Nickname = Nickname;
+            if (Email != null)
             {
-                myBoard = new BoardPackage.Board(email);
+                MyBoard = new BoardPackage.Board(Email);
             }
             else
             {
-                myBoard = new BoardPackage.Board();
+                MyBoard = new BoardPackage.Board();
             }
         }
 
         public void SetEmail(string Email)
         {
-            this.email = Email;
+            this.Email = Email;
         }
 
         /// <summary>
-        /// this function gets a password and checks if the given password is same as the user password 
+        /// this function gets a Password and checks if the given Password is same as the user Password 
         /// </summary>
-        /// <param name="password"></param>
-        /// <returns>returns true if the password is correct and false if not</returns>
-        public Boolean ValidatePassword(string password)
+        /// <param name="Password"></param>
+        /// <returns>returns true if the Password is correct and false if not</returns>
+        public Boolean ValidatePassword(string Password)
         {
-            return this.password.Equals(password);
+            return this.Password.Equals(Password);
         }
 
         /// <summary>
-        /// Getter to the email adress
+        /// Getter to the Email adress
         /// </summary>
-        /// <returns>returns the email adress</returns>
+        /// <returns>returns the Email adress</returns>
         public string GetEmail()
         {
-            return email;
+            return Email;
         }
 
         /// <summary>
@@ -58,16 +58,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         /// <returns>returns the board</returns>
         public BoardPackage.Board GetBoard()
         {
-            return myBoard;
+            return MyBoard;
         }
 
         /// <summary>
-        /// Getter to the nickname of the user
+        /// Getter to the Nickname of the user
         /// </summary>
         /// <returns>returns the nuckname of the user</returns>
         public string GetNickname()
         {
-            return nickname;
+            return Nickname;
         }
 
         /// <summary>
@@ -76,12 +76,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         /// <param name="newBoard"></param>
         public void SetBoard(BoardPackage.Board newBoard)
         {
-            myBoard = newBoard;
+            MyBoard = newBoard;
         }
 
 
         /// <summary>
-        /// This function gets an email and a column ordinal and convert the user 
+        /// This function gets an Email and a column ordinal and convert the user 
         /// to a DAL user 
         /// </summary>
         /// <param name="Email"></param>
@@ -90,7 +90,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 
         public DataAccessLayer.User ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.User(email.ToLower(), password, nickname, myBoard.GetColumn(0).getEmail());///////////////////////////////
+            return new DataAccessLayer.User(Email.ToLower(), Password, Nickname, MyBoard.GetColumn(0).getEmail());///////////////////////////////
         }
     }
 }

@@ -212,7 +212,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string name)
         {
-            this.columnName = name;
+            this.ColumnName = name;
         }
 
         /// <summary>

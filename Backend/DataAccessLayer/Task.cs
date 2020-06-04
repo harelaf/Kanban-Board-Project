@@ -33,7 +33,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         SQLiteConnection Connection;
         SQLiteCommand Command;
         const string DATABASE_NAME = "kanbanDB.db";
-        const string Path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
+        string MyPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
 
         public Task(string Title,string Description,DateTime CreationDate,DateTime DueDate,int TaskId, string ColumnName, string Email, string Assignee)
         {
@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             this.Description = null;
             this.CreationDate = new DateTime();
             this.DueDate = new DateTime();
-            this.TaskId = null;
+            this.TaskId = 0;
             this.ColumnName = null;
             this.Email = "";
             this.Assignee = "";
@@ -65,7 +65,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public override void Save()
         {
             
-            ConnetionString = $"Data Source={path};Version=3;";
+            ConnetionString = $"Data Source={MyPath};Version=3;";
             Connection = new SQLiteConnection(ConnetionString);
             SQLiteDataReader DataReader;
 
@@ -95,7 +95,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     Command.Parameters.Add(CreationDateParam);
                     Command.Parameters.Add(DueDateparam);
                     Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(TaskidParam);
+                    Command.Parameters.Add(TaskIdParam);
                     Command.Parameters.Add(AssigneeParam);
 
 
@@ -122,7 +122,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     Command.Parameters.Add(CreationDateParam);
                     Command.Parameters.Add(DueDateparam);
                     Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(TaskidParam);
+                    Command.Parameters.Add(TaskIdParam);
                     Command.Parameters.Add(AssigneeParam);
 
                     Command.Prepare();
@@ -151,7 +151,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// </summary>
         public override void Delete()
         {
-            ConnetionString = $"Data Source={Path};Version=3;";
+            ConnetionString = $"Data Source={MyPath};Version=3;";
             Connection = new SQLiteConnection(ConnetionString);
             Command = new SQLiteCommand();
 
