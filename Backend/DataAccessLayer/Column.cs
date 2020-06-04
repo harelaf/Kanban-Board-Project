@@ -19,6 +19,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         const string colName = "columnName";
         const string colOrdinal = "columnId";
         const string colLimit = "columnLimit";
+
         const string colTaskEmail = "Email";
         const string colTaskTitle = "Title";
         const string colTaskColumn = "column";
