@@ -15,37 +15,48 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         public DateTime CreationDate { get; set; }
         public DateTime DueDate { get; set; }
         public int TaskId { get; set; }
-        public String columnName { get; set; }
+        public String ColumnName { get; set; }
         public string Email { get; set; }
+        public string Assignee { get; set; }
 
-        const string colTaskId = "TaskId";
-        const string colTaskEmail = "Email";
-        const string colTaskTitle = "Title";
-        const string colTaskColumn = "column";
-        const string colTaskDesc = "description";
-        const string colTaskCreationDate = "creationDate";
-        const string colTaskDueDate = "dueDate";
+        const string COL_TASK_EMAIL = "Email";
+        const string COL_TASK_TITLE = "Title";
+        const string COL_TASK_COLUMN = "Column";
+        const string COL_TASK_ID = "TaskId";
+        const string COL_TASK_DESC = "Description";
+        const string COL_TASK_CREATION_DATE = "CreationDate";
+        const string COL_TASK_DUE_DATE = "DueDate";
+        const string COL_TASK_ASSIGNEE = "Assignee";
 
-        public Task(string Title,string Description,DateTime CreationDate,DateTime DueDate,int TaskId, string columnName, string Email)
+        string ConnetionString = null;
+        string SqlQuery = null;
+        SQLiteConnection Connection;
+        SQLiteCommand Command;
+        const string DATABASE_NAME = "kanbanDB.db";
+        const string Path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
+
+        public Task(string Title,string Description,DateTime CreationDate,DateTime DueDate,int TaskId, string ColumnName, string Email, string Assignee)
         {
             this.Title = Title;
             this.Description = Description;
             this.CreationDate = CreationDate;
             this.DueDate = DueDate;
             this.TaskId = TaskId;
-            this.columnName = columnName;
+            this.ColumnName = ColumnName;
             this.Email = Email;
+            this.Assignee = Assignee;
         }
 
         public Task()
         {
-            Title = null;
-            Description = null;
-            CreationDate = new DateTime();
-            DueDate = new DateTime();
-            TaskId = 0;
-            Email = "";
-            columnName = "";
+            this.Title = null;
+            this.Description = null;
+            this.CreationDate = new DateTime();
+            this.DueDate = new DateTime();
+            this.TaskId = null;
+            this.ColumnName = null;
+            this.Email = "";
+            this.Assignee = "";
         }
 
         /// <summary>
@@ -53,74 +64,72 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// </summary>
         public override void Save()
         {
-            string connetion_string = null;
-            string sql_query = null;
-            string database_name = "kanbanDB.db";
-            SQLiteConnection connection;
-            SQLiteCommand command = new SQLiteCommand();
-
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
-            SQLiteDataReader dataReader;
+            
+            ConnetionString = $"Data Source={path};Version=3;";
+            Connection = new SQLiteConnection(ConnetionString);
+            SQLiteDataReader DataReader;
 
             try
             {
-                connection.Open();
+                Connection.Open();
 
-                sql_query = $"SELECT * FROM tbTasks WHERE {colTaskEmail} = '{Email}' AND {colTaskId} = '{TaskId}'";
-                command = new SQLiteCommand(sql_query, connection);
-                dataReader = command.ExecuteReader();
-                if (dataReader.Read()) //This if statement checks if the task is already in the database, and in that case wee need to update it
+                SqlQuery = $"SELECT * FROM tbTasks WHERE {COL_TASK_EMAIL} = '{Email}' AND {COL_TASK_ID} = '{TaskId}'";
+                Command = new SQLiteCommand(SqlQuery, Connection);
+                DataReader = Command.ExecuteReader();
+                if (DataReader.Read())
                 {
-                    command = new SQLiteCommand(null, connection);
-                    command.CommandText = $"UPDATE tbTasks SET {colTaskColumn} = @column, {colTaskTitle} = @title, {colTaskDesc} = @description, {colTaskCreationDate} = @creationDate, {colTaskDueDate} = @dueDate WHERE {colTaskEmail} = @Email AND {colTaskId} = @taskId";
-                    SQLiteParameter columnParam = new SQLiteParameter(@"column", columnName);
-                    SQLiteParameter titleParam = new SQLiteParameter(@"title", Title);
-                    SQLiteParameter descrptionParam = new SQLiteParameter(@"description", Description);
-                    SQLiteParameter creationDateParam = new SQLiteParameter(@"creationDate", CreationDate.ToString());
-                    SQLiteParameter dueDateparam = new SQLiteParameter(@"dueDate", DueDate.ToString());
+                    Command = new SQLiteCommand(null, Connection);
+                    Command.CommandText = $"UPDATE tbTasks SET {COL_TASK_COLUMN} = @Column, {COL_TASK_TITLE} = @Title, {COL_TASK_DESC} = @Description, {COL_TASK_CREATION_DATE} = @DreationDate, {COL_TASK_DUE_DATE} = @DueDate, {COL_TASK_ASSIGNEE} = @Assignee WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @taskId";
+                    SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
+                    SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
+                    SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
+                    SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
+                    SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter taskidParam = new SQLiteParameter(@"taskId", TaskId);
+                    SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
+                    SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
 
-                    command.Parameters.Add(columnParam);
-                    command.Parameters.Add(titleParam);
-                    command.Parameters.Add(descrptionParam);
-                    command.Parameters.Add(creationDateParam);
-                    command.Parameters.Add(dueDateparam);
-                    command.Parameters.Add(EmailParam);
-                    command.Parameters.Add(taskidParam);
+                    Command.Parameters.Add(ColumnParam);
+                    Command.Parameters.Add(TitleParam);
+                    Command.Parameters.Add(DescrptionParam);
+                    Command.Parameters.Add(CreationDateParam);
+                    Command.Parameters.Add(DueDateparam);
+                    Command.Parameters.Add(EmailParam);
+                    Command.Parameters.Add(TaskidParam);
+                    Command.Parameters.Add(AssigneeParam);
 
-                    command.Prepare();
-                    int num_rows_changed = command.ExecuteNonQuery();
-                    command.Dispose();
+
+                    Command.Prepare();
+                    int num_rows_changed = Command.ExecuteNonQuery();
+                    Command.Dispose();
                 }
                 else //Otherwise, we need to insert its information to the database
                 {
-                    command = new SQLiteCommand(null, connection);
-                    command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@column,@Email,@title,@description,@creationDate,@dueDate)";
-                    SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
-                    SQLiteParameter columnParam = new SQLiteParameter(@"column", columnName);
+                    Command = new SQLiteCommand(null, Connection);
+                    Command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@Column,@Email,@Title,@Description,@CreationDate,@DueDate,@Assignee)";
+                    SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
+                    SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
+                    SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
+                    SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
+                    SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
                     SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter titleParam = new SQLiteParameter(@"title", Title);
-                    SQLiteParameter descrptionParam = new SQLiteParameter(@"description", Description);
-                    SQLiteParameter creationDateParam = new SQLiteParameter(@"creationDate", CreationDate.ToString());
-                    SQLiteParameter dueDateparam = new SQLiteParameter(@"dueDate", DueDate.ToString());
+                    SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
+                    SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
 
-                    command.Parameters.Add(TaskIdParam);
-                    command.Parameters.Add(columnParam);
-                    command.Parameters.Add(EmailParam);
-                    command.Parameters.Add(titleParam);
-                    command.Parameters.Add(descrptionParam);
-                    command.Parameters.Add(creationDateParam);
-                    command.Parameters.Add(dueDateparam);
+                    Command.Parameters.Add(ColumnParam);
+                    Command.Parameters.Add(TitleParam);
+                    Command.Parameters.Add(DescrptionParam);
+                    Command.Parameters.Add(CreationDateParam);
+                    Command.Parameters.Add(DueDateparam);
+                    Command.Parameters.Add(EmailParam);
+                    Command.Parameters.Add(TaskidParam);
+                    Command.Parameters.Add(AssigneeParam);
 
-                    command.Prepare();
-                    int num_rows_changed = command.ExecuteNonQuery();
-                    command.Dispose();
+                    Command.Prepare();
+                    int Num_Rows_Changed = Command.ExecuteNonQuery();
+                    Command.Dispose();
                 }
-                dataReader.Close();
+                DataReader.Close();
             }
             catch (Exception e)
             {
@@ -128,7 +137,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
+                Connection.Close();
             }
         }
 
@@ -142,31 +151,25 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// </summary>
         public override void Delete()
         {
-            string connetion_string = null;
-            string database_name = "kanbanDB.db";
-            SQLiteConnection connection;
-            SQLiteCommand command = new SQLiteCommand();
-
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), database_name));
-
-            connetion_string = $"Data Source={path};Version=3;";
-            connection = new SQLiteConnection(connetion_string);
+            ConnetionString = $"Data Source={Path};Version=3;";
+            Connection = new SQLiteConnection(ConnetionString);
+            Command = new SQLiteCommand();
 
             try
             {
-                connection.Open();
+                Connection.Open();
 
-                command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM tbTasks WHERE {colTaskEmail} = @Email AND {colTaskId} = @taskId";
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = $"DELETE FROM tbTasks WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @taskId";
                 SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
                 SQLiteParameter taskIdParam = new SQLiteParameter(@"taskId", TaskId);
 
-                command.Parameters.Add(EmailParam);
-                command.Parameters.Add(taskIdParam);
+                Command.Parameters.Add(EmailParam);
+                Command.Parameters.Add(taskIdParam);
 
-                command.Prepare();
-                int num_rows_changed = command.ExecuteNonQuery();
-                command.Dispose();
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
             }
             catch (Exception e)
             {
@@ -174,7 +177,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             finally
             {
-                connection.Close();
+                Connection.Close();
             }
         }
     }
