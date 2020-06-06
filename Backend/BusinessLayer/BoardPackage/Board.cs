@@ -58,13 +58,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             toRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
         }
 
+        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+
+        }
+
+        public void DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+
+        }
+
+        public void ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+
+        }
+
         /// <summary>
         /// This function adds new task to the board by giving the title, description and dueDate of the new task
         /// </summary>
         /// <param name="title"></param>
         /// <param name="description"></param>
-        /// <param name="dueDate"></param>
-        /// <returns> This function returns the added task </returns>
+        /// <param name="dueDate"></param>        /// <returns> This function returns the added task </returns>
 
         public Task AddTask(string Email,string Title, string Description, DateTime DueDate)
         {
