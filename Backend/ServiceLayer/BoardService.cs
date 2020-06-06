@@ -47,6 +47,75 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
+        public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried assigning a task with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.AssignTask(email.ToLower(), columnOrdinal, taskId, emailAssignee);
+                response = new Response();
+                log.Info("Task has been assigned successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at assigning a task: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
+        public Response DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried deleting a task with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.DeleteTask(email.ToLower(), columnOrdinal, taskId);
+                response = new Response();
+                log.Info("Task has been deleted successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at deleting a task: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
+        public Response ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried changing a column's name with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.ChangeColumnName(email, columnOrdinal, newName);
+                response = new Response();
+                log.Info("Name of the column has changed successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at changing a column's name: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
         public Response AdvanceTask(int columnOrdinal, int taskId, string Email)
         {
             Response response;
