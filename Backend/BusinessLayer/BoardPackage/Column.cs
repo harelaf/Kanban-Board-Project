@@ -73,6 +73,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return Email;
         }
 
+        public void SetColumnName(string ColumnName)
+        {
+            this.columnName = ColumnName;
+        }
+
         /// <summary>
         /// This function change the column ordinal of this column by a new given name
         /// </summary>

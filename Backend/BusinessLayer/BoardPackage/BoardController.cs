@@ -134,7 +134,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
 
         /// <summary>
-        /// This column is shifting a specific column one column left. This column is identify by his column ordinal 
+        /// This column is shifting a specific column one column left. TC:\Users\יועד אוחיון\Git-Workspace\milestones-2-doom\Backend\BusinessLayer\BoardPackage\BoardController.cshis column is identify by his column ordinal 
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
@@ -168,6 +168,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
         {
             activeBoard.DeleteTask(Email, ColumnOrdinal, TaskId);
+        }
+
+        public void ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            activeBoard.ChangeColumnName(email, columnOrdinal, newName);
         }
     }
 }
