@@ -12,11 +12,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
     {
         private Dictionary<string, User> UserList;
         private User CurrentUser;
-        private RegisteredEmails registeredemails;
+        private RegisteredEmails RegisteredEmails;
         private DalController DalController = new DalController();
 
-        const int MIN_LENGTH_OF_PASSWORD = 5;
-        const int MAX_LENGTH_OF_PASSWORD = 25;
+        const int MIN_LENGTH_OF_Password = 5;
+        const int MAX_LENGTH_OF_Password = 25;
         const int MIN_UCASE_LETTER = 1;
         const int MIN_LCASE_LETTER = 1;
         const int MIN_DIGITS = 1;
@@ -25,12 +25,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             UserList = new Dictionary<string, User>();
             CurrentUser = null;
-            registeredemails = new RegisteredEmails();
+            RegisteredEmails = new RegisteredEmails();
             DalController.CreateDataBase();
         }
 
         /// <summary>
-        /// This function gets the email of the user and the password
+        /// This function gets the email of the user and the Password
         /// and login to the system if the details are correct 
         /// </summary>
         /// <param name="Email"></param>
@@ -47,7 +47,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     return MyUser;
                 }
                 else
-                    throw new Exception("your password is incorrect");
+                    throw new Exception("your Password is incorrect");
 
             }
             else
@@ -68,30 +68,30 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
 
         /// <summary>
-        /// This function gets a password and checks if this password is legal to register with
-        /// according to the next demands : a user password must be in length of 5 to 25 characters and must include at
+        /// This function gets a Password and checks if this Password is legal to register with
+        /// according to the next demands : a user Password must be in length of 5 to 25 characters and must include at
         ///least one uppercase letter, one small character and a number.
         /// </summary>
-        /// <param name="password"></param>
-        /// <returns>returns true if this password is proper to register or false if not</returns>
-        private bool CheckProperPassToRegister(string password)
+        /// <param name="Password"></param>
+        /// <returns>returns true if this Password is proper to register or false if not</returns>
+        private bool CheckProperPassToRegister(string Password)
         {
-            if (password.Length > MAX_LENGTH_OF_PASSWORD | password.Length < MIN_LENGTH_OF_PASSWORD)
-                throw new Exception("This password is not between" + MIN_LENGTH_OF_PASSWORD + "-" + MAX_LENGTH_OF_PASSWORD + "characters");
+            if (Password.Length > MAX_LENGTH_OF_Password | Password.Length < MIN_LENGTH_OF_Password)
+                throw new Exception("This password is not between" + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + "characters");
             int AmountOfUpperCase = MIN_UCASE_LETTER;
             int AmountOfLowerCase = MIN_LCASE_LETTER;
             int AmountOfDigits = MIN_DIGITS;
 
-            for (int index = 0; index < password.Length & (AmountOfDigits > 0 | AmountOfLowerCase > 0 | AmountOfUpperCase > 0); index++)
+            for (int Index = 0; Index < Password.Length & (AmountOfDigits > 0 | AmountOfLowerCase > 0 | AmountOfUpperCase > 0); Index++)
             {
 
-                if (password[index] >= 'a' & password[index] <= 'z')
+                if (Password[Index] >= 'a' & Password[Index] <= 'z')
                     AmountOfLowerCase--;
 
-                else if (password[index] >= 'A' & password[index] <= 'Z')
+                else if (Password[Index] >= 'A' & Password[Index] <= 'Z')
                     AmountOfUpperCase--;
 
-                else if (password[index] >= '0' & password[index] <= '9')
+                else if (Password[Index] >= '0' & Password[Index] <= '9')
                     AmountOfDigits--;
 
             }
@@ -103,14 +103,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         }
 
         /// <summary>
-        /// This function gets an email,password and nickname and registers to the system
-        /// if the email is not already taken, the password is proper the email is legal 
-        /// and the nickname is not null
+        /// This function gets an email,Password and Nickname and registers to the system
+        /// if the email is not already taken, the Password is proper the email is legal 
+        /// and the Nickname is not null
         /// </summary>
         /// <param name="Email"></param>
         /// <param name="Password"></param>
-        /// <param name="NickName"></param>
-        public void Register(string Email, string Password, string NickName)
+        /// <param name="Nickname"></param>
+        public void Register(string Email, string Password, string Nickname)
         {
             if (UserList.ContainsKey(Email))
             {
@@ -118,23 +118,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
             if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
             {
-                if (NickName == null)
+                if (Nickname == null)
                 {
-                    throw new Exception("A null value was entered for the nickname");
+                    throw new Exception("A null value was entered for the Nickname");
                 }
-                else if (NickName == "")
+                else if (Nickname == "")
                 {
-                    throw new Exception("An empty nickname was entered");
+                    throw new Exception("An empty Nickname was entered");
                 }
-                User MyUser = new User(Email, Password, NickName);
+                User MyUser = new User(Email, Password, Nickname);
                 UserList.Add(Email, MyUser);
-                //registeredEmails.Emails.Add(Email);
-                //registeredEmails.Save();
+                //RegisteredEmails.Emails.Add(Email);
+                //RegisteredEmails.Save();
                 MyUser.ToDalObject(Email, "").Save();
             }
             else
             {
-                throw new Exception("The password or email entered are invaild");
+                throw new Exception("The Password or email entered are invaild");
             }
         }
 
@@ -147,32 +147,32 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         {
             try
             {
-                var addr = new System.Net.Mail.MailAddress(Email);
+                var Addr = new System.Net.Mail.MailAddress(Email);
                 if (Email.IndexOf('@') == -1)
-                    throw new Exception("Ilegal email, the email must contains @");
-                int index = Email.IndexOf('@');
-                int counter = 0;
+                    throw new Exception("Illegal email, the email must contains @");
+                int Index = Email.IndexOf('@');
+                int Counter = 0;
 
-                if (Email.Substring(index + 1).Contains("@"))
-                    throw new Exception("Ilegal email, the email contains more than one @");
+                if (Email.Substring(Index + 1).Contains("@"))
+                    throw new Exception("Illegal email, the email contains more than one @");
 
-                if (!Email.Substring(index + 1).Contains("."))
-                    throw new Exception("Ilegal email, the email doesnt contain a '.'");
+                if (!Email.Substring(Index + 1).Contains("."))
+                    throw new Exception("Illegal email, the email doesnt contain a '.'");
 
-                for (int i = index + 1; i < Email.Length; i++)
+                for (int i = Index + 1; i < Email.Length; i++)
                 {
                     if (Email[i] != '.')
-                        counter++;
-                    else if (counter < 2)
-                        throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                        Counter++;
+                    else if (Counter < 2)
+                        throw new Exception("Illegal email, every generic top level must contains 2 or more characters");
                     else
-                        counter = 0;
+                        Counter = 0;
                 }
 
-                if (counter < 2)
-                    throw new Exception("Ilegal email, every generic top level must contains 2 or more characters");
+                if (Counter < 2)
+                    throw new Exception("Illegal email, every generic top level must contains 2 or more characters");
 
-                return addr.Address == Email;
+                return Addr.Address == Email;
             }
             catch
             {
@@ -193,32 +193,33 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void LoadData()
         {
             DalController.CreateDataBase();
-            registeredemails = registeredemails.Import();
-            if (registeredemails.Emails != null)
+            RegisteredEmails = RegisteredEmails.Import();
+            if (RegisteredEmails.Emails != null)
             {
-                foreach (string email in registeredemails.Emails)
+                foreach (string email in RegisteredEmails.Emails)
                 {
-                    DataAccessLayer.User temp = new DataAccessLayer.User(email);
-                    temp = temp.Import();
+                    DataAccessLayer.User Temp = new DataAccessLayer.User(email);
+                    Temp = Temp.Import();
 
-                    User toAdd = new User(null, temp.password, temp.nickname);
+                    User toAdd = new User(null, Temp.Password, Temp.Nickname);
                     toAdd.SetEmail(email);
-                    List<DataAccessLayer.Column> columnListDAL = temp.GetColumns();
-                    //DataAccessLayer.Board tempBoard = temp.myBoard;
+                    
+                    DataAccessLayer.Board TempBoard = Temp.GetBoard();
+                    List<DataAccessLayer.Column> columnListDAL = TempBoard.GetColumns();
 
                     List<BoardPackage.Column> cl = new List<BoardPackage.Column>();
                     foreach (DataAccessLayer.Column myColumn in columnListDAL)
                     {
                         List<DataAccessLayer.Task> TaskListDAL = myColumn.getTasks();
                         List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
-                        foreach (DataAccessLayer.Task task in TaskListDAL)
+                        foreach (DataAccessLayer.Task MyTask in TaskListDAL)
                         {
-                            myTaskList.Add(new BoardPackage.Task(task.Title, task.Description, task.DueDate, task.TaskId, task.CreationDate));
+                            myTaskList.Add(new BoardPackage.Task(MyTask.Title, MyTask.Description, MyTask.DueDate, MyTask.TaskId, MyTask.CreationDate, MyTask.Assignee));
                         }
-                        cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.ordinal, email.ToLower()));
+                        cl.Add(new BoardPackage.Column(myTaskList, (int)myColumn.Limit, myColumn.Name, (int)myColumn.Ordinal, email.ToLower()));
                     }
 
-                    Board board = new Board(cl, (int)temp.idGiver);
+                    BoardPackage.Board board = new BoardPackage.Board(cl,TempBoard.IdGiver);
 
                     toAdd.SetBoard(board);
                     UserList.Add(email, toAdd);

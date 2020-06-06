@@ -14,10 +14,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         private DateTime creationDate;
         private DateTime dueDate;
         private int taskId;
+        private string emailAssignee;
 
         const int TITLE_MAX_LENGTH = 50;
         const int DESC_MAX_LENGTH = 300;
-        public Task(string title, string description, DateTime dueDate, int taskId)
+        public Task(string title, string description, DateTime dueDate, int taskId,string emailAssignee)
         {
             if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
                 throw new Exception("One or more of the parameters illegal");
@@ -26,9 +27,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.creationDate = DateTime.Now;
             this.dueDate = dueDate;
             this.taskId = taskId;
+            this.emailAssignee = emailAssignee;
         }
 
-        public Task(string title, string description, DateTime dueDate, int taskId, DateTime creationDate)
+        public Task(string title, string description, DateTime dueDate, int taskId, DateTime creationDate,string emailAssignee)
         {
             if (!ValidateTitle(title) | !ValidateDescription(description) | !ValidateDueDate(dueDate))
                 throw new Exception("One or more of the parameters illegal");
@@ -37,6 +39,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.creationDate = creationDate;
             this.dueDate = dueDate;
             this.taskId = taskId;
+            this.emailAssignee = emailAssignee;
+        }
+
+        public string GetEmailAssignee()
+        {
+            return emailAssignee;
         }
 
         /// <summary>
@@ -162,7 +170,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)
         {
-            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower());
+            return new DataAccessLayer.Task(title, description, creationDate, dueDate, taskId, column, Email.ToLower(), emailAssignee);
         }
     }
 }
