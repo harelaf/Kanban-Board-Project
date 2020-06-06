@@ -63,16 +63,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         }
 
-        public void DeleteTask(string email, int columnOrdinal, int taskId)
-        {
-
-        }
-
-        public void ChangeColumnName(string email, int columnOrdinal, string newName)
-        {
-
-        }
-
         /// <summary>
         /// This function adds new task to the board by giving the title, description and dueDate of the new task
         /// </summary>
