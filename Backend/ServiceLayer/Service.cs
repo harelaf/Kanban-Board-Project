@@ -446,9 +446,5 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
         }
 
-        Response IService.ChangeColumnName(string email, int columnOrdinal, string newName)
-        {
-            throw new NotImplementedException();
-        }
     }
-}
+

@@ -149,7 +149,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         }
 
         /// <summary>
-        /// This column is shifting a specific column one column left. This column is identify by his column ordinal 
+        /// This column is shifting a specific column one column left. TC:\Users\יועד אוחיון\Git-Workspace\milestones-2-doom\Backend\BusinessLayer\BoardPackage\BoardController.cshis column is identify by his column ordinal 
         /// </summary>
         /// <param name="columnOrdinal"></param>
         /// <returns>This function returns the shifted column</returns>
