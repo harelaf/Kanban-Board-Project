@@ -136,13 +136,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         /// <returns>This function returns the removed task</returns>
 
-        public Task RemoveTask(int TaskId,string Email)
+        public Task RemoveTask(int TaskId, string Email)
         {
             Task toRemove = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
-                TaskList.Remove(toRemove);
-            else
-                throw new Exception($"The user with this Email:{Email} can't remove this task because he is not the assignee");
+            if (!Email.Equals(toRemove.GetEmailAssignee()))
+                throw new Exception("a user cannot delete a task he is not assign to");
+            TaskList.Remove(toRemove);
             return toRemove;
         }
 

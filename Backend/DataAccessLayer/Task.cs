@@ -160,12 +160,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 Connection.Open();
 
                 Command = new SQLiteCommand(null, Connection);
-                Command.CommandText = $"DELETE FROM tbTasks WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @taskId";
+                Command.CommandText = $"DELETE FROM tbTasks WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @TaskId";
                 SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                SQLiteParameter taskIdParam = new SQLiteParameter(@"taskId", TaskId);
+                SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
 
                 Command.Parameters.Add(EmailParam);
-                Command.Parameters.Add(taskIdParam);
+                Command.Parameters.Add(TaskIdParam);
 
                 Command.Prepare();
                 int num_rows_changed = Command.ExecuteNonQuery();

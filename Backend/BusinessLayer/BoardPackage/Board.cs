@@ -51,7 +51,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
             Task ToRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == TaskId);
             Column toAddto = list[ColumnOrdinal + 1];
-            
+            if (!ToRemove.GetEmailAssignee().Equals(Email)) 
+                throw new Exception("a user can't advance task which he is not assign to");
             toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
             Task Removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
 
@@ -71,8 +72,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
                 throw new Exception("The columnOrdinal is ilegal");
             Column column = list[ColumnOrdinal];
-            column.RemoveTask(TaskId, Email);
-            list[ColumnOrdinal] = column;
+            Task removed = column.RemoveTask(TaskId, Email);
+            removed.ToDalObject(Email, column.GetColumnName()).Delete();
         }
 
         public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
