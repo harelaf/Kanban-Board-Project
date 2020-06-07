@@ -382,27 +382,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return new DataAccessLayer.Board();
         }
         
-        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
-        {
-            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
-            Column MyColumn = list[ColumnOrdinal];
-            MyColumn.RemoveTask(TaskId, Email);
-            list[ColumnOrdinal] = MyColumn;
-        }
-
-        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
-        {
-            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
-            if (!Email.Equals(list[ColumnOrdinal].getEmail()))
-                throw new Exception("This user can't change the name of this column because he is not the creator");
-            foreach (Column column in list)
-            {
-                if (NewName.Equals(column.GetColumnName()))
-                    throw new Exception("you can't change the name of this column to this name because its name already exists");
-            }
-            list[ColumnOrdinal].SetColumnName(NewName);
-        }
     }
 }

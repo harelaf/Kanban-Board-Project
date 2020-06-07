@@ -75,7 +75,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string ColumnName)
         {
-            this.columnName = ColumnName;
+            this.ColumnName = ColumnName;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void AssignTask(string email, int taskid, string emailAssignee)
         {
-            Task toChange = taskList.Find(x => x.GetTaskId().Equals(taskid));
+            Task toChange = TaskList.Find(x => x.GetTaskId().Equals(taskid));
             toChange.SetEmailAssignee(emailAssignee);
         }
 
@@ -216,14 +216,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 Limit = -1;
             if (TaskList.Count > newLim & newLim >= 0)
                 throw new Exception("This column already has more tasks than the new Limit");
-            else if(newLim < -1)
+            else if (newLim < -1)
                 throw new Exception("This Limit is unecceptable");
             this.Limit = newLim;
-        }
-
-        public void SetColumnName(string name)
-        {
-            this.ColumnName = name;
         }
 
         /// <summary>

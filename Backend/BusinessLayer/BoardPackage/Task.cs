@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetEmailAssignee(string EmailAssignee)
         {
-            this.emailAssignee = EmailAssignee;
+            this.EmailAssignee = EmailAssignee;
         }
 
         /// <summary>

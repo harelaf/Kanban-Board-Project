@@ -65,17 +65,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
-            activeBoard.AssignTask(email, columnOrdinal, taskId, emailAssignee);
+            ActiveBoard.AssignTask(email, columnOrdinal, taskId, emailAssignee);
         }
 
         public void DeleteTask(string email, int columnOrdinal, int taskId)
         {
-            activeBoard.DeleteTask(email, columnOrdinal, taskId);
+            ActiveBoard.DeleteTask(email, columnOrdinal, taskId);
         }
 
         public void ChangeColumnName(string email, int columnOrdinal, string newName)
         {
-            activeBoard.ChangeColumnName(email, columnOrdinal, newName);
+            ActiveBoard.ChangeColumnName(email, columnOrdinal, newName);
         }
 
         /// <summary>
@@ -178,16 +178,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Column AddColumn(int ColumnOrdinal, string Name, string Email)
         {
             return ActiveBoard.AddColumn(ColumnOrdinal, Name, Email);
-        }
-
-        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
-        {
-            ActiveBoard.DeleteTask(Email, ColumnOrdinal, TaskId);
-        }
-
-        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
-        {
-            ActiveBoard.ChangeColumnName(Email, ColumnOrdinal, NewName);
         }
     }
 }
