@@ -17,6 +17,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         const string DATABASE_NAME = "kanbanDB.db";
         string MyPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), DATABASE_NAME));
 
+        const string COL_EMAIL = "Email";
+
         /// <summary>
         /// This function deletes all of the information stored in the database
         /// </summary>
@@ -123,6 +125,38 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     Connection.Close();
                 }
             }
+        }
+
+        public List<string> ImportRegisteredEmails()
+        {
+
+            List<string> EmailList = new List<string>();
+
+            ConnectionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnectionString);
+            SQLiteDataReader DataReader;
+            try
+            {
+                Connection.Open();
+                string sql = "SELECT Email FROM tbUsers;";
+                Command = new SQLiteCommand(sql, Connection);
+                DataReader = Command.ExecuteReader();
+                while (DataReader.Read())
+                {
+                    EmailList.Add((string)DataReader[COL_EMAIL]);
+                }
+                DataReader.Close();
+                Command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+            return EmailList;
         }
     }
 }

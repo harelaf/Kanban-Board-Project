@@ -8,12 +8,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 {
     class BoardController
     {
-        private Board activeBoard;
+        private Board ActiveBoard;
 
 
         public BoardController()
         {
-            activeBoard = null;
+            ActiveBoard = null;
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="newBoard"></param>
         public void SetActiveBoard(Board newBoard)
         {
-            activeBoard = newBoard;
+            ActiveBoard = newBoard;
         }
         /// <summary>
         /// Getter to the board
@@ -30,7 +30,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the active board</returns>
         public Board GetBoard()
         {
-            return activeBoard;
+            return ActiveBoard;
         }
         /// <summary>
         /// This function searches a specific column by its column name
@@ -39,7 +39,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the column which its name is the specific column name we are looking for </returns>
         public Column GetColumn(string columnName)
         {
-            return activeBoard.GetColumn(columnName);
+            return ActiveBoard.GetColumn(columnName);
         }
         /// <summary>
         /// This function searches a specific column by its column ordinal
@@ -48,7 +48,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the column which its column ordinal is the specific column name we are looking for</returns>
         public Column GetColumn(int columnOrdinal)
         {
-            return activeBoard.GetColumn(columnOrdinal);
+            return ActiveBoard.GetColumn(columnOrdinal);
         }
 
         /// <summary>
@@ -60,22 +60,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the new added task</returns>
         public Task AddTask(string Email, string Title, string Description, DateTime DueDate)
         {
-            return activeBoard.AddTask(Email, Title, Description, DueDate);
+            return ActiveBoard.AddTask(Email, Title, Description, DueDate);
         }
 
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
-            activeBoard.AssignTask(email, columnOrdinal, taskId, emailAssignee);
+            ActiveBoard.AssignTask(email, columnOrdinal, taskId, emailAssignee);
         }
 
         public void DeleteTask(string email, int columnOrdinal, int taskId)
         {
-            activeBoard.DeleteTask(email, columnOrdinal, taskId);
+            ActiveBoard.DeleteTask(email, columnOrdinal, taskId);
         }
 
         public void ChangeColumnName(string email, int columnOrdinal, string newName)
         {
-            activeBoard.ChangeColumnName(email, columnOrdinal, newName);
+            ActiveBoard.ChangeColumnName(email, columnOrdinal, newName);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="taskId"></param>
         public void AdvanceTask(int ColumnOrdinal, int TaskId, string Email)
         {
-            activeBoard.AdvanceTask(ColumnOrdinal, TaskId, Email);
+            ActiveBoard.AdvanceTask(ColumnOrdinal, TaskId, Email);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns the updated task</returns>
         public Task UpdateTaskDueDate(string Email,int ColumnOrdinal, int TaskId, DateTime DueDate)
         {
-            return activeBoard.UpdateTaskDueDate(Email,ColumnOrdinal, TaskId, DueDate);
+            return ActiveBoard.UpdateTaskDueDate(Email,ColumnOrdinal, TaskId, DueDate);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns><returns>returns the updated task</returns></returns>
         public Task UpdateTaskTitle(string Email,int ColumnOrdinal, int TaskId, string Title)
         {
-            return activeBoard.UpdateTaskTitle(Email,ColumnOrdinal, TaskId, Title);
+            return ActiveBoard.UpdateTaskTitle(Email,ColumnOrdinal, TaskId, Title);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <param name="limit"></param>
         public void SetLimit(string Email,int ColumnId, int Limit)
         {
-            activeBoard.SetLimit(Email,ColumnId, Limit);
+            ActiveBoard.SetLimit(Email,ColumnId, Limit);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns the updated task</returns>
         public Task UpdateTaskDescription(string Email,int ColumnOrdinal, int TaskId, string Description)
         {
-            return activeBoard.UpdateTaskDescription(Email,ColumnOrdinal, TaskId, Description);
+            return ActiveBoard.UpdateTaskDescription(Email,ColumnOrdinal, TaskId, Description);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// ////////////////////to complete/////////////////////////////
         public Column RemoveColumn(string Email,int ColumnOrdinal)
         {
-            return activeBoard.RemoveColumn(Email,ColumnOrdinal);
+            return ActiveBoard.RemoveColumn(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the shifted column</returns>
         public Column MoveColumnLeft(string Email,int ColumnOrdinal)
         {
-            return activeBoard.MoveColumnLeft(Email,ColumnOrdinal);
+            return ActiveBoard.MoveColumnLeft(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the shifted column</returns>
         public Column MoveColumnRight(string Email,int ColumnOrdinal)
         {
-            return activeBoard.MoveColumnRight(Email,ColumnOrdinal);
+            return ActiveBoard.MoveColumnRight(Email,ColumnOrdinal);
         }
 
         /// <summary>
@@ -177,8 +177,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>This function returns the added column</returns>
         public Column AddColumn(int ColumnOrdinal, string Name, string Email)
         {
-            return activeBoard.AddColumn(ColumnOrdinal, Name, Email);
+            return ActiveBoard.AddColumn(ColumnOrdinal, Name, Email);
         }
-
     }
 }
