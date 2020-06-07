@@ -309,7 +309,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 names.Add(c.GetColumnName());
             }
 
-            Board responseBoard = new Board(names);
+            Board responseBoard = new Board(names, activeBoard.GetColumn(0).getEmail());
             response = new Response<Board>(responseBoard);
             log.Debug("Retrieved the board successfully");
             return response;

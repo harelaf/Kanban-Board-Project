@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BoardService boardService;
         private UserService userService;
         private log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
+
         /// <summary>
         /// Simple public constructor.
         /// </summary>
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return userService.LoadData();
         }
-        
+
         ///<summary>Remove all persistent data.</summary>
         public Response DeleteData()
         {
@@ -64,34 +64,34 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("The email/password/nickname used to register is null");
                 return new Response("The email/password/nickname used to register is null");
             }
-            return userService.Register(email, password, nickname);  
+            return userService.Register(email, password, nickname);
         }
-        
+
         /// <summary>
-		/// Registers a new user and joins the user to an existing board.
-		/// </summary>
-		/// <param name="email">The email address of the user to register</param>
-		/// <param name="password">The password of the user to register</param>
-		/// <param name="nickname">The nickname of the user to register</param>
-		/// <param name="emailHost">The email address of the host user which owns the board</param>
-		/// <returns>A response object. The response should contain a error message in case of an error<returns>
-		public Response Register(string email, string password, string nickname, string emailHost)
+        /// Registers a new user and joins the user to an existing board.
+        /// </summary>
+        /// <param name="email">The email address of the user to register</param>
+        /// <param name="password">The password of the user to register</param>
+        /// <param name="nickname">The nickname of the user to register</param>
+        /// <param name="emailHost">The email address of the host user which owns the board</param>
+        /// <returns>A response object. The response should contain a error message in case of an error<returns>
+        public Response Register(string email, string password, string nickname, string emailHost)
         {
-            if(email == null | password == null | nickname == null)
+            if (email == null | password == null | nickname == null)
             {
                 log.Warn("The email/password/nickname used to register is null");
                 return new Response("The email/password/nickname used to register is null");
             }
             return userService.Register(email, password, nickname, emailHost);
         }
-        
+
         /// <summary>
         /// Assigns a task to a user
         /// </summary>
         /// <param name="email">Email of the user. Must be logged in</param>
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="taskId">The task to be updated identified task ID</param>        
-		/// <param name="emailAssignee">Email of the user to assign to task to</param>
+        /// <param name="emailAssignee">Email of the user to assign to task to</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
@@ -103,7 +103,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
-        
+
         /// <summary>
         /// Delete a task
         /// </summary>
@@ -120,7 +120,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
-        }	
+        }
 
         /// <summary>
         /// Log in an existing user
@@ -141,7 +141,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return new Response<User>("The email used to login is null");
             }
 
-            Response<User> response=userService.Login(email, password);
+            Response<User> response = userService.Login(email, password);
             if (response.ErrorOccured)
                 return response;
             activeUser = response.Value;
@@ -205,7 +205,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
-        
+
         /// <summary>
         /// Change the name of a specific column
         /// </summary>
@@ -214,7 +214,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="newName">The new name.</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response ChangeColumnName(string email, int columnOrdinal, string newName)
-		{
+        {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.ChangeColumnName(email, columnOrdinal, newName);
@@ -356,7 +356,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
         }
-        
+
         /// <summary>
         /// Removes a column given it's identifier.
         /// The first column is identified by 0, the ID increases by 1 for each column
@@ -375,7 +375,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             else
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
         }
-        
+
         /// <summary>
         /// Adds a new column, given it's name and a location to place it.
         /// The first column is identified by 0, the ID increases by 1 for each column        
@@ -447,4 +447,5 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
     }
+}
 

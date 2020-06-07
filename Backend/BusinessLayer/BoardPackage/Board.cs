@@ -60,7 +60,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
-
+            if (columnOrdinal < 0 | columnOrdinal > list.Count)
+                throw new Exception("The columnOrdinal is ilegal");
+            Column col = list[columnOrdinal];
+            col.AssignTask(email, taskId, emailAssignee);
         }
 
         public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
@@ -70,6 +73,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Column column = list[ColumnOrdinal];
             column.RemoveTask(TaskId, Email);
             list[ColumnOrdinal] = column;
+        }
+
+        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
+        {
+            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
+                throw new Exception("The columnOrdinal is ilegal");
+
+            if (!list[ColumnOrdinal].getEmail().Equals(Email))
+                throw new Exception("You can't change the column name because you are not the creator of this column");
+
+            foreach (Column column in list)
+            {
+                if (column.GetColumnName().Equals(NewName) & column.GetColumnOrdinal() != ColumnOrdinal)
+                    throw new Exception("you can't change the column name to this new name because there is already a column with this name");
+            }
+
+            list[ColumnOrdinal].SetColumnName(NewName);
         }
 
         /// <summary>
@@ -360,23 +380,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             DataAccessLayer.Board DalBoard = new DataAccessLayer.Board(Email, IdGiver, GetNumOfColumns());///////////////////////////////////////
             return new DataAccessLayer.Board();
-        }
-
-        public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
-        {
-            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
-
-            if (!list[ColumnOrdinal].getEmail().Equals(Email))
-                throw new Exception("You can't change the column name because you are not the creator of this column");
-
-            foreach(Column column in list)
-            {
-                if (column.GetColumnName().Equals(NewName) & column.GetColumnOrdinal() != ColumnOrdinal)
-                    throw new Exception("you can't change the column name to this new name because there is already a column with this name");
-            }
-
-            list[ColumnOrdinal].SetColumnName(NewName);
         }
 
     }
