@@ -180,9 +180,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return activeBoard.AddColumn(ColumnOrdinal, Name, Email);
         }
 
-        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
-        {
-            activeBoard.DeleteTask(Email, ColumnOrdinal, TaskId);
-        }
     }
 }

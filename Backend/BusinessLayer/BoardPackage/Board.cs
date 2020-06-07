@@ -63,9 +63,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         }
 
-        public void DeleteTask(string email, int columnOrdinal, int taskId)
+        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
         {
-
+            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
+                throw new Exception("The columnOrdinal is ilegal");
+            Column column = list[ColumnOrdinal];
+            column.RemoveTask(TaskId, Email);
+            list[ColumnOrdinal] = column;
         }
 
         public void ChangeColumnName(string email, int columnOrdinal, string newName)
@@ -361,15 +365,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             DataAccessLayer.Board DalBoard = new DataAccessLayer.Board(Email, IdGiver, GetNumOfColumns());///////////////////////////////////////
             return new DataAccessLayer.Board();
-        }
-        
-        public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
-        {
-            if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
-            Column column = list[ColumnOrdinal];
-            column.RemoveTask(TaskId, Email);
-            list[ColumnOrdinal] = column;
         }
 
     }

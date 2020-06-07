@@ -199,7 +199,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
-                Response response = boardService.LimitColumnTasks(columnOrdinal, limit);
+                Response response = boardService.LimitColumnTasks(columnOrdinal, limit, email);
                 return response;
             }
             else
@@ -236,7 +236,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
-                Response<Task> response = boardService.AddTask(title, description, dueDate);
+                Response<Task> response = boardService.AddTask(email, title, description, dueDate);
                 CheckToSave(response);
                 return response;
             }
@@ -368,7 +368,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
-                Response response = boardService.RemoveColumn(columnOrdinal);
+                Response response = boardService.RemoveColumn(columnOrdinal, email);
                 CheckToSave(response);
                 return response;
             }
@@ -410,7 +410,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
-                return boardService.MoveColumnRight(columnOrdinal);
+                return boardService.MoveColumnRight(columnOrdinal, email);
             }
             else
             {
@@ -429,7 +429,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
-                return boardService.MoveColumnLeft(columnOrdinal);
+                return boardService.MoveColumnLeft(columnOrdinal, email);
             }
             else
             {
