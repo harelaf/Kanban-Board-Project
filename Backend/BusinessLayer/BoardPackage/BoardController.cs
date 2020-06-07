@@ -180,6 +180,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return activeBoard.AddColumn(ColumnOrdinal, Name, Email);
         }
 
-       
     }
 }

@@ -74,6 +74,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.taskId = id;
         }
 
+        public void SetEmailAssignee(string EmailAssignee)
+        {
+            this.emailAssignee = EmailAssignee;
+        }
+
         /// <summary>
         /// Getter to the title of the task
         /// </summary>

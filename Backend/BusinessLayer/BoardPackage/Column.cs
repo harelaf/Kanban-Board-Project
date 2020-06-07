@@ -119,6 +119,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return toAdd;
         }
 
+        public void AssignTask(string email, int taskid, string emailAssignee)
+        {
+            Task toChange = taskList.Find(x => x.GetTaskId().Equals(taskid));
+            toChange.SetEmailAssignee(emailAssignee);
+        }
+
         public void MoveExistingTaskHere(Task toAdd)
         {
             taskList.Add(toAdd);
