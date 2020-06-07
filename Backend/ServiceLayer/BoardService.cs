@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             boardController.SetActiveBoard(newBoard);
         }
 
-        public Response<Task> AddTask(string title, string description, DateTime dueDate)
+        public Response<Task> AddTask(string email, string title, string description, DateTime dueDate)
         {
             Response<Task> response;
             if(boardController.GetBoard() == null)
@@ -35,14 +35,83 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                BusinessLayer.BoardPackage.Task returnedTask = boardController.AddTask(title, description, dueDate);
-                response = new Response<Task>(new Task(returnedTask.GetTaskId(), returnedTask.GetCreationDate(), returnedTask.GetDueDate(), returnedTask.GetTitle(), returnedTask.GetDescription()));
+                BusinessLayer.BoardPackage.Task returnedTask = boardController.AddTask(email.ToLower(), title, description, dueDate);
+                response = new Response<Task>(new Task(returnedTask.GetTaskId(), returnedTask.GetCreationDate(), returnedTask.GetDueDate(), returnedTask.GetTitle(), returnedTask.GetDescription(), returnedTask.GetEmailAssignee()));
                 log.Info("Task added successfully");
             }
             catch (Exception e)
             {
                 log.Warn("Failed at adding a task: " + e.Message);
                 response = new Response<Task>(e.Message);
+            }
+            return response;
+        }
+
+        public Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried assigning a task with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.AssignTask(email.ToLower(), columnOrdinal, taskId, emailAssignee);
+                response = new Response();
+                log.Info("Task has been assigned successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at assigning a task: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
+        public Response DeleteTask(string email, int columnOrdinal, int taskId)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried deleting a task with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.DeleteTask(email.ToLower(), columnOrdinal, taskId);
+                response = new Response();
+                log.Info("Task has been deleted successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at deleting a task: " + e.Message);
+                response = new Response(e.Message);
+            }
+            return response;
+        }
+
+        public Response ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            Response response;
+            if (boardController.GetBoard() == null)
+            {
+                log.Warn("Tried changing a column's name with no user connected");
+                response = new Response("No user is logged in");
+                return response;
+            }
+            try
+            {
+                boardController.ChangeColumnName(email, columnOrdinal, newName);
+                response = new Response();
+                log.Info("Name of the column has changed successfully");
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed at changing a column's name: " + e.Message);
+                response = new Response(e.Message);
             }
             return response;
         }
@@ -81,7 +150,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskTitle(columnOrdinal, taskId, title);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskTitle(Email.ToLower(), columnOrdinal, taskId, title);
                 response = new Response();
                 log.Info("Updated a task's title successfully");
             }
@@ -104,7 +173,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDueDate(columnOrdinal, taskId, dueDate);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDueDate(Email.ToLower(), columnOrdinal, taskId, dueDate);
                 response = new Response();
                 log.Info("Updated a task's due date successfully");
             }
@@ -127,7 +196,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDescription(columnOrdinal, taskId, description);
+                BusinessLayer.BoardPackage.Task toSave = boardController.UpdateTaskDescription(Email.ToLower(), columnOrdinal, taskId, description);
                 response = new Response();
                 log.Info("Updated a task's description successfully");
             }
@@ -139,7 +208,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return response;
         }
 
-        public Response LimitColumnTasks(int columnOrdinal, int limit)
+        public Response LimitColumnTasks(int columnOrdinal, int limit, string email)
         {
             Response response;
             if (boardController.GetBoard() == null)
@@ -150,7 +219,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             try
             {
-                boardController.SetLimit(columnOrdinal, limit);
+                boardController.SetLimit(email.ToLower(), columnOrdinal, limit);
                 BusinessLayer.BoardPackage.Column toSave = boardController.GetColumn(columnOrdinal);
                 response = new Response();
                 log.Info("Updated a column's task limit successfully");
@@ -178,7 +247,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> serviceTasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
                 {
-                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                 }
                 Column responseColumn = new Column(serviceTasks, columnName, column.GetLimit());
                 response = new Response<Column>(responseColumn);
@@ -208,7 +277,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> serviceTasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
                 {
-                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription()));
+                    serviceTasks.Add(new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee()));
                 }
                 Column responseColumn;
                 responseColumn = new Column(serviceTasks, column.GetColumnName(), column.GetLimit());
@@ -240,7 +309,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 names.Add(c.GetColumnName());
             }
 
-            Board responseBoard = new Board(names);
+            Board responseBoard = new Board(names, activeBoard.GetColumn(0).getEmail());
             response = new Response<Board>(responseBoard);
             log.Debug("Retrieved the board successfully");
             return response;
@@ -256,7 +325,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> tasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in column.GetTaskList())
                 {
-                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee());
                     tasks.Add(add);
                 }
 
@@ -272,11 +341,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
            
         }
 
-        public Response RemoveColumn(int columnOrdinal)
+        public Response RemoveColumn(int columnOrdinal, string email)
         {
             try
             {
-                BusinessLayer.BoardPackage.Column removed = boardController.RemoveColumn(columnOrdinal);
+                BusinessLayer.BoardPackage.Column removed = boardController.RemoveColumn(email.ToLower(), columnOrdinal);
                 log.Info("Removed the column successfully");
                 return new Response();
             }
@@ -287,15 +356,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
         }
 
-        public Response<Column>MoveColumnRight(int columnOrdinal)
+        public Response<Column>MoveColumnRight(int columnOrdinal, string email)
         {
             try
             {
-                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnRight(columnOrdinal);
+                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnRight(email.ToLower(), columnOrdinal);
                 List<Task> tasks = new List<Task>();
                 foreach(BusinessLayer.BoardPackage.Task task in moved.GetTaskList())
                 {
-                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee());
                     tasks.Add(add);
                 }
                 Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());
@@ -308,15 +377,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
         }
 
-        public Response<Column> MoveColumnLeft(int columnOrdinal)
+        public Response<Column> MoveColumnLeft(int columnOrdinal, string email)
         {
             try
             {
-                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnLeft(columnOrdinal);
+                BusinessLayer.BoardPackage.Column moved = boardController.MoveColumnLeft(email.ToLower(), columnOrdinal);
                 List<Task> tasks = new List<Task>();
                 foreach (BusinessLayer.BoardPackage.Task task in moved.GetTaskList())
                 {
-                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription());
+                    Task add = new Task(task.GetTaskId(), task.GetCreationDate(), task.GetDueDate(), task.GetTitle(), task.GetDescription(), task.GetEmailAssignee());
                     tasks.Add(add);
                 }
                 Column responseColumn = new Column(tasks, moved.GetColumnName(), moved.GetLimit());

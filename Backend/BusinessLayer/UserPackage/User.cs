@@ -28,6 +28,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             }
         }
 
+        public User(string email,string password,string nickname,BoardPackage.Board myBoard)
+        {
+            this.email = email;
+            this.password = password;
+            this.nickname = nickname;
+            this.myBoard = myBoard;
+        }
+
         public void SetEmail(string Email)
         {
             this.Email = Email;

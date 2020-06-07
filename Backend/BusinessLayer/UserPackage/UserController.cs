@@ -65,6 +65,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 CurrentUser = null;
         }
 
+
         /// <summary>
         /// This function gets a Password and checks if this Password is legal to register with
         /// according to the next demands : a user Password must be in length of 5 to 25 characters and must include at
@@ -134,6 +135,37 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
             {
                 throw new Exception("The Password or email entered are invaild");
             }
+        }
+
+        public void Register(string Email, string Password, string Nickname, string EmailHost)
+        {
+            if (!UserList.ContainsKey(EmailHost))
+                throw new Exception("can't register to this board because the email host doesn't exist in the system");
+            if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
+            {
+                if (Nickname == null)
+                {
+                    throw new Exception("A null value was entered for the Nickname");
+                }
+                else if (Nickname == "")
+                {
+                    throw new Exception("An empty Nickname was entered");
+                }
+                User UserHost=null;
+           
+                KeyValuePair<string,User>pair=UserList.First(x => x.Value.GetEmail().Equals(EmailHost));
+                UserHost = pair.Value;
+                User MyUser = new User(Email, Password, Nickname,UserHost.GetBoard());
+                UserList.Add(Email, MyUser);
+                //RegisteredEmails.Emails.Add(Email);
+                //RegisteredEmails.Save();
+                MyUser.ToDalObject(Email, "").Save();
+            }
+            else
+            {
+                throw new Exception("The Password or email entered are invaild");
+            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
