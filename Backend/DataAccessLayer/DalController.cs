@@ -11,7 +11,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     class DalController
     {
         string ConnectionString = null;
-        string sql_query = null;
         SQLiteConnection Connection;
         SQLiteCommand Command;
         const string DATABASE_NAME = "kanbanDB.db";
@@ -32,7 +31,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 Connection.Open();
 
                 Command = new SQLiteCommand(null, Connection);
-                Command.CommandText = "DELETE FROM tbColumns; DELETE FROM tbUsers; DELETE FROM tbTasks;";
+                Command.CommandText = "DELETE FROM tbColumns; DELETE FROM tbUsers; DELETE FROM tbTasks; DELETE FROM tbBoards;";
 
                 Command.Prepare();
                 int num_rows_changed = Command.ExecuteNonQuery();
