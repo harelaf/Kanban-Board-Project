@@ -154,6 +154,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                     throw new Exception("An empty Nickname was entered");
                 }
                 User UserHost=null;
+           
                 KeyValuePair<string,User>pair=UserList.First(x => x.Value.GetEmail().Equals(EmailHost));
                 UserHost = pair.Value;
                 User MyUser = new User(Email, Password, Nickname,UserHost.GetBoard());
