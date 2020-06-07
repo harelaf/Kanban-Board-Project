@@ -77,7 +77,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error<returns>
         public Response Register(string email, string password, string nickname, string emailHost)
         {
-            if (email == null | password == null | nickname == null)
+            if (email == null | password == null | nickname == null | emailHost == null)
             {
                 log.Warn("The email/password/nickname used to register is null");
                 return new Response("The email/password/nickname used to register is null");
@@ -101,7 +101,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
-                return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+                return new Response("No user is logged in to the system, or the email doesn't match the current logged in user");
         }
 
         /// <summary>
@@ -237,7 +237,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response<Task> response = boardService.AddTask(email, title, description, dueDate);
-                CheckToSave(response);
                 return response;
             }
             else
@@ -279,7 +278,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.UpdateTaskTitle(columnOrdinal, taskId, title, email);
-                CheckToSave(response);
                 return response;
             }
             else
@@ -299,7 +297,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.UpdateTaskDescription(columnOrdinal, taskId, description, email);
-                CheckToSave(response);
                 return response;
             }
             else
@@ -369,7 +366,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response response = boardService.RemoveColumn(columnOrdinal, email);
-                CheckToSave(response);
                 return response;
             }
             else
@@ -389,7 +385,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
             {
                 Response<Column> response = boardService.AddColumn(columnOrdinal, Name, email);
-                CheckToSave(response);
                 return response;
             }
             else
@@ -445,7 +440,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 userService.Save();
             }
         }
-
     }
 }
 

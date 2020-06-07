@@ -75,7 +75,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string ColumnName)
         {
+            this.ToDalObject(Email, "").Delete();
             this.ColumnName = ColumnName;
+            Column toUpdate = new Column(this.TaskList, this.Limit, this.ColumnName, this.ColumnOrdinal, this.Email);
+            toUpdate.ToDalObject(Email, "").Save();
         }
 
         /// <summary>
@@ -123,6 +126,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             Task toChange = TaskList.Find(x => x.GetTaskId().Equals(taskid));
             toChange.SetEmailAssignee(emailAssignee);
+            toChange.ToDalObject(email, ColumnName).Save();
         }
 
         public void MoveExistingTaskHere(Task toAdd)
@@ -140,7 +144,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             Task toRemove = TaskList.Find(x => x.GetTaskId() == TaskId);
             if (!Email.Equals(toRemove.GetEmailAssignee()))
-                throw new Exception("a user cannot delete a task he is not assign to");
+                throw new Exception("a user cannot delete a task he is not assigned to");
             TaskList.Remove(toRemove);
             return toRemove;
         }
@@ -161,7 +165,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(Email, ColumnName).Save();
             }
             else
-                throw new Exception($"The user with this Email:{Email} can't update this task due date  because he is not the assignee");
+                throw new Exception($"The user with this Email:{Email} can't update this task due date because he is not the assignee");
             return toUpdate;
 
         }

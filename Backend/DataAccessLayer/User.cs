@@ -119,6 +119,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     Email = (string)DataReader[COL_EMAIL];
                     Password = (string)DataReader[COL_PASSWORD];
                     Nickname = (string)DataReader[COL_NICKNAME];
+                    HostEmail = (string)DataReader[COL_HOST_EMAIL];
                 }
                 DataReader.Close();
             }

@@ -11,6 +11,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         private List<Column> list;
         private int IdGiver;
+        private List<string> BoardMemebers;
+        private string CreatorEmail;
 
         const int MAX_LENGTH_COLUMN_NAME = 15;
         const int MIN_AMOUNT_OF_COLUMNS = 2;
@@ -19,21 +21,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             list = new List<Column>();
             IdGiver = 0;
+            BoardMemebers = new List<string>();
+            CreatorEmail = "";
         }
 
         public Board(string Email)
         {
             list = new List<Column>();
+            CreatorEmail = Email;
+            IdGiver = 0;
             AddColumn(0, "backlog", Email);
             AddColumn(1, "in progress", Email);
             AddColumn(2, "done", Email);
-            IdGiver = 0;
+            BoardMemebers = new List<string>();
         }
 
-        public Board(List<Column> list, int IdGiver)
+        public Board(List<Column> list, int IdGiver, string CreatorEmail, List<string> BoardMembers)
         {
             this.list = list;
             this.IdGiver = IdGiver;
+            this.CreatorEmail = CreatorEmail;
+            this.BoardMemebers = BoardMembers;
         }
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Task ToRemove = list[ColumnOrdinal].GetTaskList().Find(x => x.GetTaskId() == TaskId);
             Column toAddto = list[ColumnOrdinal + 1];
             if (!ToRemove.GetEmailAssignee().Equals(Email)) 
-                throw new Exception("a user can't advance task which he is not assign to");
+                throw new Exception("a user can't advance task which he is not assigned to");
             toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
             Task Removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
 
@@ -62,7 +70,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
             if (columnOrdinal < 0 | columnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
+                throw new Exception("The columnOrdinal is illegal");
+            if (!BoardMemebers.Contains(emailAssignee))
+                throw new Exception("This email is not a member of this board");
             Column col = list[columnOrdinal];
             col.AssignTask(email, taskId, emailAssignee);
         }
@@ -70,7 +80,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void DeleteTask(string Email, int ColumnOrdinal, int TaskId)
         {
             if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
+                throw new Exception("The columnOrdinal is illegal");
             Column column = list[ColumnOrdinal];
             Task removed = column.RemoveTask(TaskId, Email);
             removed.ToDalObject(Email, column.GetColumnName()).Delete();
@@ -79,7 +89,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void ChangeColumnName(string Email, int ColumnOrdinal, string NewName)
         {
             if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
-                throw new Exception("The columnOrdinal is ilegal");
+                throw new Exception("The columnOrdinal is illegal");
 
             if (!list[ColumnOrdinal].getEmail().Equals(Email))
                 throw new Exception("You can't change the column name because you are not the creator of this column");
@@ -104,6 +114,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             Task toAdd = list[0].AddTask(Title, Description, DueDate, IdGiver, Email);
             IdGiver++;
+            this.ToDalObject(CreatorEmail, "").Save();
             return toAdd;
         }
         /// <summary>
@@ -280,6 +291,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 }
             }
             removed.ToDalObject(removed.getEmail(), "").Delete();
+            this.ToDalObject(CreatorEmail, "").Save();
             return removed;
         }
         /// <summary>
@@ -348,7 +360,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("The name you entered for the column is too long");
             }
 
-            if (list.Count != 0 & !list[0].getEmail().Equals(Email))
+            if (list.Count != 0 && !CreatorEmail.Equals(Email))
                 throw new Exception("This user can't add a new column because he is not the creator");
 
             foreach (Column col in list)
@@ -365,9 +377,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 if (toUpdate.GetColumnOrdinal() >= ColumnOrdinal)
                 {
                     toUpdate.SetColumnOrdinal(list.IndexOf(toUpdate));
-                    toUpdate.ToDalObject(Email, "").Save();
+                    toUpdate.ToDalObject(CreatorEmail, "").Save();
                 }
             }
+            this.ToDalObject(CreatorEmail, "").Save();
             return add;
         }
 
@@ -376,11 +389,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// </summary>
         /// <param name="Email"></param>
         /// <param name="column"></param>
-        /// <returns></returns>
+        /// <returns>A new instance of a board from the dal</returns>
         public DataAccessLayer.Board ToDalObject(string Email, string column)
         {
-            DataAccessLayer.Board DalBoard = new DataAccessLayer.Board(Email, IdGiver, GetNumOfColumns());///////////////////////////////////////
-            return new DataAccessLayer.Board();
+            DataAccessLayer.Board DalBoard = new DataAccessLayer.Board(Email, IdGiver, GetNumOfColumns());
+            return DalBoard;
         }
         
     }

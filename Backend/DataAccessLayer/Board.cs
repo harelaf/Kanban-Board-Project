@@ -12,12 +12,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
     class Board : DalObject<Board>
     {
         public string CreatorEmail {get; set;}
-        public int NumOfColumns { get; set; }
-        public int IdGiver { get; set; }
+        public long NumOfColumns { get; set; }
+        public long IdGiver { get; set; }
 
         const string COL_CREATOR_EMAIL = "CreatorEmail";
         const string COL_NUM_OF_COLUMNS = "NumOfColumns";
         const string COL_ID_GIVER = "IdGiver";
+        const string COL_USER_HOST_EMAIL = "HostEmail";
+        const string COL_USER_EMAIL = "Email";
 
         string ConnectionString = null;
         string SqlQuery = null;
@@ -64,7 +66,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 if (!DataReader.Read())
                 {
                     Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = "INSERT INTO tbUsers VALUES(@CreatorEmail,@IdGiver,@NumOfColumns)";
+                    Command.CommandText = "INSERT INTO tbBoards VALUES(@CreatorEmail,@NumOfColumns,@IdGiver)";
                     SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"CreatorEmail", CreatorEmail);
                     SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
                     SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
@@ -72,6 +74,23 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     Command.Parameters.Add(CreatorEmailParam);
                     Command.Parameters.Add(IdGiverParam);
                     Command.Parameters.Add(NumOfColumnsParam);
+
+                    Command.Prepare();
+                    int num_rows_changed = Command.ExecuteNonQuery();
+                    Command.Dispose();
+                }
+                else
+                {
+                    Command = new SQLiteCommand(null, Connection);
+                    Command.CommandText = $"UPDATE tbBoards SET {COL_NUM_OF_COLUMNS} = @NumOfColumns, {COL_ID_GIVER} = @IdGiver WHERE {COL_CREATOR_EMAIL} = @Email";
+
+                    SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
+                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
+                    SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"Email", CreatorEmail);
+
+                    Command.Parameters.Add(NumOfColumnsParam);
+                    Command.Parameters.Add(IdGiverParam);
+                    Command.Parameters.Add(CreatorEmailParam);
 
                     Command.Prepare();
                     int num_rows_changed = Command.ExecuteNonQuery();
@@ -104,8 +123,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 DataReader = Command.ExecuteReader();
                 if (DataReader.Read())
                 {
-                    NumOfColumns = (int)DataReader[COL_NUM_OF_COLUMNS];
-                    IdGiver = (int)DataReader[COL_ID_GIVER];
+                    NumOfColumns = (long)DataReader[COL_NUM_OF_COLUMNS];
+                    IdGiver = (long)DataReader[COL_ID_GIVER];
                 }
                 DataReader.Close();
             }
@@ -139,6 +158,37 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 i++;
             }
             return ColList;
+        }
+
+        public List<string> GetMembers()
+        {
+            List<string> Members = new List<string>();
+            ConnectionString = $"Data Source={MyPath};Version=3;";
+            Connection = new SQLiteConnection(ConnectionString);
+            SQLiteDataReader DataReader;
+            try
+            {
+                Connection.Open();
+                SqlQuery = $"SELECT * FROM tbUsers WHERE {COL_USER_HOST_EMAIL} = '{CreatorEmail}'";
+
+                Command = new SQLiteCommand(SqlQuery, Connection);
+                DataReader = Command.ExecuteReader();
+                while(DataReader.Read())
+                {
+                    Members.Add((string)DataReader[COL_USER_EMAIL]);
+                }
+                DataReader.Close();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                Connection.Close();
+                Command.Dispose();
+            }
+            return Members;
         }
     }
 }

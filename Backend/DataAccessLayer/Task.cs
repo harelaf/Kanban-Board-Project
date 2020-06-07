@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         const string COL_TASK_DESC = "Description";
         const string COL_TASK_CREATION_DATE = "CreationDate";
         const string COL_TASK_DUE_DATE = "DueDate";
-        const string COL_TASK_ASSIGNEE = "Assignee";
+        const string COL_TASK_ASSIGNEE = "AssigneeEmail";
 
         string ConnetionString = null;
         string SqlQuery = null;
@@ -73,13 +73,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             {
                 Connection.Open();
 
-                SqlQuery = $"SELECT * FROM tbTasks WHERE {COL_TASK_EMAIL} = '{Email}' AND {COL_TASK_ID} = '{TaskId}'";
+                SqlQuery = $"SELECT * FROM tbTasks WHERE {COL_TASK_EMAIL} = '{Email}' AND {COL_TASK_ID} = {TaskId}";
                 Command = new SQLiteCommand(SqlQuery, Connection);
                 DataReader = Command.ExecuteReader();
                 if (DataReader.Read())
                 {
                     Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = $"UPDATE tbTasks SET {COL_TASK_COLUMN} = @Column, {COL_TASK_TITLE} = @Title, {COL_TASK_DESC} = @Description, {COL_TASK_CREATION_DATE} = @DreationDate, {COL_TASK_DUE_DATE} = @DueDate, {COL_TASK_ASSIGNEE} = @Assignee WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @taskId";
+                    Command.CommandText = $"UPDATE tbTasks SET {COL_TASK_COLUMN} = @Column, {COL_TASK_TITLE} = @Title, {COL_TASK_DESC} = @Description, {COL_TASK_CREATION_DATE} = @CreationDate, {COL_TASK_DUE_DATE} = @DueDate, {COL_TASK_ASSIGNEE} = @Assignee WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @TaskId";
                     SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
                     SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
                     SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);

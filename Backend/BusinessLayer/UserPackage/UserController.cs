@@ -127,8 +127,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 User MyUser = new User(Email, Password, Nickname);
                 UserList.Add(Email, MyUser);
-                //RegisteredEmails.Emails.Add(Email);
-                //RegisteredEmails.Save();
+                MyUser.GetBoard().ToDalObject(MyUser.GetEmail(), "").Save();
                 MyUser.ToDalObject(Email, "").Save();
             }
             else
@@ -153,19 +152,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 }
                 User UserHost=null;
            
-                KeyValuePair<string,User>pair=UserList.First(x => x.Value.GetEmail().Equals(EmailHost));
-                UserHost = pair.Value;
-                User MyUser = new User(Email, Password, Nickname,UserHost.GetBoard());
+                UserHost=UserList[EmailHost];
+                User MyUser = new User(Email, Password, Nickname, UserHost.GetBoard());
                 UserList.Add(Email, MyUser);
-                //RegisteredEmails.Emails.Add(Email);
-                //RegisteredEmails.Save();
                 MyUser.ToDalObject(Email, "").Save();
             }
             else
             {
                 throw new Exception("The Password or email entered are invaild");
             }
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -249,7 +244,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, CurrEmail.ToLower()));
                     }
 
-                    BoardPackage.Board board = new BoardPackage.Board(MyColumnList, TempBoard.IdGiver);
+                    BoardPackage.Board board = new BoardPackage.Board(MyColumnList, (int)TempBoard.IdGiver, Temp.HostEmail, TempBoard.GetMembers());
 
                     toAdd.SetBoard(board);
                     UserList.Add(CurrEmail, toAdd);
