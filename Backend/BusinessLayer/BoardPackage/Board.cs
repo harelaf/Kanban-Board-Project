@@ -73,6 +73,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("The columnOrdinal is illegal");
             if (!BoardMemebers.Contains(emailAssignee))
                 throw new Exception("This email is not a member of this board");
+            if (columnOrdinal == list.Count - 1)
+                throw new Exception("Can't assign a task that is already done");
             Column col = list[columnOrdinal];
             col.AssignTask(email, taskId, emailAssignee);
         }
@@ -81,6 +83,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         {
             if (ColumnOrdinal < 0 | ColumnOrdinal > list.Count)
                 throw new Exception("The columnOrdinal is illegal");
+            if (ColumnOrdinal == list.Count - 1)
+                throw new Exception("Can't delete a task that is already done");
             Column column = list[ColumnOrdinal];
             Task removed = column.RemoveTask(TaskId, Email);
             removed.ToDalObject(Email, column.GetColumnName()).Delete();
