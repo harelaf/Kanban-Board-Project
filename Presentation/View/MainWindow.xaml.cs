@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Presentation.View;
+using Presentation.Model;
+using Presentation.ViewModel;
 
 namespace Presentation
 {
@@ -20,9 +23,21 @@ namespace Presentation
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            KanbanWindow win = new KanbanWindow();
+            win.Show();
+        }
+
+        
     }
 }
