@@ -65,6 +65,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     "\"Email\" TEXT NOT NULL," +
                     "\"Nickname\"  TEXT NOT NULL," +
                     "\"Password\"  TEXT NOT NULL," +
+                    "\"HostEmail\" TEXT NOT NULL," +
                     "PRIMARY KEY(\"Email\"))";
 
                 string CreatetbBoards = "CREATE TABLE \"tbBoards\"(" +

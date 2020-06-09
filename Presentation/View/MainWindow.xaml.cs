@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Presentation.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,11 +24,8 @@ namespace Presentation
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-
+            RegisterWindow w = new RegisterWindow();
+            w.Show();
         }
     }
 }

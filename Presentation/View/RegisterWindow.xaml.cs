@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Presentation.ViewModel;
 
 namespace Presentation.View
 {
@@ -19,9 +20,18 @@ namespace Presentation.View
     /// </summary>
     public partial class RegisterWindow : Window
     {
+        private RegisterViewModel RegisterViewModel;
+
         public RegisterWindow()
         {
             InitializeComponent();
+            this.RegisterViewModel = new RegisterViewModel();
+            this.DataContext = RegisterViewModel;
+        }
+
+        private void Register_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterViewModel.Register();
         }
     }
 }
