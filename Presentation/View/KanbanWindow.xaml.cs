@@ -21,12 +21,15 @@ namespace Presentation.View
     /// </summary>
     public partial class KanbanWindow : Window
     {
-        //public KanbanViewModel boardy;
+        private KanbanViewModel KVModel;
 
         public KanbanWindow()
         {
             InitializeComponent();
+            KVModel = new KanbanViewModel();
+            this.DataContext = KVModel;
         }
+
 
     }
 }

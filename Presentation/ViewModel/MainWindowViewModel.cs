@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Presentation.View;
+using Presentation.Model;
 
 namespace Presentation.ViewModel
 {
@@ -67,8 +68,8 @@ namespace Presentation.ViewModel
             ErrorMessage = "";
             try
             {
-                controller.Login(email, password);
-                KanbanWindow KBWindow = new KanbanWindow();
+                UserModel loggedIn = controller.Login(email, password);
+                KanbanWindow KBWindow = new KanbanWindow(loggedIn);
                 KBWindow.Show();
             }
             catch (Exception e)

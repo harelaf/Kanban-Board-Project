@@ -7,12 +7,32 @@
         mc:Ignorable="d"
         Title="KanbanWindow" Height="450" Width="800">
     <Grid>
-        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="200" Width="200" Name ="lb1" VerticalAlignment="Top">
+        <ListBox Name ="listbox1" ItemsSource="{Binding Board.colList, Mode=OneWay}" VerticalAlignment="Top">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="true"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding }"/>
+                        <ListBox ItemsSource="{Binding }">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock FontSize="13" FontWeight="Bold" Text="{Binding Title}"/>
+                                        <TextBlock FontSize="12" Text="{Binding Description}"/>
+                                        <TextBlock FontSize="11" Text="{Binding CreationDate}"/>
+                                        <TextBlock FontSize="11" Text="{Binding DueDate}"/>
+                                        <TextBlock FontSize="11" Text="{Binding AssigneeEmail}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
 
             
             <!--Label Content="hello"/>

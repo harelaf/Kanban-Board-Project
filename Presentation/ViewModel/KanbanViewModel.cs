@@ -9,21 +9,12 @@ namespace Presentation.ViewModel
 {
     class KanbanViewModel : NotifiableObject
     {
-        public List<TaskModel> board;
-        private string[] testk;
-        public string[] test
-        {
-            get { return testk; }
-            set
-            {
-                testk = value;
-
-            }
-        }
+        private BackendController controller;
+        public BoardModel board;
 
         public KanbanViewModel()
         {
-            
+            this.controller = new BackendController();
         }
 
         

@@ -10,7 +10,7 @@ namespace Presentation
     class BackendController
     {
         private Service MyService;
-
+        
         public BackendController()
         {
             this.MyService = new Service();
@@ -32,7 +32,8 @@ namespace Presentation
 
         public void Register(string Email, string Nickname, string Password, string HostEmail)
         {
-            Response response = (HostEmail == "" ? MyService.Register(Email, Password, Nickname) : MyService.Register(Email, Password, Nickname, HostEmail));
+            Response response = (HostEmail == "" ? MyService.Register(Email, Password, Nickname)
+                : MyService.Register(Email, Password, Nickname, HostEmail));
             if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
 

@@ -8,8 +8,8 @@ namespace Presentation.Model
 {
     class BoardModel
     {
-        private List<ColumnModel> colList;
-        private string CreatorEmail;
+        public readonly List<ColumnModel> colList;
+        public readonly string CreatorEmail;
 
         public BoardModel(string CreatorEmail, List<ColumnModel> colList)
         {
