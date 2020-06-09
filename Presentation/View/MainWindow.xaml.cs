@@ -29,15 +29,10 @@ namespace Presentation
         {
             InitializeComponent();
         }
-
-
+	
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            KanbanWindow win = new KanbanWindow();
-            win.Show();
-        }
 
-        
+        }
     }
 }
