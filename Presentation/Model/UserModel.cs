@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IntroSE.Kanban.Backend.ServiceLayer;
 
 namespace Presentation.Model
 {
@@ -10,6 +11,13 @@ namespace Presentation.Model
     {
         private string Email;
         private string Nickname;
-        private 
+        private BoardModel Board;
+
+        public UserModel(string Email, string Nickname , BoardModel Board)
+        {
+            this.Email = Email;
+            this.Nickname = Nickname;
+            this.Board = Board;
+        }
     }
 }

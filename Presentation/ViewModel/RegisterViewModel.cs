@@ -13,6 +13,7 @@ namespace Presentation.ViewModel
         public RegisterViewModel()
         {
             this.Controller = new BackendController();
+            isRegisterEnabled = true;
         }
 
         private string email;
@@ -70,12 +71,24 @@ namespace Presentation.ViewModel
             }
         }
 
+        private bool isRegisterEnabled;
+        public bool IsRegisterEnabled
+        {
+            get => isRegisterEnabled;
+            set
+            {
+                isRegisterEnabled = value;
+                RaisePropertyChanged("isRegisterEnabled");
+            }
+        }
+
         public void Register()
         {
             ErrorMessage = "";
             try
             {
                 Controller.Register(Email, Nickname, Password, HostEmail);
+                IsRegisterEnabled = false;
                 ErrorMessage = "Registered Successefully! You can now login to the system.";
             }
             catch (Exception e)

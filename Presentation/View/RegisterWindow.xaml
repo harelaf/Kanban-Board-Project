@@ -34,7 +34,8 @@
             <Label Content="Host Email (Optional)" FontSize="16" Grid.Column="0" Grid.Row="3"/>
             <TextBox Name="HostEmailTextBox" Text="{Binding Path=HostEmail, Mode=OneWayToSource}" Width="200" Grid.Column="1" Grid.Row="3" Margin="5" VerticalContentAlignment="Center"/>
         </Grid>
-        <Button Content="Register" VerticalAlignment="Center"  Name="RegisterButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="Register_Click"/>
+        <Button Content="Register" VerticalAlignment="Center"  Name="RegisterButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="Register_Click" IsEnabled="{Binding IsRegisterEnabled}"/>
         <Label Name="ErrorLabel" Content="{Binding Path=ErrorMessage, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
     </Grid>
 </Window>
+

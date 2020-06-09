@@ -27,23 +27,19 @@ namespace Presentation
         public MainWindow()
         {
             InitializeComponent();
-<<<<<<< HEAD
             MWViewModel = new MainWindowViewModel();
             this.DataContext = MWViewModel;
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            MWViewModel.login
+            MWViewModel.Login();
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-
-=======
             RegisterWindow w = new RegisterWindow();
             w.Show();
->>>>>>> 5efb80720a8cfcd664838d0c2c93ddacaea4a5ac
         }
     }
 }

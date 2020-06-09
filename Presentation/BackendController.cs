@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using Presentation.Model;
 
@@ -10,19 +9,19 @@ namespace Presentation
 {
     class BackendController
     {
-        private Service myService;
+        private Service MyService;
 
         public BackendController()
         {
-            this.myService = new Service();
-            myService.LoadData();
+            this.MyService = new Service();
+            MyService.LoadData();
         }
 
         //Response LoadData();
 
         public void DeleteData()
         {
-            Response resp = myService.DeleteData();
+            Response resp = MyService.DeleteData();
             if (resp.ErrorOccured)
             {
                 throw new Exception(resp.ErrorMessage);
@@ -44,7 +43,7 @@ namespace Presentation
 
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
-            Response resp = myService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
+            Response resp = MyService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
             if (resp.ErrorOccured)
             {
                 throw new Exception(resp.ErrorMessage);
@@ -55,7 +54,7 @@ namespace Presentation
 
         public void DeleteTask(string email, int columnOrdinal, int taskId)
         {
-            Response resp = myService.DeleteTask(email, columnOrdinal, taskId);
+            Response resp = MyService.DeleteTask(email, columnOrdinal, taskId);
             if (resp.ErrorOccured)
             {
                 throw new Exception(resp.ErrorMessage);
@@ -66,12 +65,42 @@ namespace Presentation
 
         public UserModel Login(string email, string password)
         {
-            Response<User> resp = myService.Login(email, password);
+            Response<User> resp = MyService.Login(email, password);
             if (resp.ErrorOccured)
             {
                 throw new Exception(resp.ErrorMessage);
             }
-            UserModel ActiveUser = new UserModel(resp.Value.)
+            UserModel ActiveUser = new UserModel(resp.Value.Email, resp.Value.Nickname
+                , toBoardModel(MyService.GetBoard(resp.Value.Email).Value));
+            return ActiveUser;
+        }
+
+        private BoardModel toBoardModel(Board MyBoard)
+        {
+            List<ColumnModel> colList = new List<ColumnModel>();
+            int i = 0;
+            while (i < MyBoard.ColumnsNames.Count)
+            {
+                Column col = MyService.GetColumn(MyBoard.emailCreator, i).Value;
+                colList.Add(toColumnModel(col));
+                i++;
+            }
+            return new BoardModel(MyBoard.emailCreator, colList);
+        }
+
+        private ColumnModel toColumnModel(Column MyColumn)
+        {
+            List<TaskModel> TaskModelList = new List<TaskModel>();
+            foreach(Task tsk in MyColumn.Tasks)
+            {
+                TaskModelList.Add(toTaskModel(tsk));
+            }
+            return new ColumnModel(TaskModelList);
+        }
+
+        private TaskModel toTaskModel(Task tsk)
+        {
+            return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
         }
 
         //Response<User> Login(string email, string password);
@@ -107,4 +136,4 @@ namespace Presentation
         //Response<Column> MoveColumnLeft(string email, int columnOrdinal);
 
     }
-    }
+}

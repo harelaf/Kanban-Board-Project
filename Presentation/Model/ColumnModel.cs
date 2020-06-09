@@ -8,6 +8,11 @@ namespace Presentation.Model
 {
     class ColumnModel
     {
-        
+        private List<TaskModel> TaskList;
+
+        public ColumnModel(List<TaskModel> TaskList)
+        {
+            this.TaskList = TaskList;
+        }
     }
 }
