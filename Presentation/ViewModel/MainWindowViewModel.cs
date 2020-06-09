@@ -6,7 +6,25 @@ using System.Threading.Tasks;
 
 namespace Presentation.ViewModel
 {
-    class MainWindowViewModel
+    class MainWindowViewModel : 
     {
+        private BackendController controller;
+
+        private string email;
+        public string Email
+        {
+            get => email;
+            set
+            {
+                email = value;
+                rais
+            }
+        }
+
+        public MainWindowViewModel()
+        {
+            this.controller = new BackendController();
+
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Presentation.Model
 {
     class ColumnModel
     {
+        
     }
 }

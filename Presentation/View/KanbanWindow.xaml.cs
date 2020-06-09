@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Presentation.Model;
+using Presentation.ViewModel;
 
 namespace Presentation.View
 {
@@ -19,9 +21,12 @@ namespace Presentation.View
     /// </summary>
     public partial class KanbanWindow : Window
     {
+        //public KanbanViewModel boardy;
+
         public KanbanWindow()
         {
             InitializeComponent();
         }
+
     }
 }

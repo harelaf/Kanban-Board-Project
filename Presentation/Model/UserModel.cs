@@ -8,6 +8,8 @@ namespace Presentation.Model
 {
     class UserModel
     {
-
+        private string Email;
+        private string Nickname;
+        private 
     }
 }

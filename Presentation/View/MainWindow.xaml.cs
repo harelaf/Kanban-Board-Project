@@ -12,8 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Presentation.View;
-using Presentation.Model;
 using Presentation.ViewModel;
 
 namespace Presentation
@@ -23,14 +21,21 @@ namespace Presentation
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private MainWindowViewModel MWViewModel;
 
         public MainWindow()
         {
             InitializeComponent();
+            MWViewModel = new MainWindowViewModel();
+            this.DataContext = MWViewModel;
         }
-	
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            MWViewModel.login
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
