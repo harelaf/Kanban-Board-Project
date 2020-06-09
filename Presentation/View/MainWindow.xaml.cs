@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Presentation.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace Presentation
         public MainWindow()
         {
             InitializeComponent();
+<<<<<<< HEAD
             MWViewModel = new MainWindowViewModel();
             this.DataContext = MWViewModel;
         }
@@ -38,6 +40,10 @@ namespace Presentation
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
 
+=======
+            RegisterWindow w = new RegisterWindow();
+            w.Show();
+>>>>>>> 5efb80720a8cfcd664838d0c2c93ddacaea4a5ac
         }
     }
 }

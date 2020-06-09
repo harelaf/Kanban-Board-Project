@@ -31,22 +31,12 @@ namespace Presentation
 
         //Response DeleteData();
 
-        public void Register(string email, string password, string nickname, string emailHost)
+        public void Register(string Email, string Nickname, string Password, string HostEmail)
         {
-            Response resp;
-            if (emailHost == null)
-            {
-                resp = myService.Register(email, password, nickname);
-            }
-            else
-            {
-                resp = myService.Register(email, password, nickname, emailHost);
-            }
-            if (resp.ErrorOccured)
-            {
-                throw new Exception(resp.ErrorMessage);
-            }
+            Response response = (HostEmail == "" ? MyService.Register(Email, Password, Nickname) : MyService.Register(Email, Password, Nickname, HostEmail));
+            if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
+
 
         //Response Register(string email, string password, string nickname);
 
