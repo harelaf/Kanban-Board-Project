@@ -83,15 +83,31 @@
     <Compile Include="Model\TaskModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="NotifiableObject.cs" />
+    <Compile Include="ViewModel\AddColumnViewModel.cs" />
+    <Compile Include="ViewModel\AddTaskViewModel.cs" />
     <Compile Include="ViewModel\KanbanViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />
+    <Compile Include="View\AddColumn.xaml.cs">
+      <DependentUpon>AddColumn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddTaskWindow.xaml.cs">
+      <DependentUpon>AddTaskWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\KanbanWindow.xaml.cs">
       <DependentUpon>KanbanWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\RegisterWindow.xaml.cs">
       <DependentUpon>RegisterWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\AddColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddTaskWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\KanbanWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

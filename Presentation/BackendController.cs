@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using IntroSE.Kanban.Backend.ServiceLayer;
@@ -10,14 +11,14 @@ namespace Presentation
     class BackendController
     {
         private Service MyService;
+        public string Email { get; private set; }
         
         public BackendController()
         {
             this.MyService = new Service();
             MyService.LoadData();
+            Email = "";
         }
-
-        //Response LoadData();
 
         public void DeleteData()
         {
@@ -28,19 +29,12 @@ namespace Presentation
             }
         }
 
-        //Response DeleteData();
-
         public void Register(string Email, string Nickname, string Password, string HostEmail)
         {
             Response response = (HostEmail == "" ? MyService.Register(Email, Password, Nickname)
                 : MyService.Register(Email, Password, Nickname, HostEmail));
             if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
-
-
-        //Response Register(string email, string password, string nickname);
-
-        //Response Register(string email, string password, string nickname, string emailHost);
 
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
@@ -51,8 +45,6 @@ namespace Presentation
             }
         }
 
-        //Response AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee);
-
         public void DeleteTask(string email, int columnOrdinal, int taskId)
         {
             Response resp = MyService.DeleteTask(email, columnOrdinal, taskId);
@@ -62,8 +54,6 @@ namespace Presentation
             }
         }
 
-        //Response DeleteTask(string email, int columnOrdinal, int taskId);
-
         public UserModel Login(string email, string password)
         {
             Response<User> resp = MyService.Login(email, password);
@@ -72,41 +62,46 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
             }
             UserModel ActiveUser = new UserModel(resp.Value.Email, resp.Value.Nickname
-                , toBoardModel(MyService.GetBoard(resp.Value.Email).Value));
+                , ToBoardModel(MyService.GetBoard(resp.Value.Email).Value));
+            Email = email;
             return ActiveUser;
         }
 
-        private BoardModel toBoardModel(Board MyBoard)
+        private BoardModel ToBoardModel(Board MyBoard)
         {
-            List<ColumnModel> colList = new List<ColumnModel>();
+            ObservableCollection<ColumnModel> colList = new ObservableCollection<ColumnModel>();
             int i = 0;
             while (i < MyBoard.ColumnsNames.Count)
             {
                 Column col = MyService.GetColumn(MyBoard.emailCreator, i).Value;
-                colList.Add(toColumnModel(col));
+                colList.Add(ToColumnModel(col));
                 i++;
             }
             return new BoardModel(MyBoard.emailCreator, colList);
         }
 
-        private ColumnModel toColumnModel(Column MyColumn)
+        private ColumnModel ToColumnModel(Column MyColumn)
         {
-            List<TaskModel> TaskModelList = new List<TaskModel>();
+            ObservableCollection<TaskModel> TaskModelList = new ObservableCollection<TaskModel>();
             foreach(Task tsk in MyColumn.Tasks)
             {
-                TaskModelList.Add(toTaskModel(tsk));
+                TaskModelList.Add(ToTaskModel(tsk));
             }
-            return new ColumnModel(TaskModelList);
+            return new ColumnModel(TaskModelList, MyColumn.Name);
         }
 
-        private TaskModel toTaskModel(Task tsk)
+        private TaskModel ToTaskModel(Task tsk)
         {
             return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
         }
 
-        //Response<User> Login(string email, string password);
 
         //Response Logout(string email);
+
+        public BoardModel GetBoard(string Email)
+        {
+            return ToBoardModel(MyService.GetBoard(Email).Value);
+        }
 
         //Response<Board> GetBoard(string email);
 

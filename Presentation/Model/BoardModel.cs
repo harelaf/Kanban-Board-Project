@@ -1,5 +1,7 @@
-﻿using System;
+﻿using IntroSE.Kanban.Backend.ServiceLayer;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,15 +10,21 @@ namespace Presentation.Model
 {
     class BoardModel
     {
-        public readonly List<ColumnModel> colList;
+        private ObservableCollection<ColumnModel> colList;
+        public ObservableCollection<ColumnModel> ColList
+        {
+            get => colList;
+            set
+            {
+                colList = value;
+            }
+        }
         public readonly string CreatorEmail;
 
-        public BoardModel(string CreatorEmail, List<ColumnModel> colList)
+        public BoardModel(string CreatorEmail, ObservableCollection<ColumnModel> colList)
         {
             this.colList = colList;
             this.CreatorEmail = CreatorEmail;
         }
-
-
     }
 }

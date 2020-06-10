@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="KanbanWindow" Height="450" Width="800">
     <Grid>
-        <ListBox Name ="listbox1" ItemsSource="{Binding Board.colList, Mode=OneWay}" VerticalAlignment="Top">
+        <ListBox Name ="ColumnListBox" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" VerticalContentAlignment="Top">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="true"/>
@@ -16,8 +16,8 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding }"/>
-                        <ListBox ItemsSource="{Binding }">
+                        <TextBlock Name="ColumnName" Text="{Binding Path=ColumnModel.Name}"/>
+                        <ListBox Name="TaskListBox"  ItemsSource="{Binding }">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -33,29 +33,6 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-
-            
-            <!--Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/-->
         </ListBox>
     </Grid>
 </Window>
