@@ -44,6 +44,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.BoardMemebers = BoardMembers;
         }
 
+        public void AddMember(string Member)
+        {
+            BoardMemebers.Add(Member);
+        }
+
         /// <summary>
         /// This function advance task from one column to the next column
         /// </summary>

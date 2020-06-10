@@ -155,6 +155,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 UserHost=UserList[EmailHost];
                 User MyUser = new User(Email, Password, Nickname, UserHost.GetBoard());
                 UserList.Add(Email, MyUser);
+                MyUser.GetBoard().AddMember(Email);
                 MyUser.ToDalObject(Email, "").Save();
             }
             else

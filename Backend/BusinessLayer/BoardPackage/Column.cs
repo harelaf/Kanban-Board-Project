@@ -132,6 +132,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void AssignTask(string email, int taskid, string emailAssignee)
         {
             Task toChange = TaskList.Find(x => x.GetTaskId().Equals(taskid));
+            if (!email.Equals(toChange.GetEmailAssignee()))
+                throw new Exception("This task is not your assigned task to change");
             toChange.SetEmailAssignee(emailAssignee);
             toChange.ToDalObject(email, ColumnName).Save();
         }
