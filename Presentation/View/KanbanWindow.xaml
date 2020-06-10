@@ -5,28 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" Height="450" Width="800">
+        Title="KanbanWindow" Height="450" Width="1000">
     <Grid>
-        <ListBox Name ="ColumnListBox" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" VerticalContentAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Name ="ColumnListBox" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="true"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Name="ColumnName" Text="{Binding Path=ColumnModel.Name}"/>
-                        <ListBox Name="TaskListBox"  ItemsSource="{Binding }">
+                    <StackPanel MinHeight="150">
+                        <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
+                        <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=TaskList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock FontSize="13" FontWeight="Bold" Text="{Binding Title}"/>
-                                        <TextBlock FontSize="12" Text="{Binding Description}"/>
-                                        <TextBlock FontSize="11" Text="{Binding CreationDate}"/>
-                                        <TextBlock FontSize="11" Text="{Binding DueDate}"/>
-                                        <TextBlock FontSize="11" Text="{Binding AssigneeEmail}"/>
-                                    </StackPanel>
+                                    <Border BorderThickness="2">
+                                        <StackPanel Width="150">
+                                            <TextBlock FontSize="13" FontWeight="Bold" Text="{Binding Title}" TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="13" Text="{Binding Description}" TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="11" Text="{Binding CreationDate}" TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="11" Text="{Binding DueDate}" TextWrapping="Wrap"/>
+                                            <TextBlock FontSize="11" Text="{Binding EmailAssignee}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -34,5 +40,25 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Button Content="Delete Board"  HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteData_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0"/>
+            <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1"/>
+            <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="2"/>
+            <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="3"/>
+            <Button Content="Delete Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteColumn_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="4"/>
+            <Button Content="Move Column ->" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="5"/>
+            <Button Content="Move Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="30" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6"/>
+
+        </Grid>
+        
     </Grid>
 </Window>

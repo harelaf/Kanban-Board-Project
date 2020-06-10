@@ -8,17 +8,17 @@ namespace Presentation.Model
 {
     class TaskModel
     {
-        public readonly int Id;
-        public readonly DateTime CreationTime;
-        public readonly DateTime DueDate;
-        public readonly string Title;
-        public readonly string Description;
-        public readonly string EmailAssignee;
+        public int Id;
+        public DateTime CreationDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string EmailAssignee { get; set; }
 
-        public TaskModel(int id, DateTime creationTime, DateTime dueDate, string title, string description, string emailAssignee)
+        public TaskModel(int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee)
         {
             this.Id = id;
-            this.CreationTime = creationTime;
+            this.CreationDate = CreationDate;
             this.DueDate = dueDate;
             this.Title = title;
             this.Description = description;

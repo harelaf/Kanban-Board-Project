@@ -9,7 +9,7 @@ namespace Presentation.Model
 {
     class ColumnModel
     {
-        private string Name { get; set; }
+        public string Name { get; set; }
         private ObservableCollection<TaskModel> taskList;
         public ObservableCollection<TaskModel> TaskList
         {
