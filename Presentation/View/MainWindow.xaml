@@ -1,0 +1,41 @@
+﻿<Window x:Class="Presentation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Presentation"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="600" ResizeMode="CanMinimize" >
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Label Content="Kanban System" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18" Foreground="Black" Grid.Row="0"/>
+        <Grid HorizontalAlignment="Center" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Label Content="Email" FontSize="16" Grid.Column="0" Grid.Row="0"/>
+            <TextBox Name="EmailTextBox" Text="{Binding Path=Email, Mode=OneWayToSource}" Width="200"  Grid.Column="1" Grid.Row="0" Margin="5" VerticalContentAlignment="Center"/>
+            <Label Content="Password" FontSize="16" Grid.Column="0" Grid.Row="1"/>
+            <TextBox Name="PasswordTextBox" Text="{Binding Path=Password, Mode=OneWayToSource}" Width="200" Grid.Column="1" Grid.Row="1" Margin="5" VerticalContentAlignment="Center"/>
+        </Grid>
+        <Grid HorizontalAlignment="Center" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Login" VerticalAlignment="Center"  Name="LoginButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Column="0" Click="LoginButton_Click"/>
+            <Button Content="Register" VerticalAlignment="Center"  Name="RegisterButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Column="1" Click="RegisterButton_Click"/>
+        </Grid>
+        <Label Name="ErrorLabel" Content="{Binding ErrorMessage}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
+    </Grid>
+</Window>
