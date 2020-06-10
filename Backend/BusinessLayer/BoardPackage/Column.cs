@@ -171,7 +171,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDueDate(DueDate);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task due date because he is not the assignee");
@@ -191,7 +191,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskTitle(Title);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task title because he is not the assignee");
@@ -211,7 +211,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDescription(Description);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task description because he is not the assignee");

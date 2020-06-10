@@ -242,7 +242,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         {
                             myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.CreationDate, DalTask.Assignee));
                         }
-                        MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, CurrEmail.ToLower()));
+                        MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, Temp.HostEmail.ToLower()));
                     }
 
                     BoardPackage.Board board = new BoardPackage.Board(MyColumnList, (int)TempBoard.IdGiver, Temp.HostEmail, TempBoard.GetMembers());
