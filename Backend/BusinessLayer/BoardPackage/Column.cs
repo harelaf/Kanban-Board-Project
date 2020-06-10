@@ -75,10 +75,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string ColumnName)
         {
+            string oldName = this.ColumnName;
             this.ToDalObject(Email, "").Delete();
             this.ColumnName = ColumnName;
             Column toUpdate = new Column(this.TaskList, this.Limit, this.ColumnName, this.ColumnOrdinal, this.Email);
             toUpdate.ToDalObject(Email, "").Save();
+
+            foreach (Task task in TaskList)
+            {
+                task.ToDalObject(Email, oldName).Delete();
+                task.ToDalObject(Email, ColumnName).Save();
+            }
         }
 
         /// <summary>

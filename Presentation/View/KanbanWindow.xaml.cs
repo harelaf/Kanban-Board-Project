@@ -26,10 +26,15 @@ namespace Presentation.View
         public KanbanWindow()
         {
             InitializeComponent();
-            KVModel = new KanbanViewModel();
+            this.KVModel = new KanbanViewModel();
             this.DataContext = KVModel;
         }
 
-
+        internal KanbanWindow(BackendController Controller)
+        {
+            InitializeComponent();
+            KVModel = new KanbanViewModel(Controller);
+            this.DataContext = KVModel;
+        }
     }
 }

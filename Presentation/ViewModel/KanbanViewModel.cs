@@ -9,14 +9,18 @@ namespace Presentation.ViewModel
 {
     class KanbanViewModel : NotifiableObject
     {
-        private BackendController controller;
-        public BoardModel board;
+        private BackendController Controller;
+        public BoardModel Board;
 
         public KanbanViewModel()
         {
-            this.controller = new BackendController();
+            this.Controller = new BackendController();
         }
 
-        
+        public KanbanViewModel(BackendController Controller)
+        {
+            this.Controller = Controller;
+        }
+
     }
 }

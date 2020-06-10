@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         const string COL_TASK_DESC = "Description";
         const string COL_TASK_CREATION_DATE = "CreationDate";
         const string COL_TASK_DUE_DATE = "DueDate";
-        const string COL_TASK_ASSIGNEE = "AssigneeEmail";
+        const string COL_TASK_ASSIGNEE = "Assignee";
 
         string ConnetionString = null;
         string SqlQuery = null;

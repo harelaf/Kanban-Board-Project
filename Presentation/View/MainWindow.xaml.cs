@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Presentation.ViewModel;
+using Presentation.Model;
 
 namespace Presentation
 {
@@ -33,12 +34,17 @@ namespace Presentation
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            MWViewModel.Login();
+            UserModel LoggedIn = MWViewModel.Login();
+            if (LoggedIn != null)
+            {
+                KanbanWindow KanbanWindow = new KanbanWindow(MWViewModel.Controller);
+                KanbanWindow.Show();
+            }
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            RegisterWindow w = new RegisterWindow();
+            RegisterWindow w = new RegisterWindow(MWViewModel.Controller);
             w.Show();
         }
     }

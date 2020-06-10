@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private bool CheckProperPassToRegister(string Password)
         {
             if (Password.Length > MAX_LENGTH_OF_Password | Password.Length < MIN_LENGTH_OF_Password)
-                throw new Exception("This password is not between" + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + "characters");
+                throw new Exception("This password is not between " + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + " characters");
             int AmountOfUpperCase = MIN_UCASE_LETTER;
             int AmountOfLowerCase = MIN_LCASE_LETTER;
             int AmountOfDigits = MIN_DIGITS;
