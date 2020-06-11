@@ -36,6 +36,7 @@
             <Button Content="Login" VerticalAlignment="Center"  Name="LoginButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Column="0"/>
             <Button Content="Register" VerticalAlignment="Center"  Name="RegisterButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Column="1"/>
         </Grid>
-        <Label Name="ErrorLabel" Content="hello" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
+        <Label Name="ErrorLabel" Content="" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
+       
     </Grid>
 </Window>
