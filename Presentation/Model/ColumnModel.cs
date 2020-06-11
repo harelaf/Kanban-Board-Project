@@ -1,35 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using IntroSE.Kanban.Backend.ServiceLayer;
 
 namespace Presentation.Model
 {
-    class ColumnModel
+    class ColumnModel : NotifiableModelObject
     {
         public string Name { get; set; }
-        private ObservableCollection<TaskModel> taskList;
-        public ObservableCollection<TaskModel> TaskList
-        {
-            get => taskList;
-            set
-            {
-                taskList = value;
-            }
-        }
+        public ObservableCollection<TaskModel> TaskList { get; set; }
 
-        public ColumnModel()
+        public ColumnModel(BackendController Controller) : base(Controller)
         {
             this.TaskList = new ObservableCollection<TaskModel>();
             Name = "";
+            TaskList.CollectionChanged += HandleChange;
         }
 
-        public ColumnModel(ObservableCollection<TaskModel> TaskList, string Name)
+        public ColumnModel(BackendController Controller, ObservableCollection<TaskModel> TaskList, string Name) : base(Controller)
         {
             this.TaskList = TaskList;
             this.Name = Name;
+            TaskList.CollectionChanged += HandleChange;
+        }
+
+        public void AddTask(TaskModel task)
+        {
+            TaskList.Add(task);
+        }
+
+        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                
+            }
         }
     }
 }

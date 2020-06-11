@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.Model
 {
-    class TaskModel
+    class TaskModel : NotifiableModelObject
     {
         public int Id;
         public DateTime CreationDate { get; set; }
@@ -15,7 +15,7 @@ namespace Presentation.Model
         public string Description { get; set; }
         public string EmailAssignee { get; set; }
 
-        public TaskModel(int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee)
+        public TaskModel(BackendController Controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee) : base(Controller)
         {
             this.Id = id;
             this.CreationDate = CreationDate;

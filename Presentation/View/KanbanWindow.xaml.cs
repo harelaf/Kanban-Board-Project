@@ -36,5 +36,11 @@ namespace Presentation.View
             KVModel = new KanbanViewModel(Controller);
             this.DataContext = KVModel;
         }
+
+        private void AddTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddTaskWindow adw = new AddTaskWindow(KVModel.Controller, KVModel.ColumnList);
+            adw.Show();
+        }
     }
 }

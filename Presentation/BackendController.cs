@@ -61,7 +61,7 @@ namespace Presentation
             {
                 throw new Exception(resp.ErrorMessage);
             }
-            UserModel ActiveUser = new UserModel(resp.Value.Email, resp.Value.Nickname
+            UserModel ActiveUser = new UserModel(this, resp.Value.Email, resp.Value.Nickname
                 , ToBoardModel(MyService.GetBoard(resp.Value.Email).Value));
             Email = email;
             return ActiveUser;
@@ -77,7 +77,7 @@ namespace Presentation
                 colList.Add(ToColumnModel(col));
                 i++;
             }
-            return new BoardModel(MyBoard.emailCreator, colList);
+            return new BoardModel(this, MyBoard.emailCreator, colList);
         }
 
         private ColumnModel ToColumnModel(Column MyColumn)
@@ -87,25 +87,25 @@ namespace Presentation
             {
                 TaskModelList.Add(ToTaskModel(tsk));
             }
-            return new ColumnModel(TaskModelList, MyColumn.Name);
+            return new ColumnModel(this, TaskModelList, MyColumn.Name);
         }
 
         private TaskModel ToTaskModel(Task tsk)
         {
-            return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
+            return new TaskModel(this, tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
         }
 
-
-        //Response Logout(string email);
+        public void Logout(string Email)
+        {
+            Response response = MyService.Logout(Email);
+            if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
+            this.Email = "";
+        }
 
         public BoardModel GetBoard(string Email)
         {
             return ToBoardModel(MyService.GetBoard(Email).Value);
         }
-
-
-
-        //Response<Board> GetBoard(string email);
 
         public void LimitColumnTasks(string email, int columnOrdinal, int limit)
         {
@@ -114,8 +114,6 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
-        //Response LimitColumnTasks(string email, int columnOrdinal, int limit);
-
         public void ChangeColumnName(string email, int columnOrdinal, string newName)
         {
             Response resp = MyService.ChangeColumnName(email, columnOrdinal, newName);
@@ -123,16 +121,13 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
-        //Response ChangeColumnName(string email, int columnOrdinal, string newName);
-
-        public void AddTask(string email,string title,string description, DateTime dueDate)
+        public TaskModel AddTask(string email,string title,string description, DateTime dueDate)
         {
-            Response resp = MyService.AddTask(email, title, description,dueDate);
+            Response<Task> resp = MyService.AddTask(email, title, description,dueDate);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return ToTaskModel(resp.Value);
         }
-
-        //Response<Task> AddTask(string email, string title, string description, DateTime dueDate);
 
         public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
@@ -141,8 +136,6 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
-        //Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate);
-
         public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
             Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
@@ -150,15 +143,12 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
-        //Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title);
-
         public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
             Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description);
 
         public void AdvanceTask(string email, int columnOrdinal, int taskId)
         {
@@ -166,23 +156,22 @@ namespace Presentation
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response AdvanceTask(string email, int columnOrdinal, int taskId);
 
-        public void GetColumn(string email, string columnName)
+        public ColumnModel GetColumn(string email, string columnName)
         {
-            Response resp = MyService.GetColumn(email, columnName);
+            Response<Column> resp = MyService.GetColumn(email, columnName);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return ToColumnModel(resp.Value);
         }
-        //Response<Column> GetColumn(string email, string columnName);
 
-        public void GetColumn(string email, int columnOrdinal)
+        public ColumnModel GetColumn(string email, int columnOrdinal)
         {
-            Response resp = MyService.GetColumn(email, columnOrdinal);
+            Response<Column> resp = MyService.GetColumn(email, columnOrdinal);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return ToColumnModel(resp.Value);
         }
-        //Response<Column> GetColumn(string email, int columnOrdinal);
 
         public void RemoveColumn(string email, int columnOrdinal)
         {
@@ -190,7 +179,6 @@ namespace Presentation
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response RemoveColumn(string email, int columnOrdinal);
 
         public void AddColumn(string email, int columnOrdinal,string Name)
         {
@@ -198,7 +186,6 @@ namespace Presentation
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response<Column> AddColumn(string email, int columnOrdinal, string Name);
 
         public void MoveColumnRight(string email, int columnOrdinal)
         {
@@ -206,7 +193,6 @@ namespace Presentation
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response<Column> MoveColumnRight(string email, int columnOrdinal);
 
         public void MoveColumnLeft(string email, int columnOrdinal)
         {
@@ -214,7 +200,5 @@ namespace Presentation
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
         }
-        //Response<Column> MoveColumnLeft(string email, int columnOrdinal);
-
     }
 }
