@@ -11,7 +11,17 @@ namespace Presentation.Model
     class ColumnModel : NotifiableModelObject
     {
         public string Name { get; set; }
-        public ObservableCollection<TaskModel> TaskList { get; set; }
+        public string EmptyListErrorMessage { get; set; }
+        private ObservableCollection<TaskModel> taskList;
+        public ObservableCollection<TaskModel> TaskList
+        {
+            get => taskList;
+            set
+            {
+                EmptyListErrorMessage = taskList.Count == 0 ? "Empty Column" : "";
+                taskList = value;
+            }
+        }
 
         public ColumnModel(BackendController Controller) : base(Controller)
         {

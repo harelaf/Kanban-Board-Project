@@ -180,25 +180,49 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
-        public void AddColumn(string email, int columnOrdinal,string Name)
+        public ColumnModel AddColumn(string email, int columnOrdinal,string Name)
         {
-            Response resp = MyService.AddColumn(email, columnOrdinal,Name);
+            Response<Column> resp = MyService.AddColumn(email, columnOrdinal,Name);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach(Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list,Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return column;
         }
 
-        public void MoveColumnRight(string email, int columnOrdinal)
+        public ColumnModel MoveColumnRight(string email, int columnOrdinal)
         {
-            Response resp = MyService.MoveColumnRight(email, columnOrdinal);
+            Response<Column> resp = MyService.MoveColumnRight(email, columnOrdinal);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach (Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column=new ColumnModel(list,resp.Value.Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return column;
         }
 
-        public void MoveColumnLeft(string email, int columnOrdinal)
+        public ColumnModel MoveColumnLeft(string email, int columnOrdinal)
         {
-            Response resp = MyService.MoveColumnLeft(email, columnOrdinal);
+            Response<Column> resp = MyService.MoveColumnLeft(email, columnOrdinal);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach (Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list, resp.Value.Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            return column;
         }
     }
 }
