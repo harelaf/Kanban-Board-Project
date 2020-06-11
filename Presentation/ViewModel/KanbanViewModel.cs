@@ -70,23 +70,27 @@ namespace Presentation.ViewModel
             }
         }
 
-        private string errorLabel;
-        public string ErrorLabel
+        private string errorLabel1;
+        public string ErrorLabel1
         {
-            get => errorLabel;
+            get => errorLabel1;
 
             set
             {
-                errorLabel = value;
-                RaisePropertyChanged("ErrorLabel");
+                errorLabel1 = value;
+                RaisePropertyChanged("ErrorLabel1");
             }
         }
 
         public void AdvanceTask()
         {
             int columnId = -1;
-            if(ColumnList == null)
-                ErrorLabel=("couldn't find the task's next column");
+            if (taskSelectedItem == null)
+            {
+                ErrorLabel1 = "no task was chosen to advanced";
+                return;
+            }
+    
             for (int i = 0; i < columnList.Count; i++)
             {
                 if (ColumnList[i]!=null&&columnList[i].Name.Equals(taskSelectedItem.ColumnName))
@@ -95,16 +99,41 @@ namespace Presentation.ViewModel
                     break;
                 }
             }
-            if (columnId == -1)
-                ErrorLabel=("couldn't find the task's next column");
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
             }catch(Exception e)
             {
-                ErrorLabel = e.Message;
+                ErrorLabel1 = e.Message;
             }
         }
-        
+
+        public void DeleteTask()
+        {
+            int columnOrdinal = -1;
+            for(int i = 0; i < ColumnList.Count; i++)
+            {
+                if (columnList[i]!=null&&ColumnList[i].Name.Equals(Controller.Email))
+                    columnOrdinal = i;
+            }
+
+            if (TaskSelectedItem != null)
+            {
+                try
+                {
+                    Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
+                }catch(Exception e)
+                {
+                    ErrorLabel1 = e.Message;
+                }
+            }
+            else
+            {
+                ErrorLabel1 = "no task was chosen";
+            }
+            
+        }
+
+
     }
 }

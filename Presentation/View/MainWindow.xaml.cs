@@ -47,5 +47,6 @@ namespace Presentation
             RegisterWindow w = new RegisterWindow(MWViewModel.Controller);
             w.Show();
         }
+
     }
 }
