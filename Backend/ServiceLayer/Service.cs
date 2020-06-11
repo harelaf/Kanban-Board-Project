@@ -101,7 +101,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to assign task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in to the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -119,7 +122,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to delete task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -185,7 +191,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
                 return boardService.GetBoard();
             else
+            {
+                log.Error("Wasnt able to get board, the email you provided is not the logged in user's");
                 return new Response<Board>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -203,7 +212,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to limit column tasks, the email you provided is not the logged in user's");
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -221,7 +233,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to change column name, the email you provided is not the logged in user's");
                 return new Response<Task>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -262,7 +277,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to update the task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -281,7 +299,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to update the task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -300,7 +321,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to update the task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -318,7 +342,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to advance the task, the email you provided is not the logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
 
@@ -336,7 +363,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to get the column, the email you provided is not the logged in user's");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -351,7 +381,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (activeUser.Email != null && activeUser.Email.Equals(email.ToLower()))
                 return boardService.GetColumn(columnOrdinal);
             else
+            {
+                log.Error("Wasnt able to get the column, the email you provided is not the logged in user's");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -369,7 +402,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             }
             else
+            {
+                log.Error("Wasnt able to remove the column, the email you provided is not logged in user's");
                 return new Response("No user is logged in the system, or the email doesn't match the current logged in user");
+            }
         }
 
         /// <summary>
@@ -389,7 +425,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Warn("Wasnt able to add the column: No user is logged in the system, or the email doesn't match the current logged in user");
+                log.Error("Wasnt able to add the column: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
             }
         }
@@ -409,7 +445,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Warn("Wasn't able to move the column right: No user is logged in the system, or the email doesn't match the current logged in user");
+                log.Error("Wasn't able to move the column right: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
             }
         }
@@ -428,7 +464,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             else
             {
-                log.Warn("Wasnt able to move the column left: No user is logged in the system, or the email doesn't match the current logged in user");
+                log.Error("Wasnt able to move the column left: No user is logged in the system, or the email doesn't match the current logged in user");
                 return new Response<Column>("No user is logged in the system, or the email doesn't match the current logged in user");
             }
         }

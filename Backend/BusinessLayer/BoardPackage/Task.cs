@@ -113,7 +113,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void UpdateTaskDueDate(DateTime DueDate)
         {
             if (!ValidateDueDate(DueDate))
-                throw new Exception("The DueDate is Illegal(Date already passed)");
+                throw new Exception("The DueDate is Illegal (Date already passed)");
             this.DueDate = DueDate;
         }
         /// <summary>
@@ -123,7 +123,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void UpdateTaskTitle(string Title)
         {
             if (!ValidateTitle(Title))
-                throw new Exception("Illegal Title(over " + Title_MAX_LENGTH + " characters or empty)");
+                throw new Exception("Illegal Title (over " + Title_MAX_LENGTH + " characters or empty)");
             this.Title = Title;
         }
 
@@ -136,7 +136,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (Description == null)
                 Description = "";
             if (!ValidateDescription(Description))
-                throw new Exception("Description not fit(over than " + DESC_MAX_LENGTH + "characters)");
+                throw new Exception("Description not fit (over than " + DESC_MAX_LENGTH + "characters)");
             this.Description = Description;
         }
 

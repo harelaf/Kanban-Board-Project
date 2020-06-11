@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Presentation.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Presentation.ViewModel;
+using Presentation.Model;
 
 namespace Presentation
 {
@@ -20,9 +23,29 @@ namespace Presentation
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel MWViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+            MWViewModel = new MainWindowViewModel();
+            this.DataContext = MWViewModel;
+        }
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserModel LoggedIn = MWViewModel.Login();
+            if (LoggedIn != null)
+            {
+                KanbanWindow KanbanWindow = new KanbanWindow(MWViewModel.Controller);
+                KanbanWindow.Show();
+            }
+        }
+
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow w = new RegisterWindow(MWViewModel.Controller);
+            w.Show();
         }
     }
 }
