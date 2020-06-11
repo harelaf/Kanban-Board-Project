@@ -103,32 +103,117 @@ namespace Presentation
             return ToBoardModel(MyService.GetBoard(Email).Value);
         }
 
+
+
         //Response<Board> GetBoard(string email);
+
+        public void LimitColumnTasks(string email, int columnOrdinal, int limit)
+        {
+            Response resp = MyService.LimitColumnTasks(email, columnOrdinal, limit);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response LimitColumnTasks(string email, int columnOrdinal, int limit);
 
+        public void ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            Response resp = MyService.ChangeColumnName(email, columnOrdinal, newName);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
+
         //Response ChangeColumnName(string email, int columnOrdinal, string newName);
+
+        public void AddTask(string email,string title,string description, DateTime dueDate)
+        {
+            Response resp = MyService.AddTask(email, title, description,dueDate);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response<Task> AddTask(string email, string title, string description, DateTime dueDate);
 
+        public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
+        {
+            Response resp = MyService.UpdateTaskDueDate(email, columnOrdinal,taskId, dueDate);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
+
         //Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate);
+
+        public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
+        {
+            Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title);
 
+        public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
+        {
+            Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description);
 
+        public void AdvanceTask(string email, int columnOrdinal, int taskId)
+        {
+            Response resp = MyService.AdvanceTask(email, columnOrdinal, taskId);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response AdvanceTask(string email, int columnOrdinal, int taskId);
 
+        public void GetColumn(string email, string columnName)
+        {
+            Response resp = MyService.GetColumn(email, columnName);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response<Column> GetColumn(string email, string columnName);
 
+        public void GetColumn(string email, int columnOrdinal)
+        {
+            Response resp = MyService.GetColumn(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response<Column> GetColumn(string email, int columnOrdinal);
 
+        public void RemoveColumn(string email, int columnOrdinal)
+        {
+            Response resp = MyService.RemoveColumn(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response RemoveColumn(string email, int columnOrdinal);
 
+        public void AddColumn(string email, int columnOrdinal,string Name)
+        {
+            Response resp = MyService.AddColumn(email, columnOrdinal,Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response<Column> AddColumn(string email, int columnOrdinal, string Name);
 
+        public void MoveColumnRight(string email, int columnOrdinal)
+        {
+            Response resp = MyService.MoveColumnRight(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response<Column> MoveColumnRight(string email, int columnOrdinal);
 
+        public void MoveColumnLeft(string email, int columnOrdinal)
+        {
+            Response resp = MyService.MoveColumnLeft(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response<Column> MoveColumnLeft(string email, int columnOrdinal);
 
     }
