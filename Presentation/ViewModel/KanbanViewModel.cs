@@ -85,16 +85,18 @@ namespace Presentation.ViewModel
         public void AdvanceTask()
         {
             int columnId = -1;
-            for(int i = 0; i < columnList.Count; i++)
+            if(ColumnList == null)
+                ErrorLabel=("couldn't find the task's next column");
+            for (int i = 0; i < columnList.Count; i++)
             {
-                if (columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (ColumnList[i]!=null&&columnList[i].Name.Equals(taskSelectedItem.ColumnName))
                 {
                     columnId = i;
                     break;
                 }
             }
             if (columnId == -1)
-                throw new Exception("couldn't find the task's next column");
+                ErrorLabel=("couldn't find the task's next column");
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);

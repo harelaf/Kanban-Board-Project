@@ -16,9 +16,7 @@ namespace Presentation.Model
         public string EmailAssignee { get; set; }
         public string ColumnName { get; set; }
 
-
-        public TaskModel(int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName)
-
+        public TaskModel(BackendController controller,int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;
             this.CreationDate = CreationDate;
@@ -28,6 +26,7 @@ namespace Presentation.Model
             this.EmailAssignee = emailAssignee;
             this.ColumnName = ColumnName;
         }
-        
+
+      
     }
 }
