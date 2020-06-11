@@ -10,12 +10,14 @@ namespace Presentation.Model
     class ColumnModel
     {
         public string Name { get; set; }
+        public string EmptyListErrorMessage { get; set; }
         private ObservableCollection<TaskModel> taskList;
         public ObservableCollection<TaskModel> TaskList
         {
             get => taskList;
             set
             {
+                EmptyListErrorMessage = taskList.Count == 0 ? "Empty Column" : "";
                 taskList = value;
             }
         }
