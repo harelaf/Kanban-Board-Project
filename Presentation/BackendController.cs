@@ -186,10 +186,10 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = new TaskModel(this, task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(list,Name);
+            ColumnModel column = new ColumnModel(this, list,Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return column;
@@ -201,10 +201,10 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = new TaskModel(this, task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
                 list.Add(ToAdd);
             }
-            ColumnModel column=new ColumnModel(list,resp.Value.Name);
+            ColumnModel column=new ColumnModel(this, list,resp.Value.Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return column;
@@ -216,10 +216,10 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = new TaskModel(this, task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(list, resp.Value.Name);
+            ColumnModel column = new ColumnModel(this, list, resp.Value.Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return column;
