@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.Model
 {
-    class BoardModel
+    class BoardModel : NotifiableModelObject
     {
         private ObservableCollection<ColumnModel> colList;
         public ObservableCollection<ColumnModel> ColList
@@ -21,7 +21,7 @@ namespace Presentation.Model
         }
         public readonly string CreatorEmail;
 
-        public BoardModel(string CreatorEmail, ObservableCollection<ColumnModel> colList)
+        public BoardModel(BackendController Controller, string CreatorEmail, ObservableCollection<ColumnModel> colList) : base(Controller)
         {
             this.colList = colList;
             this.CreatorEmail = CreatorEmail;

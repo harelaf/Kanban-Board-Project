@@ -40,6 +40,13 @@ namespace Presentation.View
         private void AdvanceTask_Button_Click(object sender, RoutedEventArgs e)
         {
             KVModel.AdvanceTask();
-        }
+
+	}
+        private void AddTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddTaskWindow adw = new AddTaskWindow(KVModel.Controller, KVModel.ColumnList);
+            adw.Show();
+
+	}
     }
 }
