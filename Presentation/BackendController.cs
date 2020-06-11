@@ -131,7 +131,7 @@ namespace Presentation
 
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
-            return ToTaskModel(resp.Value);
+            return ToTaskModel(resp.Value, MyService.GetColumn(email, 0).Value.Name);
         }
 
         public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
