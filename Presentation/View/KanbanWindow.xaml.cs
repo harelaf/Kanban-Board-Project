@@ -36,5 +36,10 @@ namespace Presentation.View
             KVModel = new KanbanViewModel(Controller);
             this.DataContext = KVModel;
         }
+
+        private void AdvanceTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.AdvanceTask();
+        }
     }
 }

@@ -47,5 +47,62 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("ColumnList");
             }
         }
+
+        private TaskModel taskSelectedItem;
+        public TaskModel TaskSelectedItem
+        {
+            get => taskSelectedItem;
+            set
+            {
+                taskSelectedItem = value;
+                RaisePropertyChanged("TaskSelectedItem");
+            }
+        }
+
+        private ColumnModel columnSelectedItem;
+        public ColumnModel ColumnSelectedItem
+        {
+            get => columnSelectedItem;
+            set
+            {
+                columnSelectedItem = value;
+                RaisePropertyChanged("ColumnSelectedItem");
+            }
+        }
+
+        private string errorLabel;
+        public string ErrorLabel
+        {
+            get => errorLabel;
+
+            set
+            {
+                errorLabel = value;
+                RaisePropertyChanged("ErrorLabel");
+            }
+        }
+
+        public void AdvanceTask()
+        {
+            int columnId = -1;
+            for(int i = 0; i < columnList.Count; i++)
+            {
+                if (columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                {
+                    columnId = i;
+                    break;
+                }
+            }
+            if (columnId == -1)
+                throw new Exception("couldn't find the task's next column");
+            try
+            {
+                Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
+            }catch(Exception e)
+            {
+                ErrorLabel = e.Message;
+            }
+        }
+        
     }
 }

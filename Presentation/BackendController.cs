@@ -85,14 +85,14 @@ namespace Presentation
             ObservableCollection<TaskModel> TaskModelList = new ObservableCollection<TaskModel>();
             foreach(Task tsk in MyColumn.Tasks)
             {
-                TaskModelList.Add(ToTaskModel(tsk));
+                TaskModelList.Add(ToTaskModel(tsk, MyColumn.Name));
             }
             return new ColumnModel(TaskModelList, MyColumn.Name);
         }
 
-        private TaskModel ToTaskModel(Task tsk)
+        private TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
-            return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
+            return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
         }
 
         public void Logout(string Email)
@@ -132,7 +132,7 @@ namespace Presentation
         public TaskModel AddTask(string email,string title,string description, DateTime dueDate)
         {
             Response<Task> resp = MyService.AddTask(email, title, description,dueDate);
-            TaskModel task = new TaskModel(resp.Value.Id, resp.Value.CreationTime, dueDate, title, description, resp.Value.emailAssignee);
+            TaskModel task = ToTaskModel(resp.Value, MyService.GetColumn(email,0).Value.Name);
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return task;
@@ -180,7 +180,7 @@ namespace Presentation
             ObservableCollection<TaskModel> list=new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = ToTaskModel(task, columnName);
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(list, columnName);
@@ -196,7 +196,7 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(list, resp.Value.Name);
@@ -220,7 +220,7 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(list,Name);
@@ -236,7 +236,7 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
             ColumnModel column=new ColumnModel(list,resp.Value.Name);
@@ -252,7 +252,7 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
-                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(list, resp.Value.Name);
