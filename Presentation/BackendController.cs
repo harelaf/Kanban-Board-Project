@@ -95,6 +95,12 @@ namespace Presentation
             return new TaskModel(tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee);
         }
 
+        public void Logout(string Email)
+        {
+            Response resp = MyService.Logout(Email);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response Logout(string email);
 
@@ -105,30 +111,155 @@ namespace Presentation
 
         //Response<Board> GetBoard(string email);
 
+        public void LimitColumnTasks(string email, int columnOrdinal, int limit)
+        {
+            Response resp = MyService.LimitColumnTasks(email, columnOrdinal, limit);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
+
         //Response LimitColumnTasks(string email, int columnOrdinal, int limit);
+
+        public void ChangeColumnName(string email, int columnOrdinal, string newName)
+        {
+            Response resp = MyService.ChangeColumnName(email, columnOrdinal, newName);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response ChangeColumnName(string email, int columnOrdinal, string newName);
 
+        public TaskModel AddTask(string email,string title,string description, DateTime dueDate)
+        {
+            Response<Task> resp = MyService.AddTask(email, title, description,dueDate);
+            TaskModel task = new TaskModel(resp.Value.Id, resp.Value.CreationTime, dueDate, title, description, resp.Value.emailAssignee);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return task;
+        }
+
         //Response<Task> AddTask(string email, string title, string description, DateTime dueDate);
+
+        public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
+        {
+            Response resp = MyService.UpdateTaskDueDate(email, columnOrdinal,taskId, dueDate);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
 
         //Response UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate);
 
+        public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
+        {
+            Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
+
         //Response UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title);
 
+        public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
+        {
+            Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description);
 
+        public void AdvanceTask(string email, int columnOrdinal, int taskId)
+        {
+            Response resp = MyService.AdvanceTask(email, columnOrdinal, taskId);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response AdvanceTask(string email, int columnOrdinal, int taskId);
 
+        public ColumnModel GetColumn(string email, string columnName)
+        {
+            Response<Column> resp = MyService.GetColumn(email, columnName);
+            ObservableCollection<TaskModel> list=new ObservableCollection<TaskModel>();
+            foreach(Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list, columnName);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return column;
+        }
         //Response<Column> GetColumn(string email, string columnName);
 
+        public ColumnModel GetColumn(string email, int columnOrdinal)
+        {
+            Response<Column> resp = MyService.GetColumn(email, columnOrdinal);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach (Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list, resp.Value.Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return column;
+        }
         //Response<Column> GetColumn(string email, int columnOrdinal);
 
+        public void RemoveColumn(string email, int columnOrdinal)
+        {
+            Response resp = MyService.RemoveColumn(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+        }
         //Response RemoveColumn(string email, int columnOrdinal);
 
+        public ColumnModel AddColumn(string email, int columnOrdinal,string Name)
+        {
+            Response<Column> resp = MyService.AddColumn(email, columnOrdinal,Name);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach(Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list,Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return column;
+        }
         //Response<Column> AddColumn(string email, int columnOrdinal, string Name);
 
+        public ColumnModel MoveColumnRight(string email, int columnOrdinal)
+        {
+            Response<Column> resp = MyService.MoveColumnRight(email, columnOrdinal);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach (Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column=new ColumnModel(list,resp.Value.Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return column;
+        }
         //Response<Column> MoveColumnRight(string email, int columnOrdinal);
 
+        public ColumnModel MoveColumnLeft(string email, int columnOrdinal)
+        {
+            Response<Column> resp = MyService.MoveColumnLeft(email, columnOrdinal);
+            ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+            foreach (Task task in resp.Value.Tasks)
+            {
+                TaskModel ToAdd = new TaskModel(task.Id, task.CreationTime, task.DueDate, task.Title, task.Description, task.emailAssignee);
+                list.Add(ToAdd);
+            }
+            ColumnModel column = new ColumnModel(list, resp.Value.Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
+            return column;
+        }
         //Response<Column> MoveColumnLeft(string email, int columnOrdinal);
 
     }
