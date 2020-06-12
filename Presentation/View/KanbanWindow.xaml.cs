@@ -36,5 +36,40 @@ namespace Presentation.View
             KVModel = new KanbanViewModel(Controller);
             this.DataContext = KVModel;
         }
+
+        private void AddTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AdvanceTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteColumn_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MoveColumnRight_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void MoveColumnLeft_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
