@@ -207,6 +207,7 @@ namespace Presentation
         {
             Response<Column> resp = MyService.MoveColumnRight(email, columnOrdinal);
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
+
             foreach (Task task in resp.Value.Tasks)
             {
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);

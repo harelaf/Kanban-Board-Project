@@ -59,6 +59,18 @@ namespace Presentation.ViewModel
             }
         }
 
+        public void printColumn()
+        {
+            if (ColumnSelectedItem != null)
+                Console.WriteLine("column name "+columnSelectedItem.Name);
+        }
+
+        public void printTask()
+        {
+            if(taskSelectedItem!=null)
+             Console.WriteLine("Task's column name:" + taskSelectedItem.ColumnName+" Task description "+taskSelectedItem.Description);
+        }
+
         private ColumnModel columnSelectedItem;
         public ColumnModel ColumnSelectedItem
         {
@@ -132,6 +144,41 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = "no task was chosen";
             }
             
+        }
+
+        public void MoveColumnRight()
+        {
+            int id = -1;
+            for(int i = 0; i < ColumnList.Count; i++)
+            {
+                if (ColumnList[i] != null && columnSelectedItem.Name.Equals(ColumnList[i].Name))
+                    id = i;
+            }
+            try
+            {
+                Controller.MoveColumnRight(Controller.Email, id);
+            }catch(Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
+        public void MoveColumnLeft()
+        {
+            int id = -1;
+            for (int i = 0; i < ColumnList.Count; i++)
+            {
+                if (ColumnList[i] != null && columnSelectedItem.Name.Equals(ColumnList[i].Name))
+                    id = i;
+            }
+            try
+            {
+                Controller.MoveColumnLeft(Controller.Email, id);
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
         }
 
 
