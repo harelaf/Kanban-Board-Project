@@ -28,7 +28,7 @@
             <Label Content="Column Index" FontSize="16" Grid.Column="0" Grid.Row="1"/>
             <TextBox Name="IndexTextBox" Text="{Binding Path=Index, Mode=OneWayToSource}" Width="200" Grid.Column="1" Grid.Row="1" Margin="5" VerticalContentAlignment="Center"/>
         </Grid>
-        <Button Content="Add Column" VerticalAlignment="Center" Name="AddColumnButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Row="2"/>
-        <Label Name="ErrorLabel" Content="{Binding Path=ErrorMessage, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
+        <Button Content="Add Column" VerticalAlignment="Center" Name="AddColumnButton" Height="30" Width="100" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="AddColumn_Click"/>
+        <Label Name="ErrorLabel" Content="{Binding Path=ErrorMessage2, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
     </Grid>
 </Window>

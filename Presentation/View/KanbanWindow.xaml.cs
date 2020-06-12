@@ -72,12 +72,13 @@ namespace Presentation.View
 
         private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            AddColumn w = new AddColumn(KVModel);
+            w.Show();
         }
 
-        private void DeleteColumn_Button_Click(object sender, RoutedEventArgs e)
+        private void RemoveColumn_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            KVModel.RemoveColumn();
         }
 
     }
