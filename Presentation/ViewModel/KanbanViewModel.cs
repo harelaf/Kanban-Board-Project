@@ -95,6 +95,8 @@ namespace Presentation.ViewModel
         }
         private int FindSelectedColumn()
         {
+            if (ColumnSelectedItem == null)
+                return -2;
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
@@ -202,7 +204,7 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = "can't move column left";
                 return;
             }
-
+            
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
@@ -216,7 +218,14 @@ namespace Presentation.ViewModel
 
         public void RemoveColumn()
         {
+          
             int i = FindSelectedColumn();
+            if (i == -2)
+            {
+                ErrorLabel1 = "no column was selected";
+                return;
+            }
+
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
