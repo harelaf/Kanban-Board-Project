@@ -47,5 +47,93 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("ColumnList");
             }
         }
+
+        private TaskModel taskSelectedItem;
+        public TaskModel TaskSelectedItem
+        {
+            get => taskSelectedItem;
+            set
+            {
+                taskSelectedItem = value;
+                RaisePropertyChanged("TaskSelectedItem");
+            }
+        }
+
+        private ColumnModel columnSelectedItem;
+        public ColumnModel ColumnSelectedItem
+        {
+            get => columnSelectedItem;
+            set
+            {
+                columnSelectedItem = value;
+                RaisePropertyChanged("ColumnSelectedItem");
+            }
+        }
+
+        private string errorLabel1;
+        public string ErrorLabel1
+        {
+            get => errorLabel1;
+
+            set
+            {
+                errorLabel1 = value;
+                RaisePropertyChanged("ErrorLabel1");
+            }
+        }
+
+        public void AdvanceTask()
+        {
+            int columnId = -1;
+            if (taskSelectedItem == null)
+            {
+                ErrorLabel1 = "no task was chosen to advanced";
+                return;
+            }
+    
+            for (int i = 0; i < columnList.Count; i++)
+            {
+                if (ColumnList[i]!=null&&columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                {
+                    columnId = i;
+                    break;
+                }
+            }
+            try
+            {
+                Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
+            }catch(Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
+        public void DeleteTask()
+        {
+            int columnOrdinal = -1;
+            for(int i = 0; i < ColumnList.Count; i++)
+            {
+                if (columnList[i]!=null&&ColumnList[i].Name.Equals(Controller.Email))
+                    columnOrdinal = i;
+            }
+
+            if (TaskSelectedItem != null)
+            {
+                try
+                {
+                    Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
+                }catch(Exception e)
+                {
+                    ErrorLabel1 = e.Message;
+                }
+            }
+            else
+            {
+                ErrorLabel1 = "no task was chosen";
+            }
+            
+        }
+
+
     }
 }

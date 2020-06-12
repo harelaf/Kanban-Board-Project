@@ -7,13 +7,13 @@ using IntroSE.Kanban.Backend.ServiceLayer;
 
 namespace Presentation.Model
 {
-    class UserModel
+    class UserModel : NotifiableModelObject
     {
         private string Email;
         private string Nickname;
         private BoardModel Board;
 
-        public UserModel(string Email, string Nickname , BoardModel Board)
+        public UserModel(BackendController Controller, string Email, string Nickname , BoardModel Board) : base(Controller)
         {
             this.Email = Email;
             this.Nickname = Nickname;
