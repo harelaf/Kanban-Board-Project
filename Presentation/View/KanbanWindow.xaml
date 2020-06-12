@@ -8,10 +8,10 @@
         Title="KanbanWindow" MinHeight="500" MinWidth="700">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="691*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2" Margin="0,0,-0.4,-0.4">
+        <Grid Grid.ColumnSpan="2" Margin="0,0,-0.667,-0.667">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="200"/>
@@ -22,7 +22,7 @@
                 <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
                 <ListBox Name ="ColumnListBox" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" SelectedItem="{Binding Path=ColumnSelectedItem, Mode=OneWayToSource}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
 
-                                    <ListBox.ItemsPanel>
+                    <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
                         </ItemsPanelTemplate>
@@ -66,7 +66,7 @@
                     <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
-                <Button Content="Add Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1"/>
+                <Button Content="Add Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" Click="AddColumn_Button_Click"/>
                 <Button Content="Move Column ->" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="MoveColumnRight_Button_Click"/>
                 <Button Content="Move Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="3" Click="MoveColumnLeft_Button_Click"/>
                 <Button Content="Delete Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="4" Click="DeleteColumn_Button_Click"/>
@@ -76,7 +76,7 @@
                 <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="DeleteTask_Button_Click"/>
             </Grid>
         </Grid>
-        <Button Content="Delete All Boards"  Margin="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click"/>
+        <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="20"/>
     </Grid>
 
 </Window>
