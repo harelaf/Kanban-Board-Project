@@ -55,10 +55,10 @@ namespace Presentation.View
             KVModel.DeleteTask();
         }
 
-        
         private void MoveColumnRight_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+           // KVModel.printColumn();
+            KVModel.MoveColumnRight();
         }
 
         private void MoveColumnLeft_Button_Click(object sender, RoutedEventArgs e)
@@ -69,17 +69,18 @@ namespace Presentation.View
         private void DeleteColumn_Button_Click(object sender, RoutedEventArgs e)
         {
 
+            KVModel.MoveColumnLeft();
+        }
+
+        private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
 
         private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
         {
             AddColumn acw = new AddColumn();
             acw.Show();
-        }
-
-        private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
