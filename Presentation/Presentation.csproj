@@ -85,6 +85,7 @@
     <Compile Include="NotifiableObject.cs" />
     <Compile Include="ViewModel\AddColumnViewModel.cs" />
     <Compile Include="ViewModel\AddTaskViewModel.cs" />
+    <Compile Include="ViewModel\ColumnMethods.cs" />
     <Compile Include="ViewModel\KanbanViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\RegisterViewModel.cs" />

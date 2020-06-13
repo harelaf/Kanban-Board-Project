@@ -37,10 +37,49 @@ namespace Presentation.View
             this.DataContext = KVModel;
         }
 
+        private void AdvanceTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.AdvanceTask();
+
+	    }
         private void AddTask_Button_Click(object sender, RoutedEventArgs e)
         {
             AddTaskWindow adw = new AddTaskWindow(KVModel.Controller, KVModel.ColumnList);
+            //adw.DataContext = KVModel;
             adw.Show();
+
+	    }
+
+        private void DeleteTask_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.DeleteTask();
+        }
+
+        private void MoveColumnRight_Button_Click(object sender, RoutedEventArgs e)
+        {
+           // KVModel.printColumn();
+            KVModel.MoveColumnRight();
+        }
+
+        private void MoveColumnLeft_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.MoveColumnLeft();
+        }
+
+
+        private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RemoveColumn_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.RemoveColumn();
+	    }
+        private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddColumn addColumn = new AddColumn(KVModel);
+            addColumn.Show();
         }
     }
 }
