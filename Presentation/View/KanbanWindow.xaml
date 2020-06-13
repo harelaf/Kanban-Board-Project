@@ -18,15 +18,11 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <Label Name="KanbanHeader" Content="Kanban Board" FontSize="25" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0"/>
-<<<<<<< HEAD
-                <ListBox Name ="ColumnListBox" MaxHeight="470" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
-=======
 
                 <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
 
-                <ListBox Name ="ColumnListBox" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" SelectedItem="{Binding Path=ColumnSelectedItem, Mode=OneWayToSource}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
+                <ListBox Name ="ColumnListBox" MaxHeight="460" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" SelectedItem="{Binding Path=ColumnSelectedItem, Mode=OneWayToSource}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
 
->>>>>>> 7dde30288337049c29b120823142798deba3b2b2
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
@@ -56,7 +52,6 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Label Name="ErrorLabel" Content="hello" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
             </StackPanel>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>

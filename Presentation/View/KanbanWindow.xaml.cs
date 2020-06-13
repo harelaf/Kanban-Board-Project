@@ -23,7 +23,7 @@ namespace Presentation.View
     {
         private KanbanViewModel KVModel;
 
-        public KanbanWindow()
+        internal KanbanWindow()
         {
             InitializeComponent();
             this.KVModel = new KanbanViewModel();
