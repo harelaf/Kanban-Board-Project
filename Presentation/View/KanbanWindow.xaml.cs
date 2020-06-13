@@ -69,7 +69,7 @@ namespace Presentation.View
 
         private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            KVModel.printTask();
         }
 
         private void RemoveColumn_Button_Click(object sender, RoutedEventArgs e)
