@@ -23,7 +23,7 @@ namespace Presentation.View
     {
         private KanbanViewModel KVModel;
 
-        public KanbanWindow()
+        internal KanbanWindow()
         {
             InitializeComponent();
             this.KVModel = new KanbanViewModel();
@@ -63,24 +63,23 @@ namespace Presentation.View
 
         private void MoveColumnLeft_Button_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void DeleteColumn_Button_Click(object sender, RoutedEventArgs e)
-        {
-
             KVModel.MoveColumnLeft();
         }
 
+
         private void DeleteData_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
+        private void RemoveColumn_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.RemoveColumn();
+	    }
         private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
         {
-            AddColumn acw = new AddColumn();
-            acw.Show();
+            AddColumn addColumn = new AddColumn(KVModel);
+            addColumn.Show();
         }
     }
 }

@@ -93,6 +93,21 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("ErrorLabel1");
             }
         }
+        private int FindSelectedColumn()
+        {
+            if (ColumnSelectedItem == null)
+                return -2;
+            int columnOrdinal = -1;
+            for (int i = 0; i < ColumnList.Count; i++)
+            {
+                if (columnList[i] != null && ColumnList[i].Name.Equals(ColumnSelectedItem.Name))
+                {
+                    columnOrdinal = i;
+                    break;
+                }
+            }
+            return columnOrdinal;
+        }
 
         public void AdvanceTask()
         {
@@ -155,15 +170,23 @@ namespace Presentation.ViewModel
 
         public void MoveColumnRight()
         {
-            int id = -1;
-            for (int i = 0; i < ColumnList.Count; i++)
+            if (columnSelectedItem == null)
             {
-                if (ColumnList[i] != null && columnSelectedItem.Name.Equals(ColumnList[i].Name))
-                    id = i;
+                ErrorLabel1 = "No column was chosen";
+                return;
+            }
+
+            int id = FindSelectedColumn();
+
+            if (id == ColumnList.Count - 1)
+            {
+                ErrorLabel1 = "can't move column right";
+                return;
             }
             try
             {
-                Controller.MoveColumnRight(Controller.Email, id);
+                ColumnMethods columnMethod = new ColumnMethods(Controller);
+                ColumnList = columnMethod.MoveColumnRight(id);
             }
             catch (Exception e)
             {
@@ -173,20 +196,57 @@ namespace Presentation.ViewModel
 
         public void MoveColumnLeft()
         {
-            int id = -1;
-            for (int i = 0; i < ColumnList.Count; i++)
+            if (columnSelectedItem == null)
             {
-                if (ColumnList[i] != null && columnSelectedItem.Name.Equals(ColumnList[i].Name))
-                    id = i;
+                ErrorLabel1 = "No column was chosen";
+                return;
             }
+
+            int id = FindSelectedColumn();
+
+            if (id == 0)
+            {
+                ErrorLabel1 = "can't move column left";
+                return;
+            }
+            
             try
             {
-                Controller.MoveColumnLeft(Controller.Email, id);
+                ColumnMethods columnMethod = new ColumnMethods(Controller);
+                ColumnList = columnMethod.MoveColumnLeft(id);
             }
             catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
             }
+        }
+
+        public void RemoveColumn()
+        {
+          
+            int i = FindSelectedColumn();
+            if (i == -2)
+            {
+                ErrorLabel1 = "no column was selected";
+                return;
+            }
+
+            try
+            {
+                ColumnMethods columnMethod = new ColumnMethods(Controller);
+                ColumnList = columnMethod.RemoveColumn(i);
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
+
+        public ObservableCollection<ColumnModel> AddColumn(int index, string name)
+        {
+            ColumnMethods columnMethod = new ColumnMethods(Controller);
+            return columnMethod.AddColumn(index, name);
         }
     }
 }
