@@ -95,15 +95,16 @@ namespace Presentation.ViewModel
         }
         private int FindSelectedColumn()
         {
-            if (ColumnSelectedItem == null)
-                return -2;
             int columnOrdinal = -1;
-            for (int i = 0; i < ColumnList.Count; i++)
-            {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(ColumnSelectedItem.Name))
+
+            if (ColumnSelectedItem != null) {
+                for (int i = 0; i < ColumnList.Count; i++)
                 {
-                    columnOrdinal = i;
-                    break;
+                    if (columnList[i] != null && ColumnList[i].Name.Equals(ColumnSelectedItem.Name))
+                    {
+                        columnOrdinal = i;
+                        break;
+                    }
                 }
             }
             return columnOrdinal;
@@ -129,6 +130,10 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
+                ColumnList[columnId + 1].TaskList.Add(taskSelectedItem);
+                columnList[columnId].TaskList.Remove(taskSelectedItem);
+                taskSelectedItem.ColumnName = ColumnList[columnId + 1].Name;
+                ErrorLabel1 = "The task has advanced successfully";
             }
             catch (Exception e)
             {
@@ -141,7 +146,7 @@ namespace Presentation.ViewModel
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(Controller.Email))
+                if (columnList[i] != null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
                     columnOrdinal = i;
             }
 
@@ -150,6 +155,8 @@ namespace Presentation.ViewModel
                 try
                 {
                     Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
+                    columnList[columnOrdinal].TaskList.Remove(taskSelectedItem);
+                    ErrorLabel1 = "The task was deleted successfully";
                 }
                 catch (Exception e)
                 {
