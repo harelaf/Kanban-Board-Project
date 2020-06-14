@@ -62,13 +62,13 @@ namespace Presentation.ViewModel
         public void printColumn()
         {
             if (ColumnSelectedItem != null)
-                Console.WriteLine("column name "+columnSelectedItem.Name);
+                Console.WriteLine("column name " + columnSelectedItem.Name);
         }
 
         public void printTask()
         {
-            if(taskSelectedItem!=null)
-             Console.WriteLine("Task's column name:" + taskSelectedItem.ColumnName+" Task description "+taskSelectedItem.Description);
+            if (taskSelectedItem != null)
+                Console.WriteLine("Task's column name:" + taskSelectedItem.ColumnName + " Task description " + taskSelectedItem.Description);
         }
 
         private ColumnModel columnSelectedItem;
@@ -102,10 +102,10 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = "no task was chosen to advanced";
                 return;
             }
-    
+
             for (int i = 0; i < columnList.Count; i++)
             {
-                if (ColumnList[i]!=null&&columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (ColumnList[i] != null && columnList[i].Name.Equals(taskSelectedItem.ColumnName))
                 {
                     columnId = i;
                     break;
@@ -114,7 +114,11 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
-            }catch(Exception e)
+                ColumnList[columnId + 1].TaskList.Add(taskSelectedItem);
+                columnList[columnId].TaskList.Remove(taskSelectedItem);
+                ErrorLabel1 = "The task has advanced successfully";
+            }
+            catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
             }
@@ -123,9 +127,9 @@ namespace Presentation.ViewModel
         public void DeleteTask()
         {
             int columnOrdinal = -1;
-            for(int i = 0; i < ColumnList.Count; i++)
+            for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i]!=null&&ColumnList[i].Name.Equals(Controller.Email))
+                if (columnList[i] != null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
                     columnOrdinal = i;
             }
 
@@ -134,7 +138,10 @@ namespace Presentation.ViewModel
                 try
                 {
                     Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
-                }catch(Exception e)
+                    columnList[columnOrdinal].TaskList.Remove(taskSelectedItem);
+                    ErrorLabel1 = "The task was deleted successfully";
+                }
+                catch (Exception e)
                 {
                     ErrorLabel1 = e.Message;
                 }
@@ -143,13 +150,13 @@ namespace Presentation.ViewModel
             {
                 ErrorLabel1 = "no task was chosen";
             }
-            
+
         }
 
         public void MoveColumnRight()
         {
             int id = -1;
-            for(int i = 0; i < ColumnList.Count; i++)
+            for (int i = 0; i < ColumnList.Count; i++)
             {
                 if (ColumnList[i] != null && columnSelectedItem.Name.Equals(ColumnList[i].Name))
                     id = i;
@@ -157,7 +164,8 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.MoveColumnRight(Controller.Email, id);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
             }
@@ -180,7 +188,5 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = e.Message;
             }
         }
-
-
     }
 }

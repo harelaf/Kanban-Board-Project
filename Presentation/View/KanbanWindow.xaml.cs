@@ -45,7 +45,7 @@ namespace Presentation.View
         private void AddTask_Button_Click(object sender, RoutedEventArgs e)
         {
             AddTaskWindow adw = new AddTaskWindow(KVModel.Controller, KVModel.ColumnList);
-            adw.DataContext = KVModel;
+            //adw.DataContext = KVModel;
             adw.Show();
 
 	    }

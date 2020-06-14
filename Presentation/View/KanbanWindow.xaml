@@ -32,7 +32,7 @@
                         <DataTemplate>
                             <StackPanel MinHeight="150">
                                 <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
-                                <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=TaskList}" SelectedItem="{Binding Path=TaskSelectedItem, Mode=OneWayToSource}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=TaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="2">
