@@ -32,7 +32,7 @@
                         <DataTemplate>
                             <StackPanel MinHeight="150">
                                 <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
-                                <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=TaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=filteredTaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="2">
@@ -76,7 +76,11 @@
                 <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" Click="AddTask_Button_Click"/>
                 <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="7" Click="AdvanceTask_Button_Click"/>
                 <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="DeleteTask_Button_Click"/>
-                <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="Sort_Button_Click"/>
+                <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="Sort_Button_Click"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Content="?" Name="Search_Button" Height="25" MinWidth="25" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="Search_Button_Click"/>
+                    <TextBox Name="SearchBar" Text="{Binding Path=SearchValue, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" MinWidth="95" FontSize="13" FontWeight="Bold" Grid.Row="9"/>
+                </StackPanel>
             </Grid>
         </Grid>
         <StackPanel  Margin="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="65">

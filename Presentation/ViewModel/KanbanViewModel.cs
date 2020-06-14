@@ -83,6 +83,20 @@ namespace Presentation.ViewModel
             }
         }
 
+        private string searchValue;
+        public string SearchValue
+        {
+            get
+            {
+                return searchValue;
+            }
+            set
+            {
+                searchValue = value;
+                RaisePropertyChanged("Search");
+            }
+        }
+
         private int FindSelectedColumn()
         {
             int columnOrdinal = -1;
@@ -102,8 +116,9 @@ namespace Presentation.ViewModel
 
         public void AdvanceTask()
         {
+            TaskModel myTask = taskSelectedItem;
             int columnId = -1;
-            if (taskSelectedItem == null)
+            if (myTask == null)
             {
                 ErrorLabel1 = "no task was chosen to advanced";
                 return;
@@ -111,7 +126,7 @@ namespace Presentation.ViewModel
 
             for (int i = 0; i < columnList.Count; i++)
             {
-                if (ColumnList[i] != null && columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (ColumnList[i] != null && columnList[i].Name.Equals(myTask.ColumnName))
                 {
                     columnId = i;
                     break;
@@ -119,11 +134,12 @@ namespace Presentation.ViewModel
             }
             try
             {
-                TaskModel currTask = taskSelectedItem;
-                Controller.AdvanceTask(Controller.Email, columnId, currTask.Id);
-                ColumnList[columnId + 1].TaskList.Add(currTask);
-                ColumnList[columnId].TaskList.Remove(currTask);
-                currTask.ColumnName = ColumnList[columnId + 1].Name;
+                Controller.AdvanceTask(Controller.Email, columnId, myTask.Id);
+                SearchValue = null;
+                filterByString();
+                ColumnList[columnId + 1].TaskList.Add(myTask);
+                ColumnList[columnId].TaskList.Remove(myTask);
+                myTask.ColumnName = ColumnList[columnId + 1].Name;
                 ErrorLabel1 = "The task has advanced successfully";
             }
             catch (Exception e)
@@ -134,19 +150,22 @@ namespace Presentation.ViewModel
 
         public void DeleteTask()
         {
+            TaskModel myTask = taskSelectedItem;
+            SearchValue = null;
+            filterByString();
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (columnList[i] != null && ColumnList[i].Name.Equals(myTask.ColumnName))
                     columnOrdinal = i;
             }
 
-            if (TaskSelectedItem != null)
+            if (myTask != null)
             {
                 try
                 {
-                    Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
-                    columnList[columnOrdinal].TaskList.Remove(taskSelectedItem);
+                    Controller.DeleteTask(Controller.Email, columnOrdinal, myTask.Id);
+                    columnList[columnOrdinal].TaskList.Remove(myTask);
                     ErrorLabel1 = "The task was deleted successfully";
                 }
                 catch (Exception e)
@@ -242,13 +261,10 @@ namespace Presentation.ViewModel
             return columnMethod.AddColumn(index, name);
         }
 
-        private void SortColumns()
-        {
-
-        }
-
         public void SortByDueDate()
         {
+            SearchValue = null;
+            filterByString();
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
             foreach(ColumnModel cm in columnList)
             {
@@ -267,6 +283,16 @@ namespace Presentation.ViewModel
             {
                 ErrorLabel1 = e.Message;
             }
+        }
+
+        public void filterByString()
+        {
+            ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
+            foreach(ColumnModel cm in columnList)
+            {
+                newColumnList.Add(cm.filter(SearchValue));
+            }
+            ColumnList = newColumnList;
         }
     }
 }

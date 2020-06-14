@@ -12,10 +12,12 @@ namespace Presentation.Model
     {
         public string Name { get; set; }
         public ObservableCollection<TaskModel> TaskList { get; set; }
+        public ObservableCollection<TaskModel> filteredTaskList{ get; set;}
 
         public ColumnModel(BackendController Controller) : base(Controller)
         {
             this.TaskList = new ObservableCollection<TaskModel>();
+            filter("");
             Name = "";
             TaskList.CollectionChanged += HandleChange;
         }
@@ -23,6 +25,7 @@ namespace Presentation.Model
         public ColumnModel(BackendController Controller, ObservableCollection<TaskModel> TaskList, string Name) : base(Controller)
         {
             this.TaskList = TaskList;
+            filter("");
             this.Name = Name;
             TaskList.CollectionChanged += HandleChange;
         }
@@ -30,6 +33,19 @@ namespace Presentation.Model
         public void AddTask(TaskModel task)
         {
             TaskList.Add(task);
+        }
+
+        public ColumnModel filter(string s)
+        {
+            if(s==null || s == "")
+            {
+                filteredTaskList = TaskList;
+            }
+            else
+            {
+                filteredTaskList = new ObservableCollection<TaskModel>(TaskList.Where(x => x.Description.Contains(s) | x.Title.Contains(s)));
+            }
+            return this;
         }
 
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)

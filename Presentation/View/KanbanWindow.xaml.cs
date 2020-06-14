@@ -94,5 +94,10 @@ namespace Presentation.View
         {
             KVModel.SortByDueDate();
         }
+
+        private void Search_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.filterByString();
+        }
     }
 }
