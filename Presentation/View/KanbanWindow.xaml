@@ -47,7 +47,7 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <Label Name="ErrorLabel" Content="{Binding Path=EmptyListErrorMessage, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
+                                <Label Name="ErrorLabel" Content="hello" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
