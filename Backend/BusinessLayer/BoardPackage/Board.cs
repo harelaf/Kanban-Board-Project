@@ -66,7 +66,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Column toAddto = list[ColumnOrdinal + 1];
             if (!ToRemove.GetEmailAssignee().Equals(Email)) 
                 throw new Exception("a user can't advance task which he is not assigned to");
-            toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
+            toAddto.MoveExistingTaskHere(new Task(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), ToRemove.GetTaskId(), ToRemove.GetEmailAssignee(), ToRemove.GetCreationDate()));//first tries to add to the next column and removes after if adding succeeded
+            //toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
             Task Removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
 
             ToRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();

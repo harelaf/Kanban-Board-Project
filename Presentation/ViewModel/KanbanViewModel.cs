@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Presentation.Model;
 
 namespace Presentation.ViewModel
@@ -156,7 +157,7 @@ namespace Presentation.ViewModel
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(myTask.ColumnName))
+                if (columnList[i] != null && TaskSelectedItem!=null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
                     columnOrdinal = i;
             }
 
@@ -190,11 +191,6 @@ namespace Presentation.ViewModel
 
             int id = FindSelectedColumn();
 
-            if (id == ColumnList.Count - 1)
-            {
-                ErrorLabel1 = "can't move column right";
-                return;
-            }
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
@@ -216,12 +212,6 @@ namespace Presentation.ViewModel
 
             int id = FindSelectedColumn();
 
-            if (id == 0)
-            {
-                ErrorLabel1 = "can't move column left";
-                return;
-            }
-            
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
@@ -237,7 +227,7 @@ namespace Presentation.ViewModel
         {
           
             int i = FindSelectedColumn();
-            if (i == -2)
+            if (i == -1)
             {
                 ErrorLabel1 = "no column was selected";
                 return;
@@ -253,7 +243,6 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = e.Message;
             }
         }
-
 
         public ObservableCollection<ColumnModel> AddColumn(int index, string name)
         {
@@ -293,6 +282,25 @@ namespace Presentation.ViewModel
                 newColumnList.Add(cm.filter(SearchValue));
             }
             ColumnList = newColumnList;
+	}
+
+        public bool DeleteData()
+        {
+            DialogResult d = System.Windows.Forms.MessageBox.Show("ARE YOU SURE?", "Confirmation", System.Windows.Forms.MessageBoxButtons.YesNo);
+            if(d == DialogResult.Yes)
+            {
+                try
+                {
+                    Controller.DeleteData();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    ErrorLabel1 = e.Message;
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }
