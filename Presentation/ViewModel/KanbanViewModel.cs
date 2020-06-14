@@ -59,18 +59,6 @@ namespace Presentation.ViewModel
             }
         }
 
-        public void printColumn()
-        {
-            if (ColumnSelectedItem != null)
-                Console.WriteLine("column name " + columnSelectedItem.Name);
-        }
-
-        public void printTask()
-        {
-            if (taskSelectedItem != null)
-                Console.WriteLine("Task's column name:" + taskSelectedItem.ColumnName + " Task description " + taskSelectedItem.Description);
-        }
-
         private ColumnModel columnSelectedItem;
         public ColumnModel ColumnSelectedItem
         {
@@ -82,6 +70,7 @@ namespace Presentation.ViewModel
             }
         }
 
+        
         private string errorLabel1;
         public string ErrorLabel1
         {
@@ -93,6 +82,7 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("ErrorLabel1");
             }
         }
+
         private int FindSelectedColumn()
         {
             int columnOrdinal = -1;
@@ -129,10 +119,11 @@ namespace Presentation.ViewModel
             }
             try
             {
-                Controller.AdvanceTask(Controller.Email, columnId, TaskSelectedItem.Id);
-                ColumnList[columnId + 1].TaskList.Add(taskSelectedItem);
-                columnList[columnId].TaskList.Remove(taskSelectedItem);
-                taskSelectedItem.ColumnName = ColumnList[columnId + 1].Name;
+                TaskModel currTask = taskSelectedItem;
+                Controller.AdvanceTask(Controller.Email, columnId, currTask.Id);
+                ColumnList[columnId + 1].TaskList.Add(currTask);
+                ColumnList[columnId].TaskList.Remove(currTask);
+                currTask.ColumnName = ColumnList[columnId + 1].Name;
                 ErrorLabel1 = "The task has advanced successfully";
             }
             catch (Exception e)
@@ -249,6 +240,33 @@ namespace Presentation.ViewModel
         {
             ColumnMethods columnMethod = new ColumnMethods(Controller);
             return columnMethod.AddColumn(index, name);
+        }
+
+        private void SortColumns()
+        {
+
+        }
+
+        public void SortByDueDate()
+        {
+            ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
+            foreach(ColumnModel cm in columnList)
+            {
+                newColumnList.Add(new ColumnModel(Controller, new ObservableCollection<TaskModel>(cm.TaskList.OrderBy(x => x.DueDate).ToList()), cm.Name));
+            }
+            ColumnList = newColumnList;
+        }
+
+        public void logout()
+        {
+            try
+            {
+                Controller.Logout(Controller.Email);
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
         }
     }
 }
