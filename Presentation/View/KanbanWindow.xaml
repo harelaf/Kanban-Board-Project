@@ -76,7 +76,7 @@
                 <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" Click="AddTask_Button_Click"/>
                 <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="7" Click="AdvanceTask_Button_Click"/>
                 <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="DeleteTask_Button_Click"/>
-                <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="Sort_Button_Click"/>
+                <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="Sort_Button_Click"/>
             </Grid>
         </Grid>
         <StackPanel  Margin="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="65">

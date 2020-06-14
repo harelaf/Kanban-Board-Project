@@ -137,7 +137,7 @@ namespace Presentation.ViewModel
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (columnList[i] != null && TaskSelectedItem!=null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
                     columnOrdinal = i;
             }
 
