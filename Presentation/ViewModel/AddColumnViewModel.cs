@@ -60,6 +60,7 @@ namespace Presentation.ViewModel
             try
             {
                 Kvm.ColumnList = Kvm.AddColumn(index, name);
+                ErrorMessage2 = "The column has been added successfully";
             }
             catch (Exception e)
             {
