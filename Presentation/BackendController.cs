@@ -93,9 +93,7 @@ namespace Presentation
 
         private TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
-
             return new TaskModel(this,tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
-
         }
 
         public void Logout(string Email)
@@ -127,11 +125,9 @@ namespace Presentation
         public TaskModel AddTask(string email,string title,string description, DateTime dueDate)
         {
             Response<Task> resp = MyService.AddTask(email, title, description,dueDate);
-
-            TaskModel task = ToTaskModel(resp.Value, MyService.GetColumn(email,0).Value.Name);
-
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
+            TaskModel task = ToTaskModel(resp.Value, MyService.GetColumn(email,0).Value.Name);
             return ToTaskModel(resp.Value, MyService.GetColumn(email, 0).Value.Name);
         }
 
@@ -166,7 +162,6 @@ namespace Presentation
         public ColumnModel GetColumn(string email, string columnName)
         {
             Response<Column> resp = MyService.GetColumn(email, columnName);
-            
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return ToColumnModel(resp.Value);
@@ -175,7 +170,6 @@ namespace Presentation
         public ColumnModel GetColumn(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.GetColumn(email, columnOrdinal);
-
             if (resp.ErrorOccured)
                 throw new Exception(resp.ErrorMessage);
             return ToColumnModel(resp.Value);
@@ -191,6 +185,8 @@ namespace Presentation
         public ColumnModel AddColumn(string email, int columnOrdinal,string Name)
         {
             Response<Column> resp = MyService.AddColumn(email, columnOrdinal,Name);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
@@ -199,30 +195,29 @@ namespace Presentation
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(this, list,Name);
-            if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
             return column;
         }
 
         public ColumnModel MoveColumnRight(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.MoveColumnRight(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
-
             foreach (Task task in resp.Value.Tasks)
             {
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
             ColumnModel column=new ColumnModel(this, list,resp.Value.Name);
-            if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
             return column;
         }
 
         public ColumnModel MoveColumnLeft(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.MoveColumnLeft(email, columnOrdinal);
+            if (resp.ErrorOccured)
+                throw new Exception(resp.ErrorMessage);
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach (Task task in resp.Value.Tasks)
             {
@@ -230,8 +225,6 @@ namespace Presentation
                 list.Add(ToAdd);
             }
             ColumnModel column = new ColumnModel(this, list, resp.Value.Name);
-            if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
             return column;
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Presentation.Model
 {
@@ -15,7 +16,8 @@ namespace Presentation.Model
         public string Description { get; set; }
         public string EmailAssignee { get; set; }
         public string ColumnName { get; set; }
-
+        public SolidColorBrush BorderBrush { get; set; }
+        public SolidColorBrush BackgroundBrush { get; set; }
         public TaskModel(BackendController controller,int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;
@@ -25,8 +27,9 @@ namespace Presentation.Model
             this.Description = description;
             this.EmailAssignee = emailAssignee;
             this.ColumnName = ColumnName;
+            this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
+            this.BackgroundBrush = (DateTime.Now.Subtract(CreationDate)).TotalMilliseconds >= (0.75 * (dueDate.Subtract(CreationDate)).TotalMilliseconds) ? Brushes.Orange : Brushes.White;
+            this.BackgroundBrush = (dueDate.Subtract(DateTime.Now)).TotalMilliseconds <= 0 ? Brushes.Red : BackgroundBrush;
         }
-
-      
     }
 }

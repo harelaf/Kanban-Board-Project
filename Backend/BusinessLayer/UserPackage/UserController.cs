@@ -211,6 +211,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void DeleteData()
         {
             DalController.Delete();
+            UserList.Clear();
+            CurrentUser.SetBoard(null);
+            CurrentUser = null;
         }
 
         /// <summary>
@@ -240,7 +243,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
                         foreach (DataAccessLayer.Task DalTask in TaskListDAL)
                         {
-                            myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.CreationDate, DalTask.Assignee));
+                            myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.Assignee, DalTask.CreationDate));
                         }
                         MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, Temp.HostEmail.ToLower()));
                     }

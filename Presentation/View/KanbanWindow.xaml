@@ -35,13 +35,15 @@
                                 <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=TaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="2">
-                                                <StackPanel Width="150">
-                                                    <TextBlock FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" TextWrapping="Wrap"/>
-                                                    <TextBlock FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" TextWrapping="Wrap"/>
-                                                    <TextBlock FontSize="11" Text="{Binding Path=CreationDate}" TextWrapping="Wrap"/>
-                                                    <TextBlock FontSize="11" Text="{Binding Path=DueDate, Mode=TwoWay}" TextWrapping="Wrap"/>
-                                                    <TextBlock FontSize="11" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" TextWrapping="Wrap"/>
+                                            <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
+                                                <StackPanel Width="150" Margin="10">
+                                                    <TextBox Name="Title" FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBox Name="Description" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBox Name="EmailAssignee" FontSize="11" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="CreationDateLabel" Text="Creation Date: " FontWeight="Bold"/>
+                                                    <TextBlock Name="CreationDate"  FontSize="11" Text="{Binding Path=CreationDate}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="DueDateLabel" Text="Due Date: " FontWeight="Bold"/>
+                                                    <TextBox Name="DueDate" FontSize="11" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
