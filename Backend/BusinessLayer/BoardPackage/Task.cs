@@ -30,10 +30,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.EmailAssignee = EmailAssignee;
         }
 
-        public Task(string Title, string Description, DateTime DueDate, int TaskId, DateTime CreationDate,string EmailAssignee)
+        //Task constructor for LoadData
+        public Task(string Title, string Description, DateTime DueDate, int TaskId, string EmailAssignee, DateTime CreationDate)
         {
-            if (!ValidateTitle(Title) | !ValidateDescription(Description) | !ValidateDueDate(DueDate))
-                throw new Exception("One or more of the parameters illegal");
             this.Title = Title;
             this.Description = Description;
             this.CreationDate = CreationDate;
