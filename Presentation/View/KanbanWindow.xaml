@@ -11,7 +11,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="2" Margin="0,0,-0.667,-0.667">
+        <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="200"/>
@@ -47,7 +47,6 @@
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                                <Label Name="ErrorLabel" Content="hello" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -68,8 +67,8 @@
                 </Grid.RowDefinitions>
                 <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
                 <Button Content="Add Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" Click="AddColumn_Button_Click"/>
-                <Button Content="Move Column ->" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="MoveColumnRight_Button_Click"/>
-                <Button Content="Move Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="3" Click="MoveColumnLeft_Button_Click"/>
+                <Button Content="Move Column Right" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="135" FontSize="13" FontWeight="Bold" Grid.Row="2" Click="MoveColumnRight_Button_Click"/>
+                <Button Content="Move Column Left" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="135" FontSize="13" FontWeight="Bold" Grid.Row="3" Click="MoveColumnLeft_Button_Click"/>
                 <Button Content="Remove Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="RemoveColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="4" Click="RemoveColumn_Button_Click"/>
                 <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="5"/>
                 <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" Click="AddTask_Button_Click"/>

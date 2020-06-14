@@ -170,7 +170,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns true if the due date is validate or false if not</returns>
         private bool ValidateDueDate(DateTime newDue)
         {
-            return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
+            return newDue.CompareTo(DateTime.Now) > 0;//new date is in the future.
         }
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)
