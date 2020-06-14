@@ -61,8 +61,9 @@ namespace Presentation
             {
                 throw new Exception(resp.ErrorMessage);
             }
-            UserModel ActiveUser = new UserModel(this, resp.Value.Email, resp.Value.Nickname
-                , ToBoardModel(MyService.GetBoard(resp.Value.Email).Value));
+            this.Email = email;
+            UserModel ActiveUser = new UserModel(this, email, resp.Value.Nickname
+                , ToBoardModel(MyService.GetBoard(email).Value));
             Email = email;
             return ActiveUser;
         }
@@ -73,7 +74,7 @@ namespace Presentation
             int i = 0;
             while (i < MyBoard.ColumnsNames.Count)
             {
-                Column col = MyService.GetColumn(MyBoard.emailCreator, i).Value;
+                Column col = MyService.GetColumn(Email, i).Value;
                 colList.Add(ToColumnModel(col));
                 i++;
             }

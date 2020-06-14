@@ -62,6 +62,11 @@ namespace Presentation.ViewModel
             this.Controller = new BackendController();
         }
 
+        public MainWindowViewModel(BackendController controller)
+        {
+            this.Controller = controller;
+        }
+
         public UserModel Login()
         {
             ErrorMessage = "";

@@ -32,6 +32,13 @@ namespace Presentation
             this.DataContext = MWViewModel;
         }
 
+        internal MainWindow(BackendController controller)
+        {
+            InitializeComponent();
+            MWViewModel = new MainWindowViewModel(controller);
+            this.DataContext = MWViewModel;
+        }
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             UserModel LoggedIn = MWViewModel.Login();
@@ -39,6 +46,7 @@ namespace Presentation
             {
                 KanbanWindow KanbanWindow = new KanbanWindow(MWViewModel.Controller);
                 KanbanWindow.Show();
+                this.Close();
             }
         }
 

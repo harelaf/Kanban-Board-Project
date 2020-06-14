@@ -81,5 +81,18 @@ namespace Presentation.View
             AddColumn addColumn = new AddColumn(KVModel);
             addColumn.Show();
         }
+
+        private void Logout_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.logout();
+            MainWindow mw = new MainWindow(KVModel.Controller);
+            mw.Show();
+            this.Close();
+        }
+
+        private void Sort_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.SortByDueDate();
+        }
     }
 }
