@@ -84,14 +84,30 @@ namespace Presentation.ViewModel
             }
         }
 
-        private int FindSelectedColumn()
+        private string searchValue;
+        public string SearchValue
         {
+            get
+            {
+                return searchValue;
+            }
+            set
+            {
+                searchValue = value;
+                RaisePropertyChanged("SearchValue");
+            }
+        }
+
+        private int FindColumn(ColumnModel myColumn)
+        {
+            SearchValue = null;
+            filterByString();
             int columnOrdinal = -1;
 
-            if (ColumnSelectedItem != null) {
+            if (myColumn != null) {
                 for (int i = 0; i < ColumnList.Count; i++)
                 {
-                    if (columnList[i] != null && ColumnList[i].Name.Equals(ColumnSelectedItem.Name))
+                    if (columnList[i] != null && ColumnList[i].Name.Equals(myColumn.Name))
                     {
                         columnOrdinal = i;
                         break;
@@ -103,8 +119,11 @@ namespace Presentation.ViewModel
 
         public void AdvanceTask()
         {
+            TaskModel myTask = taskSelectedItem;
+            SearchValue = null;
+            filterByString();
             int columnId = -1;
-            if (taskSelectedItem == null)
+            if (myTask == null)
             {
                 ErrorLabel1 = "no task was chosen to advanced";
                 return;
@@ -112,7 +131,7 @@ namespace Presentation.ViewModel
 
             for (int i = 0; i < columnList.Count; i++)
             {
-                if (ColumnList[i] != null && columnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (ColumnList[i] != null && columnList[i].Name.Equals(myTask.ColumnName))
                 {
                     columnId = i;
                     break;
@@ -120,11 +139,11 @@ namespace Presentation.ViewModel
             }
             try
             {
-                TaskModel currTask = taskSelectedItem;
-                Controller.AdvanceTask(Controller.Email, columnId, currTask.Id);
-                ColumnList[columnId + 1].TaskList.Add(currTask);
-                ColumnList[columnId].TaskList.Remove(currTask);
-                currTask.ColumnName = ColumnList[columnId + 1].Name;
+                Controller.AdvanceTask(Controller.Email, columnId, myTask.Id);
+                
+                ColumnList[columnId + 1].TaskList.Add(myTask);
+                ColumnList[columnId].TaskList.Remove(myTask);
+                myTask.ColumnName = ColumnList[columnId + 1].Name;
                 ErrorLabel1 = "The task has advanced successfully";
             }
             catch (Exception e)
@@ -135,19 +154,22 @@ namespace Presentation.ViewModel
 
         public void DeleteTask()
         {
+            TaskModel myTask = taskSelectedItem;
+            SearchValue = null;
+            filterByString();
             int columnOrdinal = -1;
             for (int i = 0; i < ColumnList.Count; i++)
             {
-                if (columnList[i] != null && ColumnList[i].Name.Equals(taskSelectedItem.ColumnName))
+                if (columnList[i] != null && myTask!=null && ColumnList[i].Name.Equals(myTask.ColumnName))
                     columnOrdinal = i;
             }
 
-            if (TaskSelectedItem != null)
+            if (myTask != null)
             {
                 try
                 {
-                    Controller.DeleteTask(Controller.Email, columnOrdinal, TaskSelectedItem.Id);
-                    columnList[columnOrdinal].TaskList.Remove(taskSelectedItem);
+                    Controller.DeleteTask(Controller.Email, columnOrdinal, myTask.Id);
+                    columnList[columnOrdinal].TaskList.Remove(myTask);
                     ErrorLabel1 = "The task was deleted successfully";
                 }
                 catch (Exception e)
@@ -164,13 +186,16 @@ namespace Presentation.ViewModel
 
         public void MoveColumnRight()
         {
-            if (columnSelectedItem == null)
+            ColumnModel myColumn = columnSelectedItem;
+            SearchValue = null;
+            filterByString();
+            if (myColumn == null)
             {
                 ErrorLabel1 = "No column was chosen";
                 return;
             }
 
-            int id = FindSelectedColumn();
+            int id = FindColumn(myColumn);
 
             try
             {
@@ -185,13 +210,16 @@ namespace Presentation.ViewModel
 
         public void MoveColumnLeft()
         {
-            if (columnSelectedItem == null)
+            ColumnModel myColumn = columnSelectedItem;
+            SearchValue = null;
+            filterByString();
+            if (myColumn == null)
             {
                 ErrorLabel1 = "No column was chosen";
                 return;
             }
 
-            int id = FindSelectedColumn();
+            int id = FindColumn(myColumn);
 
             try
             {
@@ -206,8 +234,10 @@ namespace Presentation.ViewModel
 
         public void RemoveColumn()
         {
-          
-            int i = FindSelectedColumn();
+            ColumnModel myColumn = columnSelectedItem;
+            SearchValue = null;
+            filterByString();
+            int i = FindColumn(myColumn);
             if (i == -1)
             {
                 ErrorLabel1 = "no column was selected";
@@ -227,12 +257,16 @@ namespace Presentation.ViewModel
 
         public ObservableCollection<ColumnModel> AddColumn(int index, string name)
         {
+            SearchValue = null;
+            filterByString();
             ColumnMethods columnMethod = new ColumnMethods(Controller);
             return columnMethod.AddColumn(index, name);
         }
 
         public void SortByDueDate()
         {
+            SearchValue = null;
+            filterByString();
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
             foreach(ColumnModel cm in columnList)
             {
@@ -253,9 +287,21 @@ namespace Presentation.ViewModel
             }
         }
 
+        public void filterByString()
+        {
+            ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
+            foreach(ColumnModel cm in columnList)
+            {
+                newColumnList.Add(cm.filter(SearchValue));
+            }
+            ColumnList = newColumnList;
+	    }
+
         public bool DeleteData()
         {
-            DialogResult d = System.Windows.Forms.MessageBox.Show("ARE YOU SURE?", "Confirmation", System.Windows.Forms.MessageBoxButtons.YesNo);
+            SearchValue = null;
+            filterByString();
+            DialogResult d = MessageBox.Show("ARE YOU SURE?", "Confirmation", MessageBoxButtons.YesNo);
             if(d == DialogResult.Yes)
             {
                 try
