@@ -255,6 +255,41 @@ namespace Presentation.ViewModel
             }
         }
 
+        private string columnName;
+        public string ColumnName
+        {
+            get => columnName;
+            set
+            {
+                columnName = value;
+                RaisePropertyChanged("ColumnName");
+            }
+        }
+
+        public void ChangeColumnName(string name)
+        {
+            ColumnModel myColumn = ColumnSelectedItem;
+            SearchValue = null;
+            filterByString();
+            int id = columnList.IndexOf(myColumn);
+            if (id == -1)
+            {
+                ErrorLabel1 = "no column was selected";
+                return;
+            }
+
+            try
+            {
+                Controller.ChangeColumnName(Controller.Email, id, name);
+                ColumnList = Controller.GetBoard(Controller.Email).ColList;
+                ErrorLabel1 = "Column's has been changed succsssfully";
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
         public void SortByDueDate()
         {
             SearchValue = null;
