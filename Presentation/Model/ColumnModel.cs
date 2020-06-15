@@ -19,7 +19,6 @@ namespace Presentation.Model
             this.TaskList = new ObservableCollection<TaskModel>();
             filter("");
             Name = "";
-            TaskList.CollectionChanged += HandleChange;
         }
 
         public ColumnModel(BackendController Controller, ObservableCollection<TaskModel> TaskList, string Name) : base(Controller)
@@ -27,7 +26,6 @@ namespace Presentation.Model
             this.TaskList = TaskList;
             filter("");
             this.Name = Name;
-            TaskList.CollectionChanged += HandleChange;
         }
 
         public void AddTask(TaskModel task)
@@ -46,15 +44,6 @@ namespace Presentation.Model
                 filteredTaskList = new ObservableCollection<TaskModel>(TaskList.Where(x => x.Description.Contains(s) | x.Title.Contains(s)));
             }
             return this;
-        }
-
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                
-            }
         }
     }
 }

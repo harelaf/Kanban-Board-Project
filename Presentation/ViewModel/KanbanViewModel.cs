@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Controls;
 using Presentation.Model;
 
 namespace Presentation.ViewModel
@@ -70,11 +70,6 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("Board");
             }
         }
-
-        public bool NotInEditMode { get; set; }
-        public bool BoolToVis { get; set; }
-
-
 
         private ObservableCollection<ColumnModel> columnList;
         public ObservableCollection<ColumnModel> ColumnList
@@ -231,8 +226,8 @@ namespace Presentation.ViewModel
 
             try
             {
-                ColumnMethods columnMethod = new ColumnMethods(Controller);
-                ColumnList = columnMethod.MoveColumnRight(id);
+                Controller.MoveColumnRight(Controller.Email, id);
+                ColumnList = Controller.GetBoard(Controller.Email).ColList;
                 ErrorLabel1 = "The column has been moved successfully";
                 ColumnSelectedItem = columnList[id + 1];
             }
@@ -257,8 +252,8 @@ namespace Presentation.ViewModel
 
             try
             {
-                ColumnMethods columnMethod = new ColumnMethods(Controller);
-                ColumnList = columnMethod.MoveColumnLeft(id);
+                Controller.MoveColumnLeft(Controller.Email, id);
+                ColumnList = Controller.GetBoard(Controller.Email).ColList;
                 ErrorLabel1 = "The column has been moved successfully";
                 ColumnSelectedItem = columnList[id - 1];
             }
@@ -274,8 +269,8 @@ namespace Presentation.ViewModel
             ColumnModel myColumn = ColumnSelectedItem;
             SearchValue = null;
             filterByString();
-            int i = columnList.IndexOf(myColumn);
-            if (i == -1)
+            int id = columnList.IndexOf(myColumn);
+            if (id == -1)
             {
                 ErrorLabel1 = "no column was selected";
                 return;
@@ -283,22 +278,14 @@ namespace Presentation.ViewModel
 
             try
             {
-                ColumnMethods columnMethod = new ColumnMethods(Controller);
-                ColumnList = columnMethod.RemoveColumn(i);
+                Controller.RemoveColumn(Controller.Email, id);
+                ColumnList = Controller.GetBoard(Controller.Email).ColList;
                 ErrorLabel1 = "The column has been removed successfully";
             }
             catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
             }
-        }
-
-        public ObservableCollection<ColumnModel> AddColumn(int index, string name)
-        {
-            SearchValue = null;
-            filterByString();
-            ColumnMethods columnMethod = new ColumnMethods(Controller);
-            return columnMethod.AddColumn(index, name);
         }
 
         public void SortByDueDate()

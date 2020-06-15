@@ -1,6 +1,8 @@
-﻿using Presentation.ViewModel;
+﻿using Presentation.Model;
+using Presentation.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +23,7 @@ namespace Presentation.View
     public partial class AddColumn : Window
     {
         private AddColumnViewModel AddColumnModel;
+        private ObservableCollection<ColumnModel> columns;
 
         public AddColumn()
         {
@@ -28,16 +31,17 @@ namespace Presentation.View
         }
 
 
-        internal AddColumn(KanbanViewModel kvModel)
+        internal AddColumn(BackendController Controller, ObservableCollection<ColumnModel> columns)
         {
             InitializeComponent();
-            this.AddColumnModel = new AddColumnViewModel(kvModel);
+            this.AddColumnModel = new AddColumnViewModel(Controller);
             this.DataContext = AddColumnModel;
+            this.columns = columns;
         }
 
         private void AddColumn_Click(object sender, RoutedEventArgs e)
         {
-            AddColumnModel.AddColumn();
+            AddColumnModel.AddColumn(columns);
         }
 
     }

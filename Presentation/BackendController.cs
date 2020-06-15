@@ -36,13 +36,12 @@ namespace Presentation
             if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
 
-        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        public bool AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
             Response resp = MyService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
             if (resp.ErrorOccured)
-            {
-                throw new Exception(resp.ErrorMessage);
-            }
+                return false;
+            return true;
         }
 
         public void DeleteTask(string email, int columnOrdinal, int taskId)
@@ -91,7 +90,7 @@ namespace Presentation
             return new ColumnModel(this, TaskModelList, MyColumn.Name);
         }
 
-        private TaskModel ToTaskModel(Task tsk, string ColumnName)
+        public TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
             return new TaskModel(this,tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
         }
@@ -131,25 +130,28 @@ namespace Presentation
             return ToTaskModel(resp.Value, MyService.GetColumn(email, 0).Value.Name);
         }
 
-        public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
+        public bool UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
             Response resp = MyService.UpdateTaskDueDate(email, columnOrdinal,taskId, dueDate);
             if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
+                return false;
+            return true;
         }
 
-        public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
+        public bool UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
             Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
             if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
+                return false;
+            return true;
         }
 
-        public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
+        public bool UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
             Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
             if (resp.ErrorOccured)
-                throw new Exception(resp.ErrorMessage);
+                return false;
+            return true;
         }
 
         public void AdvanceTask(string email, int columnOrdinal, int taskId)
@@ -190,7 +192,6 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
-
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }

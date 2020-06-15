@@ -168,7 +168,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskDueDate(string Email, int TaskId, DateTime DueDate)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDueDate(DueDate);
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
@@ -188,7 +188,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskTitle(string Email,int TaskId, string Title)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskTitle(Title);
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
@@ -208,7 +208,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskDescription(string Email,int TaskId, string Description)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDescription(Description);
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();

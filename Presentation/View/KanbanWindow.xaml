@@ -43,11 +43,11 @@
                                                 <StackPanel Width="150" Margin="10">
                                                     <TextBox Name="Title" BorderThickness="0" FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBox Name="Description" BorderThickness="0" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
-                                                    <TextBox Name="EmailAssignee" BorderThickness="0" FontSize="11" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBox Name="EmailAssignee" BorderThickness="0" FontSize="13" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="CreationDateLabel" Text="Creation Date: " FontWeight="Bold"/>
-                                                    <TextBlock Name="CreationDate"  FontSize="11" Text="{Binding Path=CreationDate}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
-                                                    <TextBlock Name="DueDateLabel" Text="Due Date: " FontWeight="Bold"/>
-                                                    <TextBox Name="DueDate" BorderThickness="0" FontSize="11" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="CreationDate"  FontSize="13" Text="{Binding Path=CreationDate}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="DueDateLabel" Text="Due Date: " FontSize="13" FontWeight="Bold"/>
+                                                    <TextBox Name="DueDate" BorderThickness="0" FontSize="13" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -89,10 +89,10 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <StackPanel  Margin="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="65">
+        <StackPanel  Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85">
             <Button Content="Logout"  HorizontalAlignment="Center" VerticalAlignment="Center" Name="Logout_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Click="Logout_Button_Click" Margin="7"/>
+            <Button Content="Instructions" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Instructions_Button" Height="20" Width="100" FontWeight="Bold" FontSize="10" Click="Instructions_Button_Click"/>
             <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="7"/>
-
         </StackPanel>
     </Grid>
 
