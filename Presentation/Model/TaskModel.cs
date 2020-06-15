@@ -22,6 +22,9 @@ namespace Presentation.Model
                 {
                     int ColId = GetColumnId();
                     if (Controller.UpdateTaskDueDate(Controller.Email, ColId, Id, value)) dueDate = value;
+                    BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red :
+                        DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds)
+                        ? Brushes.Orange : Brushes.White;
                 }
             }
         }
@@ -64,6 +67,7 @@ namespace Presentation.Model
                 {
                     int ColId = GetColumnId();
                     if (Controller.AssignTask(Controller.Email, ColId, Id, value)) emailAssignee = value;
+                    BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
                 }
             }
         }
@@ -80,8 +84,9 @@ namespace Presentation.Model
             this.EmailAssignee = emailAssignee;
             this.ColumnName = ColumnName;
             this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
-            this.BackgroundBrush = (DateTime.Now.Subtract(CreationDate)).TotalMilliseconds >= (0.75 * (dueDate.Subtract(CreationDate)).TotalMilliseconds) ? Brushes.Orange : Brushes.White;
-            this.BackgroundBrush = (dueDate.Subtract(DateTime.Now)).TotalMilliseconds <= 0 ? Brushes.Red : BackgroundBrush;
+            this.BackgroundBrush = this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red : 
+                DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds) 
+                ? Brushes.Orange : Brushes.White;
         }
 
         private int GetColumnId()
