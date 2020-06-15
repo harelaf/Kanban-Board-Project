@@ -96,6 +96,7 @@
     <Compile Include="View\AddTaskWindow.xaml.cs">
       <DependentUpon>AddTaskWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\HeightConverter.cs" />
     <Compile Include="View\KanbanWindow.xaml.cs">
       <DependentUpon>KanbanWindow.xaml</DependentUpon>
     </Compile>
