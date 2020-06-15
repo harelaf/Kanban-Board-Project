@@ -12,7 +12,15 @@ namespace Presentation.Model
         public int Id;
         public DateTime CreationDate { get; set; }
         public DateTime DueDate { get; set; }
-        public string Title { get; set; }
+        private string title;
+        public string Title {
+            get => title;
+            set
+            {
+                Controller.UpdateTaskTitle(Controller.Email, Controller.GetColumn(Controller.Email, ColumnName)., Id, value);
+                title = value;
+            }
+        }
         public string Description { get; set; }
         public string EmailAssignee { get; set; }
         public string ColumnName { get; set; }

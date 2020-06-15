@@ -91,7 +91,7 @@ namespace Presentation
             return new ColumnModel(this, TaskModelList, MyColumn.Name);
         }
 
-        private TaskModel ToTaskModel(Task tsk, string ColumnName)
+        public TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
             return new TaskModel(this,tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
         }
