@@ -192,7 +192,6 @@ namespace Presentation
             ObservableCollection<TaskModel> list = new ObservableCollection<TaskModel>();
             foreach(Task task in resp.Value.Tasks)
             {
-
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
