@@ -25,6 +25,39 @@ namespace Presentation.ViewModel
             this.Controller = Controller;
             Board = Controller.GetBoard(Controller.Email);
             ColumnList = Board.ColList;
+            myHeight = 600;
+        }
+
+        private int myheight;
+        public int myHeight
+        {
+            get => myheight;
+            set
+            {
+                if(value > 550)
+                {
+                    myheight = value;
+                    RaisePropertyChanged("myHeight");
+                    myHeight2 = myheight - 120;
+                }
+                else
+                {
+                    myheight = 550;
+                    RaisePropertyChanged("myHeight");
+                    myHeight2 = myheight - 120;
+                }
+            }
+        }
+
+        private int myheight2;
+        public int myHeight2
+        {
+            get => myheight2;
+            set
+            {
+                myheight2 = value;
+                RaisePropertyChanged("myHeight2");
+            }
         }
 
         private BoardModel board;

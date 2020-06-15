@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" MinHeight="600" MinWidth="700">
-    
-    <Grid Margin="10">
-        
+        Title="KanbanWindow" MinHeight="500" MinWidth="700">
+    <Window.Resources>
+
+        <local:HeightConverter x:Key="HeightConverter"/>
+
+    </Window.Resources>
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="0*"/>
@@ -19,12 +22,11 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
             <StackPanel>
-                <Label Name="KanbanHeader" Content="Kanban Board" FontSize="25" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0"/>
-
-                <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Foreground="Red"/>
-
-                <ListBox Name ="ColumnListBox" MaxHeight="460" ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}"  SelectedItem="{Binding Path=ColumnSelectedItem, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
-
+                <Label Name="KanbanHeader" Content="Kanban Board" FontSize="20" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0"/>
+                <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
+                <ListBox Name ="ColumnListBox"
+                         Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},Converter={StaticResource HeightConverter}}" 
+                         ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}"  SelectedItem="{Binding Path=ColumnSelectedItem, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
@@ -34,7 +36,7 @@
                         <DataTemplate>
                             <StackPanel MinHeight="150">
                                 <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
-                                <ListBox Name="TaskListBox"  ItemsSource="{Binding Path=filteredTaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">

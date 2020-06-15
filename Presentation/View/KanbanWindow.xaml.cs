@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,4 +108,5 @@ namespace Presentation.View
             MessageBox.Show("Instructions for using the board:\n\n1. In order to add a task/column, click the appropriate button and fill in the fields\n2. When a field requires a date enter the date using the syntax MM/DD/YYYY or MM/DD/YYYY hh:mm:ss AM/PM for more accuracy\n3. In order to advance a task/column, first select one from the list and then click the appropriate button\n4. In order to update a tasks field, select the desired field of the task, change the text and then click off the field, in order to register your update\n5. In order to filter out tasks, enter the text box near the top right the desired key words, and then click the question mark", "Instructions");
         }
     }
+
 }
