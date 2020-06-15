@@ -102,5 +102,6 @@ namespace Presentation.View
         {
             KVModel.filterByString();
         }
+
     }
 }
