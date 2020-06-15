@@ -38,6 +38,11 @@ namespace Presentation.ViewModel
             }
         }
 
+        public bool NotInEditMode { get; set; }
+        public bool BoolToVis { get; set; }
+
+
+
         private ObservableCollection<ColumnModel> columnList;
         public ObservableCollection<ColumnModel> ColumnList
         {
@@ -98,16 +103,16 @@ namespace Presentation.ViewModel
             }
         }
 
-        private int FindColumn(ColumnModel myColumn)
+        private int FindColumn(string myColumnName)
         {
             SearchValue = null;
             filterByString();
             int columnOrdinal = -1;
 
-            if (myColumn != null) {
+            if (myColumnName != null) {
                 for (int i = 0; i < ColumnList.Count; i++)
                 {
-                    if (columnList[i] != null && ColumnList[i].Name.Equals(myColumn.Name))
+                    if (columnList[i] != null && ColumnList[i].Name.Equals(myColumnName))
                     {
                         columnOrdinal = i;
                         break;
@@ -119,24 +124,17 @@ namespace Presentation.ViewModel
 
         public void AdvanceTask()
         {
-            TaskModel myTask = taskSelectedItem;
+            TaskModel myTask = TaskSelectedItem;
             SearchValue = null;
             filterByString();
-            int columnId = -1;
             if (myTask == null)
             {
                 ErrorLabel1 = "no task was chosen to advanced";
                 return;
             }
 
-            for (int i = 0; i < columnList.Count; i++)
-            {
-                if (ColumnList[i] != null && columnList[i].Name.Equals(myTask.ColumnName))
-                {
-                    columnId = i;
-                    break;
-                }
-            }
+            int columnId = FindColumn(myTask.ColumnName);
+
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, myTask.Id);
@@ -145,6 +143,7 @@ namespace Presentation.ViewModel
                 ColumnList[columnId].TaskList.Remove(myTask);
                 myTask.ColumnName = ColumnList[columnId + 1].Name;
                 ErrorLabel1 = "The task has advanced successfully";
+                TaskSelectedItem = myTask;
             }
             catch (Exception e)
             {
@@ -186,7 +185,7 @@ namespace Presentation.ViewModel
 
         public void MoveColumnRight()
         {
-            ColumnModel myColumn = columnSelectedItem;
+            ColumnModel myColumn = ColumnSelectedItem;
             SearchValue = null;
             filterByString();
             if (myColumn == null)
@@ -195,12 +194,14 @@ namespace Presentation.ViewModel
                 return;
             }
 
-            int id = FindColumn(myColumn);
+            int id = columnList.IndexOf(myColumn);
 
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
                 ColumnList = columnMethod.MoveColumnRight(id);
+                ErrorLabel1 = "The column has been moved successfully";
+                ColumnSelectedItem = columnList[id + 1];
             }
             catch (Exception e)
             {
@@ -210,7 +211,7 @@ namespace Presentation.ViewModel
 
         public void MoveColumnLeft()
         {
-            ColumnModel myColumn = columnSelectedItem;
+            ColumnModel myColumn = ColumnSelectedItem;
             SearchValue = null;
             filterByString();
             if (myColumn == null)
@@ -219,25 +220,28 @@ namespace Presentation.ViewModel
                 return;
             }
 
-            int id = FindColumn(myColumn);
+            int id = columnList.IndexOf(myColumn);
 
             try
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
                 ColumnList = columnMethod.MoveColumnLeft(id);
+                ErrorLabel1 = "The column has been moved successfully";
+                ColumnSelectedItem = columnList[id - 1];
             }
             catch (Exception e)
             {
+                ColumnSelectedItem = myColumn;
                 ErrorLabel1 = e.Message;
             }
         }
 
         public void RemoveColumn()
         {
-            ColumnModel myColumn = columnSelectedItem;
+            ColumnModel myColumn = ColumnSelectedItem;
             SearchValue = null;
             filterByString();
-            int i = FindColumn(myColumn);
+            int i = columnList.IndexOf(myColumn);
             if (i == -1)
             {
                 ErrorLabel1 = "no column was selected";
@@ -248,6 +252,7 @@ namespace Presentation.ViewModel
             {
                 ColumnMethods columnMethod = new ColumnMethods(Controller);
                 ColumnList = columnMethod.RemoveColumn(i);
+                ErrorLabel1 = "The column has been removed successfully";
             }
             catch (Exception e)
             {
