@@ -11,22 +11,66 @@ namespace Presentation.Model
     {
         public int Id;
         public DateTime CreationDate { get; set; }
-        public DateTime DueDate { get; set; }
+        private DateTime dueDate;
+        public DateTime DueDate
+        {
+            get => dueDate;
+            set
+            {
+                if (dueDate == default(DateTime)) { dueDate = value; }
+                else
+                {
+                    int ColId = GetColumnId();
+                    if (Controller.UpdateTaskDueDate(Controller.Email, ColId, Id, value)) dueDate = value;
+                }
+            }
+        }
         private string title;
-        public string Title {
+        public string Title
+        {
             get => title;
             set
             {
-                Controller.UpdateTaskTitle(Controller.Email, Controller.GetColumn(Controller.Email, ColumnName)., Id, value);
-                title = value;
+                if (title == null) { title = value; }
+                else
+                {
+                    int ColId = GetColumnId();
+                    if (Controller.UpdateTaskTitle(Controller.Email, ColId, Id, value)) title = value;
+                }
             }
         }
-        public string Description { get; set; }
-        public string EmailAssignee { get; set; }
+        private string description;
+        public string Description
+        {
+            get => description;
+            set
+            {
+                if (description == null) { description = value; }
+                else
+                {
+                    int ColId = GetColumnId();
+                    if (Controller.UpdateTaskDescription(Controller.Email, ColId, Id, value)) description = value;
+                }
+            }
+        }
+        private string emailAssignee;
+        public string EmailAssignee
+        {
+            get => emailAssignee;
+            set
+            {
+                if (emailAssignee == null) { emailAssignee = value; }
+                else
+                {
+                    int ColId = GetColumnId();
+                    if (Controller.AssignTask(Controller.Email, ColId, Id, value)) emailAssignee = value;
+                }
+            }
+        }
         public string ColumnName { get; set; }
         public SolidColorBrush BorderBrush { get; set; }
         public SolidColorBrush BackgroundBrush { get; set; }
-        public TaskModel(BackendController controller,int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
+        public TaskModel(BackendController controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;
             this.CreationDate = CreationDate;
@@ -38,6 +82,18 @@ namespace Presentation.Model
             this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
             this.BackgroundBrush = (DateTime.Now.Subtract(CreationDate)).TotalMilliseconds >= (0.75 * (dueDate.Subtract(CreationDate)).TotalMilliseconds) ? Brushes.Orange : Brushes.White;
             this.BackgroundBrush = (dueDate.Subtract(DateTime.Now)).TotalMilliseconds <= 0 ? Brushes.Red : BackgroundBrush;
+        }
+
+        private int GetColumnId()
+        {
+            BoardModel board = Controller.GetBoard(Controller.Email);
+            int ColId = 0;
+            foreach (ColumnModel col in board.ColList)
+            {
+                if (col.Name.Equals(ColumnName)) break;
+                ColId++;
+            }
+            return ColId;
         }
     }
 }
