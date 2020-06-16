@@ -48,12 +48,30 @@ namespace Presentation.Model
             set
             {
                 emailAssignee = value;
-                this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
+                BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
             }
         }
         public string ColumnName { get; set; }
-        public SolidColorBrush BorderBrush { get; set; }
-        public SolidColorBrush BackgroundBrush { get; set; }
+        private SolidColorBrush borderBrush;
+        public SolidColorBrush BorderBrush
+        {
+            get => borderBrush;
+            set
+            {
+                borderBrush = value;
+                RaisePropertyChanged("BorderBrush");
+            }
+        }
+        private SolidColorBrush backgroundBrush;
+        public SolidColorBrush BackgroundBrush
+        {
+            get => backgroundBrush;
+            set
+            {
+                backgroundBrush = value;
+                RaisePropertyChanged("BackgroundBrush");
+            }
+        }
         public TaskModel(BackendController controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;

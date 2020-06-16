@@ -92,6 +92,9 @@ namespace Presentation.ViewModel
                 {
                     taskSelectedItem = new TaskModel(Controller, value.Id, value.CreationDate, value.DueDate, value.Title, value.Description, value.EmailAssignee, value.ColumnName);
                     LastSelected = taskSelectedItem;
+                    UpdateTitle = taskSelectedItem.Title;
+                    UpdateDescription = taskSelectedItem.Description;
+                    UpdateAssignee = taskSelectedItem.EmailAssignee;
                 }
                 else
                     taskSelectedItem = null;
@@ -175,6 +178,7 @@ namespace Presentation.ViewModel
             set
             {
                 updateTitle = value;
+                RaisePropertyChanged("UpdateTitle");
             }
         }
 
@@ -185,6 +189,7 @@ namespace Presentation.ViewModel
             set
             {
                 updateDescription = value;
+                RaisePropertyChanged("UpdateDescription");
             }
         }
 
@@ -205,6 +210,7 @@ namespace Presentation.ViewModel
             set
             {
                 updateAssignee = value;
+                RaisePropertyChanged("UpdateAssignee");
             }
         }
 
