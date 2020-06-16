@@ -25,39 +25,6 @@ namespace Presentation.ViewModel
             this.Controller = Controller;
             Board = Controller.GetBoard(Controller.Email);
             ColumnList = Board.ColList;
-            myHeight = 600;
-        }
-
-        private int myheight;
-        public int myHeight
-        {
-            get => myheight;
-            set
-            {
-                if(value > 550)
-                {
-                    myheight = value;
-                    RaisePropertyChanged("myHeight");
-                    myHeight2 = myheight - 120;
-                }
-                else
-                {
-                    myheight = 550;
-                    RaisePropertyChanged("myHeight");
-                    myHeight2 = myheight - 120;
-                }
-            }
-        }
-
-        private int myheight2;
-        public int myHeight2
-        {
-            get => myheight2;
-            set
-            {
-                myheight2 = value;
-                RaisePropertyChanged("myHeight2");
-            }
         }
 
         private BoardModel board;
@@ -90,16 +57,20 @@ namespace Presentation.ViewModel
             {
                 if (value != null)
                 {
-                    taskSelectedItem = new TaskModel(Controller, value.Id, value.CreationDate, value.DueDate, value.Title, value.Description, value.EmailAssignee, value.ColumnName);
+                    taskSelectedItem = value;
                     LastSelected = taskSelectedItem;
                     UpdateTitle = taskSelectedItem.Title;
                     UpdateDescription = taskSelectedItem.Description;
                     UpdateAssignee = taskSelectedItem.EmailAssignee;
+                    UpdateDueDate = taskSelectedItem.DueDate.ToString();
+                    Enabled = true;
                 }
                 else
+                {
                     taskSelectedItem = null;
+                    Enabled = false;
+                }
                 RaisePropertyChanged("TaskSelectedItem");
-                Enabled = true;
             }
         }
 
@@ -109,7 +80,17 @@ namespace Presentation.ViewModel
             get => columnSelectedItem;
             set
             {
-                columnSelectedItem = value;
+                if (value != null)
+                {
+                    columnSelectedItem = value;
+                    ColumnName = columnSelectedItem.Name;
+                    EnabledColumn = true;
+                }
+                else
+                {
+                    columnSelectedItem = null;
+                    EnabledColumn = false;
+                }
                 RaisePropertyChanged("ColumnSelectedItem");
             }
         }
@@ -171,6 +152,17 @@ namespace Presentation.ViewModel
             }
         }
 
+        private bool enabledColumn;
+        public bool EnabledColumn
+        {
+            get => enabledColumn;
+            set
+            {
+                enabledColumn = value;
+                RaisePropertyChanged("EnabledColumn");
+            }
+        }
+
         private string updateTitle;
         public string UpdateTitle
         {
@@ -200,6 +192,7 @@ namespace Presentation.ViewModel
             set
             {
                 updateDueDate = value;
+                RaisePropertyChanged("UpdateDueDate");
             }
         }
 
@@ -211,6 +204,17 @@ namespace Presentation.ViewModel
             {
                 updateAssignee = value;
                 RaisePropertyChanged("UpdateAssignee");
+            }
+        }
+
+        private string columnName;
+        public string ColumnName
+        {
+            get => columnName;
+            set
+            {
+                columnName = value;
+                RaisePropertyChanged("ColumnName");
             }
         }
 
@@ -278,6 +282,22 @@ namespace Presentation.ViewModel
             catch
             {
                 ErrorLabel1 = "Can't convert the string you have entered to a date";
+            }
+        }
+
+        public void ChangeColumnName()
+        {
+            int ColId = FindColumn(ColumnSelectedItem.Name);
+            try
+            {
+                Controller.ChangeColumnName(Controller.Email, ColId, ColumnName);
+                ColumnList[ColId].Name = ColumnName;
+                RaisePropertyChanged("ColumnList");
+                ErrorLabel1 = "Changed column's name successfully";
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
             }
         }
 
