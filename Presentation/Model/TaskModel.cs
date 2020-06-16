@@ -34,12 +34,7 @@ namespace Presentation.Model
             get => title;
             set
             {
-                if (title == null) { title = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskTitle(Controller.Email, ColId, Id, value)) title = value;
-                }
+                title = value;
             }
         }
         private string description;
@@ -48,12 +43,7 @@ namespace Presentation.Model
             get => description;
             set
             {
-                if (description == null) { description = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskDescription(Controller.Email, ColId, Id, value)) description = value;
-                }
+                description = value;
             }
         }
         private string emailAssignee;
@@ -62,13 +52,7 @@ namespace Presentation.Model
             get => emailAssignee;
             set
             {
-                if (emailAssignee == null) { emailAssignee = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.AssignTask(Controller.Email, ColId, Id, value)) emailAssignee = value;
-                    BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
-                }
+                emailAssignee = value;
             }
         }
         public string ColumnName { get; set; }
