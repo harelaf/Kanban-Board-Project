@@ -129,12 +129,11 @@ namespace Presentation
             return ToTaskModel(resp.Value, MyService.GetColumn(email, 0).Value.Name);
         }
 
-        public bool UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
+        public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
             Response resp = MyService.UpdateTaskDueDate(email, columnOrdinal,taskId, dueDate);
             if (resp.ErrorOccured)
-                return false;
-            return true;
+                throw new Exception(resp.ErrorMessage);
         }
 
         public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)

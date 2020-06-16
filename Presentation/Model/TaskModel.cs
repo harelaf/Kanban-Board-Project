@@ -17,15 +17,10 @@ namespace Presentation.Model
             get => dueDate;
             set
             {
-                if (dueDate == default(DateTime)) { dueDate = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskDueDate(Controller.Email, ColId, Id, value)) dueDate = value;
-                    BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red :
-                        DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds)
-                        ? Brushes.Orange : Brushes.White;
-                }
+                dueDate = value;
+                this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red :
+                DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds)
+                ? Brushes.Orange : Brushes.White;
             }
         }
         private string title;
@@ -53,6 +48,7 @@ namespace Presentation.Model
             set
             {
                 emailAssignee = value;
+                this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
             }
         }
         public string ColumnName { get; set; }

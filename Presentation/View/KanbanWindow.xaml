@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" Height="700" MinHeight="700" MinWidth="700">
+        Title="KanbanWindow" Height="750" MinHeight="750" MinWidth="700">
     <Window.Resources>
 
         <local:HeightConverter x:Key="HeightConverter"/>
@@ -41,13 +41,13 @@
                                         <DataTemplate>
                                             <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
                                                 <StackPanel Width="150" Margin="10">
-                                                    <TextBox Name="Title" BorderThickness="0" FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
-                                                    <TextBox Name="Description" BorderThickness="0" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
-                                                    <TextBox Name="EmailAssignee" BorderThickness="0" FontSize="13" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="Title" FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="Description" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="EmailAssignee" FontSize="13" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="CreationDateLabel" Text="Creation Date: " FontWeight="Bold"/>
                                                     <TextBlock Name="CreationDate"  FontSize="13" Text="{Binding Path=CreationDate}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="DueDateLabel" Text="Due Date: " FontSize="13" FontWeight="Bold"/>
-                                                    <TextBox Name="DueDate" BorderThickness="0" FontSize="13" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="DueDate" FontSize="13" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -74,6 +74,7 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"/>
@@ -92,7 +93,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Button Content="Update Title" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateTitle_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateTitle_Button_Click"/>
-                    <TextBox Name="UpdateTitle_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateTitle, Mode=OneWayToSource}"/>
+                    <TextBox Name="UpdateTitle_TextBox" Width="120" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateTitle, Mode=OneWayToSource}"/>
                 </Grid>
                 <Grid Grid.Row="12">
                     <Grid.RowDefinitions>
@@ -100,19 +101,27 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Button Content="Update Description" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateDescription_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateDescription_Button_Click"/>
-                    <TextBox Name="UpdateDescription_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateDescription, Mode=OneWayToSource}"/>
+                    <TextBox Name="UpdateDescription_TextBox" Width="120" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateDescription, Mode=OneWayToSource}"/>
                 </Grid>
                 <Grid Grid.Row="13">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
+                    <Button Content="Update Due Date" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateDueDate_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateDueDate_Button_Click"/>
+                    <TextBox Name="UpdateDueDate_TextBox" Width="120" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateDueDate, Mode=OneWayToSource}"/>
+                </Grid>
+                <Grid Grid.Row="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <Button Content="Update Assignee" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateAssignee_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateAssignee_Button_Click"/>
-                    <TextBox Name="UpdateAssignee_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateAssignee, Mode=OneWayToSource}"/>
+                    <TextBox Name="UpdateAssignee_TextBox" Width="120" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateAssignee, Mode=OneWayToSource}"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Content="?" Name="Search_Button" Height="25" MinWidth="25" FontSize="13" FontWeight="Bold" Click="Search_Button_Click"/>
-                    <TextBox Name="SearchBar" Text="{Binding Path=SearchValue, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" MinWidth="95" FontSize="13" FontWeight="Bold"/>
+                    <TextBox Name="SearchBar" Text="{Binding Path=SearchValue, Mode=TwoWay}" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" MinWidth="95" FontSize="13" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Grid>

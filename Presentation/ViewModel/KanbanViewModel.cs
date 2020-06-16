@@ -188,6 +188,16 @@ namespace Presentation.ViewModel
             }
         }
 
+        private string updateDueDate;
+        public string UpdateDueDate
+        {
+            get => updateDueDate;
+            set
+            {
+                updateDueDate = value;
+            }
+        }
+
         private string updateAssignee;
         public string UpdateAssignee
         {
@@ -237,6 +247,31 @@ namespace Presentation.ViewModel
             catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
+            }
+        }
+
+        public void UpdateTaskDueDate()
+        {
+            int ColId = FindColumn(LastSelected.ColumnName);
+            DateTime newDate;
+            try
+            {
+                newDate = DateTime.Parse(UpdateDueDate);
+                try
+                {
+                    Controller.UpdateTaskDueDate(Controller.Email, ColId, LastSelected.Id, newDate);
+                    ColumnList[ColId].TaskList.Where(x => x.Id == LastSelected.Id).ToList()[0].DueDate = newDate;
+                    RaisePropertyChanged("ColumnList");
+                    ErrorLabel1 = "Updated task's due date successfully";
+                }
+                catch (Exception e)
+                {
+                    ErrorLabel1 = e.Message;
+                }
+            }
+            catch
+            {
+                ErrorLabel1 = "Can't convert the string you have entered to a date";
             }
         }
 

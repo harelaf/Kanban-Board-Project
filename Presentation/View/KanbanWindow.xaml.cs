@@ -122,6 +122,11 @@ namespace Presentation.View
         {
             KVModel.AssignTask();
         }
+
+        private void UpdateDueDate_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.UpdateTaskDueDate();
+        }
     }
 
 }
