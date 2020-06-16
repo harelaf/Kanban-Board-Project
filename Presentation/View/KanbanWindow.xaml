@@ -11,7 +11,7 @@
         <local:HeightConverter x:Key="HeightConverter"/>
 
     </Window.Resources>
-    <Grid>
+    <Grid Background="#e0f1fd">
         <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="140" Width="*"/>
