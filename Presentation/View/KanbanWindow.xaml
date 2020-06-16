@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" MinHeight="500" MinWidth="700">
+        Title="KanbanWindow" Height="700" MinHeight="700" MinWidth="700">
     <Window.Resources>
 
         <local:HeightConverter x:Key="HeightConverter"/>
@@ -71,6 +71,9 @@
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"/>
@@ -83,13 +86,37 @@
                 <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="AdvanceTask_Button_Click"/>
                 <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="10" Click="DeleteTask_Button_Click"/>
                 <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" Click="Sort_Button_Click"/>
+                <Grid Grid.Row="11">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Title" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateTitle_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateTitle_Button_Click"/>
+                    <TextBox Name="UpdateTitle_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateTitle, Mode=OneWayToSource}"/>
+                </Grid>
+                <Grid Grid.Row="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Description" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateDescription_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateDescription_Button_Click"/>
+                    <TextBox Name="UpdateDescription_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateDescription, Mode=OneWayToSource}"/>
+                </Grid>
+                <Grid Grid.Row="13">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Assignee" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateAssignee_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" IsEnabled="{Binding Path=Enabled}" Click="UpdateAssignee_Button_Click"/>
+                    <TextBox Name="UpdateAssignee_TextBox" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="1" Text="{Binding Path=UpdateAssignee, Mode=OneWayToSource}"/>
+                </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Content="?" Name="Search_Button" Height="25" MinWidth="25" FontSize="13" FontWeight="Bold" Click="Search_Button_Click"/>
                     <TextBox Name="SearchBar" Text="{Binding Path=SearchValue, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" MinWidth="95" FontSize="13" FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </Grid>
-        <StackPanel  Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85">
+        <StackPanel  Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85" Grid.Row="12">
             <Button Content="Logout"  HorizontalAlignment="Center" VerticalAlignment="Center" Name="Logout_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Click="Logout_Button_Click" Margin="7"/>
             <Button Content="Instructions" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Instructions_Button" Height="20" Width="100" FontWeight="Bold" FontSize="10" Click="Instructions_Button_Click"/>
             <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="7"/>

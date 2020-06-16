@@ -88,8 +88,15 @@ namespace Presentation.ViewModel
             get => taskSelectedItem;
             set
             {
-                taskSelectedItem = value;
+                if (value != null)
+                {
+                    taskSelectedItem = new TaskModel(Controller, value.Id, value.CreationDate, value.DueDate, value.Title, value.Description, value.EmailAssignee, value.ColumnName);
+                    LastSelected = taskSelectedItem;
+                }
+                else
+                    taskSelectedItem = null;
                 RaisePropertyChanged("TaskSelectedItem");
+                Enabled = true;
             }
         }
 
@@ -150,6 +157,105 @@ namespace Presentation.ViewModel
             return columnOrdinal;
         }
 
+        private bool enabled;
+        public bool Enabled
+        {
+            get => enabled;
+            set
+            {
+                enabled = value;
+                RaisePropertyChanged("Enabled");
+            }
+        }
+
+        private string updateTitle;
+        public string UpdateTitle
+        {
+            get => updateTitle;
+            set
+            {
+                updateTitle = value;
+            }
+        }
+
+        private string updateDescription;
+        public string UpdateDescription
+        {
+            get => updateDescription;
+            set
+            {
+                updateDescription = value;
+            }
+        }
+
+        private string updateAssignee;
+        public string UpdateAssignee
+        {
+            get => updateAssignee;
+            set
+            {
+                updateAssignee = value;
+            }
+        }
+
+        private TaskModel lastSelected;
+        public TaskModel LastSelected
+        {
+            get => lastSelected;
+            set
+            {
+                lastSelected = value;
+            }
+        }
+
+        public void UpdateTaskTitle()
+        {
+            int ColId = FindColumn(LastSelected.ColumnName);
+            try
+            {
+                Controller.UpdateTaskTitle(Controller.Email, ColId, LastSelected.Id, UpdateTitle);
+                ColumnList[ColId].TaskList.Where(x => x.Id == LastSelected.Id).ToList()[0].Title = UpdateTitle;
+                RaisePropertyChanged("ColumnList");
+                ErrorLabel1 = "Updated task's title successfully";
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
+        public void UpdateTaskDescription()
+        {
+            int ColId = FindColumn(LastSelected.ColumnName);
+            try
+            {
+                Controller.UpdateTaskDescription(Controller.Email, ColId, LastSelected.Id, UpdateDescription);
+                ColumnList[ColId].TaskList.Where(x => x.Id == LastSelected.Id).ToList()[0].Description = UpdateDescription;
+                RaisePropertyChanged("ColumnList");
+                ErrorLabel1 = "Updated task's description successfully";
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
+        public void AssignTask()
+        {
+            int ColId = FindColumn(LastSelected.ColumnName);
+            try
+            {
+                Controller.AssignTask(Controller.Email, ColId, LastSelected.Id, UpdateAssignee);
+                ColumnList[ColId].TaskList.Where(x => x.Id == LastSelected.Id).ToList()[0].EmailAssignee = UpdateAssignee;
+                RaisePropertyChanged("ColumnList");
+                ErrorLabel1 = "Assigned task successfully";
+            }
+            catch (Exception e)
+            {
+                ErrorLabel1 = e.Message;
+            }
+        }
+
         public void AdvanceTask()
         {
             TaskModel myTask = TaskSelectedItem;
@@ -168,7 +274,7 @@ namespace Presentation.ViewModel
                 Controller.AdvanceTask(Controller.Email, columnId, myTask.Id);
                 
                 ColumnList[columnId + 1].TaskList.Add(myTask);
-                ColumnList[columnId].TaskList.Remove(myTask);
+                ColumnList[columnId].TaskList.Remove(ColumnList[columnId].TaskList.Where(x => x.Id == myTask.Id).ToList()[0]);
                 myTask.ColumnName = ColumnList[columnId + 1].Name;
                 ErrorLabel1 = "The task has advanced successfully";
                 TaskSelectedItem = myTask;
@@ -185,18 +291,15 @@ namespace Presentation.ViewModel
             SearchValue = null;
             filterByString();
             int columnOrdinal = -1;
-            for (int i = 0; i < ColumnList.Count; i++)
-            {
-                if (columnList[i] != null && myTask!=null && ColumnList[i].Name.Equals(myTask.ColumnName))
-                    columnOrdinal = i;
-            }
+            
+            columnOrdinal = FindColumn(myTask.ColumnName);
 
             if (myTask != null)
             {
                 try
                 {
                     Controller.DeleteTask(Controller.Email, columnOrdinal, myTask.Id);
-                    columnList[columnOrdinal].TaskList.Remove(myTask);
+                    columnList[columnOrdinal].TaskList.Remove(ColumnList[columnOrdinal].TaskList.Where(x => x.Id == myTask.Id).ToList()[0]);
                     ErrorLabel1 = "The task was deleted successfully";
                 }
                 catch (Exception e)

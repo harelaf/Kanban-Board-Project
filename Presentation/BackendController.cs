@@ -36,12 +36,11 @@ namespace Presentation
             if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
 
-        public bool AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
+        public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
             Response resp = MyService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
             if (resp.ErrorOccured)
-                return false;
-            return true;
+                throw new Exception(resp.ErrorMessage);
         }
 
         public void DeleteTask(string email, int columnOrdinal, int taskId)
@@ -138,20 +137,18 @@ namespace Presentation
             return true;
         }
 
-        public bool UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
+        public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
             Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
             if (resp.ErrorOccured)
-                return false;
-            return true;
+                throw new Exception(resp.ErrorMessage);
         }
 
-        public bool UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
+        public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
             Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
             if (resp.ErrorOccured)
-                return false;
-            return true;
+                throw new Exception(resp.ErrorMessage);
         }
 
         public void AdvanceTask(string email, int columnOrdinal, int taskId)
