@@ -5,57 +5,138 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" Height="450" Width="800">
-    <Grid>
-        <ListBox Name ="listbox1" ItemsSource="{Binding Board.colList, Mode=OneWay}" VerticalAlignment="Top">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel IsItemsHost="true"/>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding }"/>
-                        <ListBox ItemsSource="{Binding }">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock FontSize="13" FontWeight="Bold" Text="{Binding Title}"/>
-                                        <TextBlock FontSize="12" Text="{Binding Description}"/>
-                                        <TextBlock FontSize="11" Text="{Binding CreationDate}"/>
-                                        <TextBlock FontSize="11" Text="{Binding DueDate}"/>
-                                        <TextBlock FontSize="11" Text="{Binding AssigneeEmail}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+        Title="KanbanWindow" Width="1000" Height="600" MinHeight="600" MinWidth="800">
+    <Window.Resources>
 
-            
-            <!--Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/>
-            <Label Content="hello"/-->
-        </ListBox>
+        <local:HeightConverter x:Key="HeightConverter"/>
+
+    </Window.Resources>
+    <Grid Background="#e0f1fd">
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="140" Width="*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition MinWidth="170" Width="170"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Name="KanbanHeader" Content="Kanban Board For: " FontSize="22" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                    <Label Name="KanbanEmail" Content="{Binding Path=Controller.Email}" FontSize="16" FontWeight="ExtraBold" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+                <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
+                <ListBox Name ="ColumnListBox"
+                         Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},Converter={StaticResource HeightConverter}}" 
+                         ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" SelectedItem="{Binding Path=ColumnSelectedItem, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel MinHeight="150">
+                                <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
+                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectionChanged="TaskListBox_SelectionChanged" SelectionMode="Single" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
+                                                <StackPanel Width="150" Margin="10">
+                                                    <TextBlock Name="Title" FontSize="13" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="Description" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="EmailAssignee" FontSize="13" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="CreationDateLabel" Text="Creation Date: " FontWeight="Bold"/>
+                                                    <TextBlock Name="CreationDate"  FontSize="13" Text="{Binding Path=CreationDate}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="DueDateLabel" Text="Due Date: " FontSize="13" FontWeight="Bold"/>
+                                                    <TextBlock Name="DueDate" FontSize="13" Text="{Binding Path=DueDate, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            <Grid Grid.Column="2" Margin="10,30,10,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
+                </Grid.RowDefinitions>
+                <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" Click="Sort_Button_Click"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Content="?" Name="Search_Button" Height="25" MinWidth="25" FontSize="13" FontWeight="Bold" Click="Search_Button_Click"/>
+                    <TextBox Name="SearchBar" Text="{Binding Path=SearchValue, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="25" MinWidth="95" FontSize="13" FontWeight="Bold"/>
+                </StackPanel>
+                <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"/>
+                <Button Content="Add Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="3" Click="AddColumn_Button_Click"/>
+                <Button Content="Move Right" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="4" IsEnabled="{Binding Path=EnabledColumn}" Click="MoveColumnRight_Button_Click"/>
+                <Button Content="Move Left" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="5" IsEnabled="{Binding Path=EnabledColumn}" Click="MoveColumnLeft_Button_Click"/>
+                <Button Content="Remove Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="RemoveColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" IsEnabled="{Binding Path=EnabledColumn}" Click="RemoveColumn_Button_Click"/>
+                <Grid Grid.Row="7">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChangeColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnName_Button_Click"/>
+                    <TextBox Name="ChangeName_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnName, Mode=TwoWay}"/>
+                </Grid>
+                <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="8"/>
+                <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="AddTask_Button_Click"/>
+                <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="10" IsEnabled="{Binding Path=Enabled}" Click="AdvanceTask_Button_Click"/>
+                <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="11" IsEnabled="{Binding Path=Enabled}" Click="DeleteTask_Button_Click"/>
+            </Grid>
+            <StackPanel Grid.Column="0" Margin="0,20,0,0">
+                <Label Name="TaskDisplay" Content="Task Display" Margin="20" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <Grid Margin="10,10,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Title" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateTitle_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=Enabled}" Click="UpdateTitle_Button_Click"/>
+                    <TextBox Name="UpdateTitle_TextBox" BorderThickness="0.5"  Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=UpdateTitle, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Description" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateDescription_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=Enabled}" Click="UpdateDescription_Button_Click"/>
+                    <TextBox Name="UpdateDescription_TextBox" BorderThickness="0.5" Height="75" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=UpdateDescription, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Due Date" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateDueDate_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=Enabled}" Click="UpdateDueDate_Button_Click"/>
+                    <TextBox Name="UpdateDueDate_TextBox" BorderThickness="0.5" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=UpdateDueDate, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Update Assignee" HorizontalAlignment="Center" VerticalAlignment="Center" Name="UpdateAssignee_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=Enabled}" Click="UpdateAssignee_Button_Click"/>
+                    <TextBox Name="UpdateAssignee_TextBox" BorderThickness="0.5" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=UpdateAssignee, Mode=TwoWay}"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+        <StackPanel Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85">
+            <Button Content="Logout"  HorizontalAlignment="Center" VerticalAlignment="Center" Name="Logout_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Click="Logout_Button_Click" Margin="7"/>
+            <Button Content="Instructions" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Instructions_Button" Height="20" Width="100" FontWeight="Bold" FontSize="10" Click="Instructions_Button_Click"/>
+            <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="7"/>
+        </StackPanel>
     </Grid>
+
 </Window>

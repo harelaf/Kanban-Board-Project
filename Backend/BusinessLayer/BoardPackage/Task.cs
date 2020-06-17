@@ -30,10 +30,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.EmailAssignee = EmailAssignee;
         }
 
-        public Task(string Title, string Description, DateTime DueDate, int TaskId, DateTime CreationDate,string EmailAssignee)
+        //Task constructor for LoadData
+        public Task(string Title, string Description, DateTime DueDate, int TaskId, string EmailAssignee, DateTime CreationDate)
         {
-            if (!ValidateTitle(Title) | !ValidateDescription(Description) | !ValidateDueDate(DueDate))
-                throw new Exception("One or more of the parameters illegal");
             this.Title = Title;
             this.Description = Description;
             this.CreationDate = CreationDate;
@@ -113,7 +112,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void UpdateTaskDueDate(DateTime DueDate)
         {
             if (!ValidateDueDate(DueDate))
-                throw new Exception("The DueDate is Illegal(Date already passed)");
+                throw new Exception("The DueDate is Illegal (Date already passed)");
             this.DueDate = DueDate;
         }
         /// <summary>
@@ -123,7 +122,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void UpdateTaskTitle(string Title)
         {
             if (!ValidateTitle(Title))
-                throw new Exception("Illegal Title(over " + Title_MAX_LENGTH + " characters or empty)");
+                throw new Exception("Illegal Title (over " + Title_MAX_LENGTH + " characters or empty)");
             this.Title = Title;
         }
 
@@ -136,7 +135,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (Description == null)
                 Description = "";
             if (!ValidateDescription(Description))
-                throw new Exception("Description not fit(over than " + DESC_MAX_LENGTH + "characters)");
+                throw new Exception("Description not fit (over than " + DESC_MAX_LENGTH + "characters)");
             this.Description = Description;
         }
 
@@ -170,7 +169,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         /// <returns>returns true if the due date is validate or false if not</returns>
         private bool ValidateDueDate(DateTime newDue)
         {
-            return newDue.CompareTo(DateTime.Today) >= 0;//new date is in the future.
+            return newDue.CompareTo(DateTime.Now) > 0;//new date is in the future.
         }
 
         public DataAccessLayer.Task ToDalObject(string Email, string column)

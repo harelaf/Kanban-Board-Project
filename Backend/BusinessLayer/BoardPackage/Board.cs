@@ -44,6 +44,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             this.BoardMemebers = BoardMembers;
         }
 
+        public void AddMember(string Member)
+        {
+            BoardMemebers.Add(Member);
+        }
+
         /// <summary>
         /// This function advance task from one column to the next column
         /// </summary>
@@ -61,7 +66,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             Column toAddto = list[ColumnOrdinal + 1];
             if (!ToRemove.GetEmailAssignee().Equals(Email)) 
                 throw new Exception("a user can't advance task which he is not assigned to");
-            toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
+            toAddto.MoveExistingTaskHere(new Task(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), ToRemove.GetTaskId(), ToRemove.GetEmailAssignee(), ToRemove.GetCreationDate()));//first tries to add to the next column and removes after if adding succeeded
+            //toAddto.AddTask(ToRemove.GetTitle(), ToRemove.GetDescription(), ToRemove.GetDueDate(), TaskId, Email);//first tries to add to the next column and removes after if adding succeeded
             Task Removed = list[ColumnOrdinal].RemoveTask(TaskId,Email);
 
             ToRemove.ToDalObject(Email, toAddto.GetColumnName()).Save();
@@ -208,7 +214,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("This columnOrdinal does not exist");
 
             if (ColumnOrdinal == list.Count - 1)
-                throw new Exception("Cannot change tasks that are in the done column");
+                throw new Exception("Cannot change tasks that are in the last column");
 
             return GetColumn(ColumnOrdinal).UpdateTaskDescription(Email,TaskId, Description);
         }
@@ -225,7 +231,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskTitle(string Email,int columnOrdinal, int taskId, string title)
         {
             if (columnOrdinal == list.Count - 1)
-                throw new Exception("Cannot change tasks that are in the done column");
+                throw new Exception("Cannot change tasks that are in the last column");
 
             if (columnOrdinal > list.Count - 1 | columnOrdinal < 0)
                 throw new Exception("This columnOrdinal does not exist");
@@ -245,7 +251,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskDueDate(string Email,int ColumnOrdinal, int TaskId, DateTime DueDate)
         {
             if (ColumnOrdinal == list.Count - 1)
-                throw new Exception("Cannot change tasks that are in the done column");
+                throw new Exception("Cannot change tasks that are in the last column");
 
             if (ColumnOrdinal > list.Count - 1 | ColumnOrdinal < 0)
                 throw new Exception("This columnOrdinal does not exist");

@@ -75,10 +75,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string ColumnName)
         {
+            string oldName = this.ColumnName;
             this.ToDalObject(Email, "").Delete();
             this.ColumnName = ColumnName;
             Column toUpdate = new Column(this.TaskList, this.Limit, this.ColumnName, this.ColumnOrdinal, this.Email);
             toUpdate.ToDalObject(Email, "").Save();
+
+            foreach (Task task in TaskList)
+            {
+                task.ToDalObject(Email, oldName).Delete();
+                task.ToDalObject(Email, ColumnName).Save();
+            }
         }
 
         /// <summary>
@@ -125,6 +132,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public void AssignTask(string email, int taskid, string emailAssignee)
         {
             Task toChange = TaskList.Find(x => x.GetTaskId().Equals(taskid));
+            if (!email.Equals(toChange.GetEmailAssignee()))
+                throw new Exception("This task is not your assigned task to change");
             toChange.SetEmailAssignee(emailAssignee);
             toChange.ToDalObject(email, ColumnName).Save();
         }
@@ -159,10 +168,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskDueDate(string Email, int TaskId, DateTime DueDate)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDueDate(DueDate);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task due date because he is not the assignee");
@@ -179,10 +188,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskTitle(string Email,int TaskId, string Title)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskTitle(Title);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task title because he is not the assignee");
@@ -199,10 +208,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
         public Task UpdateTaskDescription(string Email,int TaskId, string Description)
         {
             Task toUpdate = TaskList.Find(x => x.GetTaskId() == TaskId);
-            if (Email.Equals(TaskList[TaskId].GetEmailAssignee()))
+            if (Email.Equals(toUpdate.GetEmailAssignee()))
             {
                 toUpdate.UpdateTaskDescription(Description);
-                toUpdate.ToDalObject(Email, ColumnName).Save();
+                toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
                 throw new Exception($"The user with this Email:{Email} can't update this task description because he is not the assignee");

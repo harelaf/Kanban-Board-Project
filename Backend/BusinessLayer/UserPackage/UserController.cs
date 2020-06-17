@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         private bool CheckProperPassToRegister(string Password)
         {
             if (Password.Length > MAX_LENGTH_OF_Password | Password.Length < MIN_LENGTH_OF_Password)
-                throw new Exception("This password is not between" + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + "characters");
+                throw new Exception("This password is not between " + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + " characters");
             int AmountOfUpperCase = MIN_UCASE_LETTER;
             int AmountOfLowerCase = MIN_LCASE_LETTER;
             int AmountOfDigits = MIN_DIGITS;
@@ -155,6 +155,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 UserHost=UserList[EmailHost];
                 User MyUser = new User(Email, Password, Nickname, UserHost.GetBoard());
                 UserList.Add(Email, MyUser);
+                MyUser.GetBoard().AddMember(Email);
                 MyUser.ToDalObject(Email, "").Save();
             }
             else
@@ -210,6 +211,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void DeleteData()
         {
             DalController.Delete();
+            UserList.Clear();
+            CurrentUser.SetBoard(null);
+            CurrentUser = null;
         }
 
         /// <summary>
@@ -239,9 +243,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                         List<BoardPackage.Task> myTaskList = new List<BoardPackage.Task>();
                         foreach (DataAccessLayer.Task DalTask in TaskListDAL)
                         {
-                            myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.CreationDate, DalTask.Assignee));
+                            myTaskList.Add(new BoardPackage.Task(DalTask.Title, DalTask.Description, DalTask.DueDate, DalTask.TaskId, DalTask.Assignee, DalTask.CreationDate));
                         }
-                        MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, CurrEmail.ToLower()));
+                        MyColumnList.Add(new BoardPackage.Column(myTaskList, (int)DalColumn.Limit, DalColumn.Name, (int)DalColumn.Ordinal, Temp.HostEmail.ToLower()));
                     }
 
                     BoardPackage.Board board = new BoardPackage.Board(MyColumnList, (int)TempBoard.IdGiver, Temp.HostEmail, TempBoard.GetMembers());

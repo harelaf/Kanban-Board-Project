@@ -11,7 +11,7 @@ namespace Presentation.ViewModel
 {
     class MainWindowViewModel : NotifiableObject
     {
-        private BackendController controller;
+        public BackendController Controller { get; private set; }
 
         private string email;
         public string Email
@@ -53,28 +53,32 @@ namespace Presentation.ViewModel
             set
             {
                 errorMessage = value;
-                RaisePropertyChanged("errorMessage");
+                RaisePropertyChanged("ErrorMessage");
             }
         }
 
         public MainWindowViewModel()
         {
-            this.controller = new BackendController();
-
+            this.Controller = new BackendController();
         }
 
-        public void Login()
+        public MainWindowViewModel(BackendController controller)
+        {
+            this.Controller = controller;
+        }
+
+        public UserModel Login()
         {
             ErrorMessage = "";
             try
             {
-                UserModel loggedIn = controller.Login(email, password);
-                KanbanWindow KBWindow = new KanbanWindow(loggedIn);
-                KBWindow.Show();
+                UserModel loggedIn = Controller.Login(email, password);
+                return loggedIn;
             }
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
+                return null;
             }
         }
     }
