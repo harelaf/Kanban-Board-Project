@@ -70,7 +70,6 @@ namespace Presentation.ViewModel
                     taskSelectedItem = null;
                     Enabled = false;
                 }
-                RaisePropertyChanged("TaskSelectedItem");
             }
         }
 

@@ -128,9 +128,24 @@ namespace Presentation.View
             KVModel.UpdateTaskDueDate();
         }
 
-        private void ChanegColumnName_Button_Click(object sender, RoutedEventArgs e)
+        private void ChangeColumnName_Button_Click(object sender, RoutedEventArgs e)
         {
             KVModel.ChangeColumnName();
+        }
+
+        /// <summary>
+        /// This is an event handler that triggers when a user selects a task
+        /// In order to avoide "collisions" between selected tasks in different columns, we unselect all tasks and make the new selected task the last select
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TaskListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ListBox)sender).SelectedItems.Count > 0)
+            {
+                ((ListBox)sender).UnselectAll();
+                KVModel.TaskSelectedItem = KVModel.LastSelected;
+            }
         }
     }
 

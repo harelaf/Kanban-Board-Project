@@ -26,7 +26,7 @@
                 <Label Name="ErrorLabel1" Content="{Binding Path=ErrorLabel1, Mode=OneWay}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Red"/>
                 <ListBox Name ="ColumnListBox"
                          Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},Converter={StaticResource HeightConverter}}" 
-                         ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}"  SelectedItem="{Binding Path=ColumnSelectedItem, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
+                         ItemsSource="{Binding Path=ColumnList, Mode=TwoWay}" SelectedItem="{Binding Path=ColumnSelectedItem, Mode=TwoWay}" VerticalContentAlignment="Top" HorizontalAlignment="Center" Grid.Column="0">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"/>
@@ -36,7 +36,7 @@
                         <DataTemplate>
                             <StackPanel MinHeight="150">
                                 <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
-                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectionMode="Multiple" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectionChanged="TaskListBox_SelectionChanged" SelectionMode="Single" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
@@ -88,7 +88,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChanegColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChanegColumnName_Button_Click"/>
+                    <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChangeColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnName_Button_Click"/>
                     <TextBox Name="ChangeName_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnName, Mode=TwoWay}"/>
                 </Grid>
                 <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="8"/>

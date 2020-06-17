@@ -84,19 +84,7 @@ namespace Presentation.Model
             this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
             this.BackgroundBrush = this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red : 
                 DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds) 
-                ? Brushes.Orange : Brushes.White;
-        }
-
-        private int GetColumnId()
-        {
-            BoardModel board = Controller.GetBoard(Controller.Email);
-            int ColId = 0;
-            foreach (ColumnModel col in board.ColList)
-            {
-                if (col.Name.Equals(ColumnName)) break;
-                ColId++;
-            }
-            return ColId;
+                ? Brushes.Orange : Brushes.White; //First check if a red background is needed, then if an orange, otherwise white 
         }
     }
 }
