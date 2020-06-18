@@ -10,11 +10,6 @@ namespace Presentation.ViewModel
     {
         public BackendController Controller { get; private set; }
 
-        public RegisterViewModel()
-        {
-            this.Controller = new BackendController();
-        }
-
         public RegisterViewModel(BackendController Controller)
         {
             this.Controller = Controller;
@@ -64,6 +59,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// a label to display the error messages
+        /// </summary>
         private string errorMessage;
         public string ErrorMessage
         {
@@ -75,6 +73,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// order the controller to register a new user and display a proper message
+        /// </summary>
         public void Register()
         {
             ErrorMessage = "";

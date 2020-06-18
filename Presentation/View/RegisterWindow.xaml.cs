@@ -22,13 +22,6 @@ namespace Presentation.View
     {
         private RegisterViewModel RegisterViewModel;
 
-        public RegisterWindow()
-        {
-            InitializeComponent();
-            this.RegisterViewModel = new RegisterViewModel();
-            this.DataContext = RegisterViewModel;
-        }
-
         internal RegisterWindow(BackendController Controller)
         {
             InitializeComponent();

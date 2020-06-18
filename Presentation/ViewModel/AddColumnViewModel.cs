@@ -12,14 +12,13 @@ namespace Presentation.ViewModel
     {
 
         public BackendController Controller { get; private set; }
-        public AddColumnViewModel()
-        {
-            Controller = new BackendController();
-        }
-
+        
+        /// <summary>
+        /// always get an existing controller
+        /// </summary>
+        /// <param name="Controller"></param>
         public AddColumnViewModel(BackendController Controller)
         {
-
             this.Controller = Controller;
         }
 
@@ -30,10 +29,12 @@ namespace Presentation.ViewModel
             set
             {
                 name = value;
-                RaisePropertyChanged("Name");
             }
         }
 
+        /// <summary>
+        /// the index for insertion
+        /// </summary>
         private int index;
         public int Index
         {
@@ -41,10 +42,12 @@ namespace Presentation.ViewModel
             set
             {
                 index = value;
-                RaisePropertyChanged("Index");
             }
         }
 
+        /// <summary>
+        /// displays all kind if messages to the user
+        /// </summary>
         private string errorMessage2;
         public string ErrorMessage2
         {
@@ -56,6 +59,10 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// adds a new column to the recieved column list with the fields above^ and displays a proper message
+        /// </summary>
+        /// <param name="columns"></param>
         public void AddColumn(ObservableCollection<ColumnModel> columns)
         {
             ErrorMessage2 = "";

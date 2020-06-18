@@ -34,9 +34,9 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel MinHeight="150">
+                            <StackPanel MinWidth="100">
                                 <TextBlock Name="ColumnName" Text="{Binding Path=Name}" HorizontalAlignment="Center" FontSize="14" FontStyle="Italic" Height="25"/>
-                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectionChanged="TaskListBox_SelectionChanged" SelectionMode="Single" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox Name="TaskListBox" ItemsSource="{Binding Path=filteredTaskList}" SelectionChanged="TaskListBox_SelectionChanged" SelectionMode="Single" SelectedItem="{Binding Path=DataContext.TaskSelectedItem, Mode=OneWayToSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
@@ -90,8 +90,8 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChangeColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnName_Button_Click"/>
-                    <TextBox Name="ChangeName_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnName, Mode=TwoWay}"/>
+                    <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Top" Name="ChangeColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnName_Button_Click"/>
+                    <TextBox Name="ChangeName_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnName, Mode=TwoWay}"/>
                 </Grid>
                 <Grid Grid.Row="9">
                     <Grid.RowDefinitions>
