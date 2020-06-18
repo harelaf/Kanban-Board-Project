@@ -25,6 +25,9 @@ namespace Presentation
     {
         private MainWindowViewModel MWViewModel;
 
+        /// <summary>
+        /// for new startup
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -32,12 +35,17 @@ namespace Presentation
             this.DataContext = MWViewModel;
         }
 
+        /// <summary>
+        /// for after logout
+        /// </summary>
+        /// <param name="controller">which olds an instance of service</param>
         internal MainWindow(BackendController controller)
         {
             InitializeComponent();
             MWViewModel = new MainWindowViewModel(controller);
             this.DataContext = MWViewModel;
         }
+
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -50,6 +58,11 @@ namespace Presentation
             }
         }
 
+        /// <summary>
+        /// boots up a new register window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             RegisterWindow w = new RegisterWindow(MWViewModel.Controller);

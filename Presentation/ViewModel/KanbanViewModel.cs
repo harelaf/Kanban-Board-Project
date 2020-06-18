@@ -13,13 +13,10 @@ namespace Presentation.ViewModel
     {
         public BackendController Controller { get; private set; }
 
-        public KanbanViewModel()
-        {
-            this.Controller = new BackendController();
-            Board = null;
-            ColumnList = null;
-        }
-
+        /// <summary>
+        /// always gets an existing controller
+        /// </summary>
+        /// <param name="Controller"></param>
         public KanbanViewModel(BackendController Controller)
         {
             this.Controller = Controller;
@@ -38,6 +35,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// the main list to display. each one contains a task list
+        /// </summary>
         private ObservableCollection<ColumnModel> columnList;
         public ObservableCollection<ColumnModel> ColumnList
         {
@@ -49,6 +49,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// the current item to operate on
+        /// </summary>
         private TaskModel taskSelectedItem;
         public TaskModel TaskSelectedItem
         {
@@ -73,6 +76,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// the current column to operate on
+        /// </summary>
         private ColumnModel columnSelectedItem;
         public ColumnModel ColumnSelectedItem
         {
@@ -94,7 +100,9 @@ namespace Presentation.ViewModel
             }
         }
 
-
+        /// <summary>
+        /// a label to display messages to the loggedIn user
+        /// </summary>
         private string errorLabel1;
         public string ErrorLabel1
         {
@@ -107,6 +115,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds a string to filter by
+        /// </summary>
         private string searchValue;
         public string SearchValue
         {
@@ -121,6 +132,11 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// returns column index 
+        /// </summary>
+        /// <param name="myColumnName">the column name to search by</param>
+        /// <returns></returns>
         private int FindColumn(string myColumnName)
         {
             SearchValue = null;
@@ -141,6 +157,9 @@ namespace Presentation.ViewModel
             return columnOrdinal;
         }
 
+        /// <summary>
+        /// determine weather the task-change-buttons will be enabled
+        /// </summary>
         private bool enabled;
         public bool Enabled
         {
@@ -152,6 +171,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// determine weather the column-change-buttons will be enabled
+        /// </summary>
         private bool enabledColumn;
         public bool EnabledColumn
         {
@@ -163,6 +185,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the title of the current task
+        /// </summary>
         private string updateTitle;
         public string UpdateTitle
         {
@@ -174,6 +199,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the description of the current task
+        /// </summary>
         private string updateDescription;
         public string UpdateDescription
         {
@@ -185,6 +213,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the dueDate of the current task
+        /// </summary>
         private string updateDueDate;
         public string UpdateDueDate
         {
@@ -196,6 +227,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the Assigned user's email of the current task
+        /// </summary>
         private string updateAssignee;
         public string UpdateAssignee
         {
@@ -207,6 +241,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the name of the current column
+        /// </summary>
         private string columnName;
         public string ColumnName
         {
@@ -218,6 +255,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// holds the current task (since it changes on button click)
+        /// </summary>
         private TaskModel lastSelected;
         public TaskModel LastSelected
         {
@@ -228,6 +268,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates current task's title and displays a proper message
+        /// </summary>
         public void UpdateTaskTitle()
         {
             int ColId = FindColumn(LastSelected.ColumnName);
@@ -244,6 +287,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates current task's description and displays a proper message
+        /// </summary>
         public void UpdateTaskDescription()
         {
             int ColId = FindColumn(LastSelected.ColumnName);
@@ -260,6 +306,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates current task's dueDate and displays a proper message
+        /// </summary>
         public void UpdateTaskDueDate()
         {
             int ColId = FindColumn(LastSelected.ColumnName);
@@ -285,6 +334,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates current column's name and displays a proper message
+        /// </summary>
         public void ChangeColumnName()
         {
             int ColId = FindColumn(ColumnSelectedItem.Name);
@@ -301,6 +353,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// Updates current task's assigned user and displays a proper message
+        /// </summary>
         public void AssignTask()
         {
             int ColId = FindColumn(LastSelected.ColumnName);
@@ -317,6 +372,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// advances current task and displays a proper message
+        /// </summary>
         public void AdvanceTask()
         {
             TaskModel myTask = TaskSelectedItem;
@@ -346,6 +404,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// deletes current task and displays a proper message
+        /// </summary>
         public void DeleteTask()
         {
             TaskModel myTask = taskSelectedItem;
@@ -375,6 +436,9 @@ namespace Presentation.ViewModel
 
         }
 
+        /// <summary>
+        /// moves curent column to the right and displays a proper message
+        /// </summary>
         public void MoveColumnRight()
         {
             ColumnModel myColumn = ColumnSelectedItem;
@@ -401,6 +465,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// moves current column to the left and displays a proper message
+        /// </summary>
         public void MoveColumnLeft()
         {
             ColumnModel myColumn = ColumnSelectedItem;
@@ -428,6 +495,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// delete current column from the board (takes care of its tasks) and display a proper messsage
+        /// </summary>
         public void RemoveColumn()
         {
             ColumnModel myColumn = ColumnSelectedItem;
@@ -452,6 +522,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// sort the entire board by the task's dueDate
+        /// </summary>
         public void SortByDueDate()
         {
             SearchValue = null;
@@ -464,6 +537,9 @@ namespace Presentation.ViewModel
             ColumnList = newColumnList;
         }
 
+        /// <summary>
+        /// user check out and displays a proper message
+        /// </summary>
         public void logout()
         {
             try
@@ -476,6 +552,9 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// filter the entire board by the "searchValue"
+        /// </summary>
         public void filterByString()
         {
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
@@ -486,6 +565,10 @@ namespace Presentation.ViewModel
             ColumnList = newColumnList;
         }
 
+        /// <summary>
+        /// deletes dataBase and logout of the board
+        /// </summary>
+        /// <returns></returns>
         public bool DeleteData()
         {
             SearchValue = null;

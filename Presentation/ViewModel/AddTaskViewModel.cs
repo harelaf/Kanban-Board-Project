@@ -13,12 +13,10 @@ namespace Presentation.ViewModel
         public BackendController Controller { get; private set; }
         public ColumnModel Column { get; set; }
 
-        public AddTaskViewModel()
-        {
-            Controller = new BackendController();
-            Column = new ColumnModel(Controller);
-        }
-
+        /// <summary>
+        /// always get an existing controller
+        /// </summary>
+        /// <param name="controller"></param>
         public AddTaskViewModel(BackendController controller)
         {
             this.Controller = controller;
@@ -32,7 +30,6 @@ namespace Presentation.ViewModel
             set
             {
                 title = value;
-                RaisePropertyChanged("Title");
             }
         }
 
@@ -43,7 +40,6 @@ namespace Presentation.ViewModel
             set
             {
                 dueDate = value;
-                RaisePropertyChanged("DueDate");
             }
         }
 
@@ -54,10 +50,12 @@ namespace Presentation.ViewModel
             set
             {
                 description = value;
-                RaisePropertyChanged("Description");
             }
         }
 
+        /// <summary>
+        /// displays all kind of messages to the user
+        /// </summary>
         private string errorMessage;
         public string ErrorMessage
         {
@@ -69,6 +67,10 @@ namespace Presentation.ViewModel
             }
         }
 
+        /// <summary>
+        /// add new task to the first column and displays a proper message
+        /// </summary>
+        /// <param name="columns"></param>
         public void AddTask(ObservableCollection<ColumnModel> columns)
         {
             try
