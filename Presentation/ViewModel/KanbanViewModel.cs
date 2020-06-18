@@ -94,7 +94,7 @@ namespace Presentation.ViewModel
             }
         }
 
-        
+
         private string errorLabel1;
         public string ErrorLabel1
         {
@@ -127,7 +127,8 @@ namespace Presentation.ViewModel
             filterByString();
             int columnOrdinal = -1;
 
-            if (myColumnName != null) {
+            if (myColumnName != null)
+            {
                 for (int i = 0; i < ColumnList.Count; i++)
                 {
                     if (columnList[i] != null && ColumnList[i].Name.Equals(myColumnName))
@@ -332,7 +333,7 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.AdvanceTask(Controller.Email, columnId, myTask.Id);
-                
+
                 ColumnList[columnId + 1].TaskList.Add(myTask);
                 ColumnList[columnId].TaskList.Remove(ColumnList[columnId].TaskList.Where(x => x.Id == myTask.Id).ToList()[0]);
                 myTask.ColumnName = ColumnList[columnId + 1].Name;
@@ -351,7 +352,7 @@ namespace Presentation.ViewModel
             SearchValue = null;
             filterByString();
             int columnOrdinal = -1;
-            
+
             columnOrdinal = FindColumn(myTask.ColumnName);
 
             if (myTask != null)
@@ -451,47 +452,12 @@ namespace Presentation.ViewModel
             }
         }
 
-        private string columnName;
-        public string ColumnName
-        {
-            get => columnName;
-            set
-            {
-                columnName = value;
-                RaisePropertyChanged("ColumnName");
-            }
-        }
-
-       /* public void ChangeColumnName(string name)
-        {
-            ColumnModel myColumn = ColumnSelectedItem;
-            SearchValue = null;
-            filterByString();
-            int id = columnList.IndexOf(myColumn);
-            if (id == -1)
-            {
-                ErrorLabel1 = "no column was selected";
-                return;
-            }
-
-            try
-            {
-                Controller.ChangeColumnName(Controller.Email, id, name);
-                ColumnList = Controller.GetBoard(Controller.Email).ColList;
-                ErrorLabel1 = "Column's has been changed succsssfully";
-            }
-            catch (Exception e)
-            {
-                ErrorLabel1 = e.Message;
-            }
-        }
-        */
         public void SortByDueDate()
         {
             SearchValue = null;
             filterByString();
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
-            foreach(ColumnModel cm in columnList)
+            foreach (ColumnModel cm in columnList)
             {
                 newColumnList.Add(new ColumnModel(Controller, new ObservableCollection<TaskModel>(cm.TaskList.OrderBy(x => x.DueDate).ToList()), cm.Name));
             }
@@ -513,19 +479,19 @@ namespace Presentation.ViewModel
         public void filterByString()
         {
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
-            foreach(ColumnModel cm in columnList)
+            foreach (ColumnModel cm in columnList)
             {
                 newColumnList.Add(cm.filter(SearchValue));
             }
             ColumnList = newColumnList;
-	    }
+        }
 
         public bool DeleteData()
         {
             SearchValue = null;
             filterByString();
             DialogResult d = MessageBox.Show("ARE YOU SURE?", "Confirmation", MessageBoxButtons.YesNo);
-            if(d == DialogResult.Yes)
+            if (d == DialogResult.Yes)
             {
                 try
                 {
