@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" Width="1000" Height="600" MinHeight="600" MinWidth="800">
+        Title="KanbanWindow" Width="1000" Height="670" MinHeight="600" MinWidth="800">
     <Window.Resources>
 
         <local:HeightConverter x:Key="HeightConverter"/>
 
     </Window.Resources>
-    <Grid Background="#e0f1fd">
+    <Grid>
         <Grid Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="140" Width="*"/>
@@ -68,6 +68,8 @@
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="50"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
@@ -91,10 +93,18 @@
                     <Button Content="Change Name" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChangeColumnName_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnName_Button_Click"/>
                     <TextBox Name="ChangeName_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnName, Mode=TwoWay}"/>
                 </Grid>
-                <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="8"/>
-                <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="AddTask_Button_Click"/>
-                <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="10" IsEnabled="{Binding Path=Enabled}" Click="AdvanceTask_Button_Click"/>
-                <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="11" IsEnabled="{Binding Path=Enabled}" Click="DeleteTask_Button_Click"/>
+                <Grid Grid.Row="9">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Change Limit" HorizontalAlignment="Center" VerticalAlignment="Center" Name="ChangeColumnLimit_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="1" IsEnabled="{Binding Path=EnabledColumn}" Click="ChangeColumnLimit_Button_Click"/>
+                    <TextBox Name="ChangeLimit_TextBox" BorderThickness="0.5" Width="120" Height="25" TextWrapping="Wrap" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13" Grid.Row="0" Text="{Binding Path=ColumnLimit, Mode=TwoWay}"/>
+                </Grid>
+                <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="10"/>
+                <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="11" Click="AddTask_Button_Click"/>
+                <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="12" IsEnabled="{Binding Path=Enabled}" Click="AdvanceTask_Button_Click"/>
+                <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="13" IsEnabled="{Binding Path=Enabled}" Click="DeleteTask_Button_Click"/>
             </Grid>
             <StackPanel Grid.Column="0" Margin="0,20,0,0">
                 <Label Name="TaskDisplay" Content="Task Display" Margin="20" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
@@ -138,5 +148,4 @@
             <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="7"/>
         </StackPanel>
     </Grid>
-
 </Window>

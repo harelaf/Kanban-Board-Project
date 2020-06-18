@@ -133,6 +133,11 @@ namespace Presentation.View
             KVModel.ChangeColumnName();
         }
 
+        private void ChangeColumnLimit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            KVModel.ChangeColumnLimit();
+        }
+
         /// <summary>
         /// This is an event handler that triggers when a user selects a task
         /// In order to avoide "collisions" between selected tasks in different columns, we unselect all tasks and make the new selected task the last select

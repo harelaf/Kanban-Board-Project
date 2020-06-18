@@ -61,8 +61,8 @@ namespace Presentation.ViewModel
             ErrorMessage2 = "";
             try
             {
-                Controller.AddColumn(Controller.Email, Index, Name);
-                columns.Insert(Index, new ColumnModel(Controller, new ObservableCollection<TaskModel>(), Name));
+                ColumnModel col = Controller.AddColumn(Controller.Email, Index, Name);
+                columns.Insert(Index, new ColumnModel(Controller, new ObservableCollection<TaskModel>(), Name, col.Limit));
                 ErrorMessage2 = "The column has been added successfully";
             }
             catch (Exception e)

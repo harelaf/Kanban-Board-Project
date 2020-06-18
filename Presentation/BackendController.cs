@@ -86,7 +86,7 @@ namespace Presentation
             {
                 TaskModelList.Add(ToTaskModel(tsk, MyColumn.Name));
             }
-            return new ColumnModel(this, TaskModelList, MyColumn.Name);
+            return new ColumnModel(this, TaskModelList, MyColumn.Name, MyColumn.Limit);
         }
 
         public TaskModel ToTaskModel(Task tsk, string ColumnName)
@@ -191,7 +191,7 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(this, list,Name);
+            ColumnModel column = new ColumnModel(this, list, Name, resp.Value.Limit);
             return column;
         }
 
@@ -206,7 +206,7 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column=new ColumnModel(this, list,resp.Value.Name);
+            ColumnModel column=new ColumnModel(this, list,resp.Value.Name, resp.Value.Limit);
             return column;
         }
 
@@ -221,7 +221,7 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(this, list, resp.Value.Name);
+            ColumnModel column = new ColumnModel(this, list, resp.Value.Name, resp.Value.Limit);
             return column;
         }
     }
