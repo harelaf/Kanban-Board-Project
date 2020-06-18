@@ -65,36 +65,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 DataReader = Command.ExecuteReader();
                 if (!DataReader.Read())
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = "INSERT INTO tbBoards VALUES(@CreatorEmail,@NumOfColumns,@IdGiver)";
-                    SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"CreatorEmail", CreatorEmail);
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
-                    SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
-
-                    Command.Parameters.Add(CreatorEmailParam);
-                    Command.Parameters.Add(IdGiverParam);
-                    Command.Parameters.Add(NumOfColumnsParam);
-
-                    Command.Prepare();
-                    int num_rows_changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveDoesntExist(Connection);   
                 }
                 else
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = $"UPDATE tbBoards SET {COL_NUM_OF_COLUMNS} = @NumOfColumns, {COL_ID_GIVER} = @IdGiver WHERE {COL_CREATOR_EMAIL} = @Email";
-
-                    SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
-                    SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
-                    SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"Email", CreatorEmail);
-
-                    Command.Parameters.Add(NumOfColumnsParam);
-                    Command.Parameters.Add(IdGiverParam);
-                    Command.Parameters.Add(CreatorEmailParam);
-
-                    Command.Prepare();
-                    int num_rows_changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveExists(Connection);
                 }
                 DataReader.Close();
             }
@@ -105,6 +80,55 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             finally
             {
                 Connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// This function saves to the database a new board
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveDoesntExist(SQLiteConnection Connection)
+        {
+            if(Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = "INSERT INTO tbBoards VALUES(@CreatorEmail,@NumOfColumns,@IdGiver)";
+                SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"CreatorEmail", CreatorEmail);
+                SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
+                SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
+
+                Command.Parameters.Add(CreatorEmailParam);
+                Command.Parameters.Add(IdGiverParam);
+                Command.Parameters.Add(NumOfColumnsParam);
+
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// This function saves to the database an already existing board
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveExists(SQLiteConnection Connection)
+        {
+            if (Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = $"UPDATE tbBoards SET {COL_NUM_OF_COLUMNS} = @NumOfColumns, {COL_ID_GIVER} = @IdGiver WHERE {COL_CREATOR_EMAIL} = @Email";
+
+                SQLiteParameter NumOfColumnsParam = new SQLiteParameter(@"NumOfColumns", NumOfColumns);
+                SQLiteParameter IdGiverParam = new SQLiteParameter(@"IdGiver", IdGiver);
+                SQLiteParameter CreatorEmailParam = new SQLiteParameter(@"Email", CreatorEmail);
+
+                Command.Parameters.Add(NumOfColumnsParam);
+                Command.Parameters.Add(IdGiverParam);
+                Command.Parameters.Add(CreatorEmailParam);
+
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
             }
         }
 

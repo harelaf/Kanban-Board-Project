@@ -78,42 +78,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 Command = new SQLiteCommand(SqlQuery, Connection);
                 DataReader = Command.ExecuteReader();
                 if (DataReader.Read()) //This if checks if the column is already in the database, and in that case we update its information
-
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = $"UPDATE tbColumns SET {COL_LIMIT} = @Limit, {COL_ORDINAL} = @ColumnOrdinal WHERE {COL_EMAIL} = @Email AND {COL_NAME} = @ColumnName";
-                    SQLiteParameter ColumnNameParam = new SQLiteParameter(@"ColumnName", Name);
-                    SQLiteParameter LimitParam = new SQLiteParameter(@"Limit", Limit);
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter ColumnOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", Ordinal);
-
-                    Command.Parameters.Add(ColumnNameParam);
-                    Command.Parameters.Add(LimitParam);
-                    Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(ColumnOrdinalParam);
-
-                    Command.Prepare();
-                    int num_rows_changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveExists(Connection);
                 }
                 else //Otherwise we insert its information
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@ColumnOrdinal,@ColumnName,@Limit)";
-                    
-                    SQLiteParameter ColumnNameParam = new SQLiteParameter(@"ColumnName", Name);
-                    SQLiteParameter LimitParam = new SQLiteParameter(@"Limit", Limit);
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter ColumnOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", Ordinal);
-
-                    Command.Parameters.Add(ColumnNameParam);
-                    Command.Parameters.Add(LimitParam);
-                    Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(ColumnOrdinalParam);
-
-                    Command.Prepare();
-                    int num_rows_changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveDoesntExist(Connection);
                 }
                 DataReader.Close();
             }
@@ -124,6 +94,59 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             finally
             {
                 Connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// This function saves a column to the database if it isnt already in the database
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveDoesntExist(SQLiteConnection Connection)
+        {
+            if (Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = "INSERT INTO tbColumns VALUES(@Email,@ColumnOrdinal,@ColumnName,@Limit)";
+
+                SQLiteParameter ColumnNameParam = new SQLiteParameter(@"ColumnName", Name);
+                SQLiteParameter LimitParam = new SQLiteParameter(@"Limit", Limit);
+                SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
+                SQLiteParameter ColumnOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", Ordinal);
+
+                Command.Parameters.Add(ColumnNameParam);
+                Command.Parameters.Add(LimitParam);
+                Command.Parameters.Add(EmailParam);
+                Command.Parameters.Add(ColumnOrdinalParam);
+
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// This function saves a column to the database if it already exists in the database
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveExists(SQLiteConnection Connection)
+        {
+            if (Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = $"UPDATE tbColumns SET {COL_LIMIT} = @Limit, {COL_ORDINAL} = @ColumnOrdinal WHERE {COL_EMAIL} = @Email AND {COL_NAME} = @ColumnName";
+                SQLiteParameter ColumnNameParam = new SQLiteParameter(@"ColumnName", Name);
+                SQLiteParameter LimitParam = new SQLiteParameter(@"Limit", Limit);
+                SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
+                SQLiteParameter ColumnOrdinalParam = new SQLiteParameter(@"ColumnOrdinal", Ordinal);
+
+                Command.Parameters.Add(ColumnNameParam);
+                Command.Parameters.Add(LimitParam);
+                Command.Parameters.Add(EmailParam);
+                Command.Parameters.Add(ColumnOrdinalParam);
+
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+                Command.Dispose();
             }
         }
 

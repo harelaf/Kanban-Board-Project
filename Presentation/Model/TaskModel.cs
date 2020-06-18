@@ -17,12 +17,10 @@ namespace Presentation.Model
             get => dueDate;
             set
             {
-                if (dueDate == default(DateTime)) { dueDate = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskDueDate(Controller.Email, ColId, Id, value)) dueDate = value;
-                }
+                dueDate = value;
+                this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red :
+                DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds)
+                ? Brushes.Orange : Brushes.White;
             }
         }
         private string title;
@@ -31,12 +29,7 @@ namespace Presentation.Model
             get => title;
             set
             {
-                if (title == null) { title = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskTitle(Controller.Email, ColId, Id, value)) title = value;
-                }
+                title = value;
             }
         }
         private string description;
@@ -45,12 +38,7 @@ namespace Presentation.Model
             get => description;
             set
             {
-                if (description == null) { description = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.UpdateTaskDescription(Controller.Email, ColId, Id, value)) description = value;
-                }
+                description = value;
             }
         }
         private string emailAssignee;
@@ -59,17 +47,31 @@ namespace Presentation.Model
             get => emailAssignee;
             set
             {
-                if (emailAssignee == null) { emailAssignee = value; }
-                else
-                {
-                    int ColId = GetColumnId();
-                    if (Controller.AssignTask(Controller.Email, ColId, Id, value)) emailAssignee = value;
-                }
+                emailAssignee = value;
+                BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
             }
         }
         public string ColumnName { get; set; }
-        public SolidColorBrush BorderBrush { get; set; }
-        public SolidColorBrush BackgroundBrush { get; set; }
+        private SolidColorBrush borderBrush;
+        public SolidColorBrush BorderBrush
+        {
+            get => borderBrush;
+            set
+            {
+                borderBrush = value;
+                RaisePropertyChanged("BorderBrush");
+            }
+        }
+        private SolidColorBrush backgroundBrush;
+        public SolidColorBrush BackgroundBrush
+        {
+            get => backgroundBrush;
+            set
+            {
+                backgroundBrush = value;
+                RaisePropertyChanged("BackgroundBrush");
+            }
+        }
         public TaskModel(BackendController controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;
@@ -80,20 +82,9 @@ namespace Presentation.Model
             this.EmailAssignee = emailAssignee;
             this.ColumnName = ColumnName;
             this.BorderBrush = Controller.Email.Equals(EmailAssignee) ? Brushes.Blue : Brushes.White;
-            this.BackgroundBrush = (DateTime.Now.Subtract(CreationDate)).TotalMilliseconds >= (0.75 * (dueDate.Subtract(CreationDate)).TotalMilliseconds) ? Brushes.Orange : Brushes.White;
-            this.BackgroundBrush = (dueDate.Subtract(DateTime.Now)).TotalMilliseconds <= 0 ? Brushes.Red : BackgroundBrush;
-        }
-
-        private int GetColumnId()
-        {
-            BoardModel board = Controller.GetBoard(Controller.Email);
-            int ColId = 0;
-            foreach (ColumnModel col in board.ColList)
-            {
-                if (col.Name.Equals(ColumnName)) break;
-                ColId++;
-            }
-            return ColId;
+            this.BackgroundBrush = this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red : 
+                DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds) 
+                ? Brushes.Orange : Brushes.White; //First check if a red background is needed, then if an orange, otherwise white 
         }
     }
 }

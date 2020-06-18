@@ -78,56 +78,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 DataReader = Command.ExecuteReader();
                 if (DataReader.Read())
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = $"UPDATE tbTasks SET {COL_TASK_COLUMN} = @Column, {COL_TASK_TITLE} = @Title, {COL_TASK_DESC} = @Description, {COL_TASK_CREATION_DATE} = @CreationDate, {COL_TASK_DUE_DATE} = @DueDate, {COL_TASK_ASSIGNEE} = @Assignee WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @TaskId";
-                    SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
-                    SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
-                    SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
-                    SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
-                    SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
-                    SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
-
-                    Command.Parameters.Add(ColumnParam);
-                    Command.Parameters.Add(TitleParam);
-                    Command.Parameters.Add(DescrptionParam);
-                    Command.Parameters.Add(CreationDateParam);
-                    Command.Parameters.Add(DueDateparam);
-                    Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(TaskIdParam);
-                    Command.Parameters.Add(AssigneeParam);
-
-
-                    Command.Prepare();
-                    int num_rows_changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveExists(Connection);
                 }
                 else //Otherwise, we need to insert its information to the database
                 {
-                    Command = new SQLiteCommand(null, Connection);
-                    Command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@Column,@Email,@Title,@Description,@CreationDate,@DueDate,@Assignee)";
-                    SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
-                    SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
-                    SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
-                    SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
-                    SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
-                    SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
-                    SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
-                    SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
-
-                    Command.Parameters.Add(ColumnParam);
-                    Command.Parameters.Add(TitleParam);
-                    Command.Parameters.Add(DescrptionParam);
-                    Command.Parameters.Add(CreationDateParam);
-                    Command.Parameters.Add(DueDateparam);
-                    Command.Parameters.Add(EmailParam);
-                    Command.Parameters.Add(TaskIdParam);
-                    Command.Parameters.Add(AssigneeParam);
-
-                    Command.Prepare();
-                    int Num_Rows_Changed = Command.ExecuteNonQuery();
-                    Command.Dispose();
+                    SaveDoesntExist(Connection);
                 }
                 DataReader.Close();
             }
@@ -138,6 +93,73 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             finally
             {
                 Connection.Close();
+                Command.Dispose();
+            }
+        }
+        /// <summary>
+        /// This function saves a task to the DAL if it already exists in the database
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveExists(SQLiteConnection Connection)
+        {
+            if (Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = $"UPDATE tbTasks SET {COL_TASK_COLUMN} = @Column, {COL_TASK_TITLE} = @Title, {COL_TASK_DESC} = @Description, {COL_TASK_CREATION_DATE} = @CreationDate, {COL_TASK_DUE_DATE} = @DueDate, {COL_TASK_ASSIGNEE} = @Assignee WHERE {COL_TASK_EMAIL} = @Email AND {COL_TASK_ID} = @TaskId";
+                SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
+                SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
+                SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
+                SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
+                SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
+                SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
+                SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
+                SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
+
+                Command.Parameters.Add(ColumnParam);
+                Command.Parameters.Add(TitleParam);
+                Command.Parameters.Add(DescrptionParam);
+                Command.Parameters.Add(CreationDateParam);
+                Command.Parameters.Add(DueDateparam);
+                Command.Parameters.Add(EmailParam);
+                Command.Parameters.Add(TaskIdParam);
+                Command.Parameters.Add(AssigneeParam);
+
+
+                Command.Prepare();
+                int num_rows_changed = Command.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// This function saves a task to the DAL if it isnt already in the database
+        /// </summary>
+        /// <param name="Connection">Recieves the connection to the database</param>
+        private void SaveDoesntExist(SQLiteConnection Connection)
+        {
+            if (Connection.State == System.Data.ConnectionState.Open)
+            {
+                Command = new SQLiteCommand(null, Connection);
+                Command.CommandText = "INSERT INTO tbTasks VALUES(@TaskId,@Column,@Email,@Title,@Description,@CreationDate,@DueDate,@Assignee)";
+                SQLiteParameter ColumnParam = new SQLiteParameter(@"Column", ColumnName);
+                SQLiteParameter TitleParam = new SQLiteParameter(@"Title", Title);
+                SQLiteParameter DescrptionParam = new SQLiteParameter(@"Description", Description);
+                SQLiteParameter CreationDateParam = new SQLiteParameter(@"CreationDate", CreationDate.ToString());
+                SQLiteParameter DueDateparam = new SQLiteParameter(@"DueDate", DueDate.ToString());
+                SQLiteParameter EmailParam = new SQLiteParameter(@"Email", Email);
+                SQLiteParameter TaskIdParam = new SQLiteParameter(@"TaskId", TaskId);
+                SQLiteParameter AssigneeParam = new SQLiteParameter(@"Assignee", Assignee);
+
+                Command.Parameters.Add(ColumnParam);
+                Command.Parameters.Add(TitleParam);
+                Command.Parameters.Add(DescrptionParam);
+                Command.Parameters.Add(CreationDateParam);
+                Command.Parameters.Add(DueDateparam);
+                Command.Parameters.Add(EmailParam);
+                Command.Parameters.Add(TaskIdParam);
+                Command.Parameters.Add(AssigneeParam);
+
+                Command.Prepare();
+                int Num_Rows_Changed = Command.ExecuteNonQuery();
             }
         }
 
