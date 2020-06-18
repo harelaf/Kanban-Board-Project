@@ -139,7 +139,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         public void Register(string Email, string Password, string Nickname, string EmailHost)
         {
             if (!UserList.ContainsKey(EmailHost))
-                throw new Exception("can't register to this board because the email host doesn't exist in the system");
+                throw new Exception("Can't register to this board because the email host doesn't exist in the system");
+            if (UserList.ContainsKey(Email))
+                throw new Exception("This email is already registered to the system");
             if (CheckProperPassToRegister(Password) & IsLegalEmailAdress(Email))
             {
                 if (Nickname == null)

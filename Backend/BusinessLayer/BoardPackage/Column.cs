@@ -174,7 +174,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception($"The user with this Email:{Email} can't update this task due date because he is not the assignee");
+                throw new Exception("You can't update this tasks due date because you are not the assignee");
             return toUpdate;
 
         }
@@ -194,7 +194,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception($"The user with this Email:{Email} can't update this task title because he is not the assignee");
+                throw new Exception("You can't update this tasks title because you are not the assignee");
             return toUpdate;
         }
 
@@ -214,7 +214,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception($"The user with this Email:{Email} can't update this task description because he is not the assignee");
+                throw new Exception("You can't update this tasks description because you are not the assignee");
             return toUpdate;
         }
 
@@ -229,7 +229,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (TaskList.Count > newLim & newLim >= 0)
                 throw new Exception("This column already has more tasks than the new Limit");
             else if (newLim < -1)
-                throw new Exception("This Limit is unecceptable");
+                throw new Exception("This Limit is unacceptable");
             this.Limit = newLim;
         }
 

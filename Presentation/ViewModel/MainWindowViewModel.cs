@@ -45,7 +45,10 @@ namespace Presentation.ViewModel
                 RaisePropertyChanged("IsLoginEnabled");
             }
         }
-
+        
+        /// <summary>
+        /// displays messages to the window
+        /// </summary>
         private string errorMessage;
         public string ErrorMessage
         {
@@ -62,11 +65,19 @@ namespace Presentation.ViewModel
             this.Controller = new BackendController();
         }
 
+        /// <summary>
+        /// in case of reopen the main window. get an old controller instead of making a new ona
+        /// </summary>
+        /// <param name="controller"></param>
         public MainWindowViewModel(BackendController controller)
         {
             this.Controller = controller;
         }
 
+        /// <summary>
+        /// order the controller to login a user and displays a proper message
+        /// </summary>
+        /// <returns></returns>
         public UserModel Login()
         {
             ErrorMessage = "";
@@ -81,5 +92,7 @@ namespace Presentation.ViewModel
                 return null;
             }
         }
+
+
     }
 }

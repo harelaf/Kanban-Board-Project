@@ -25,14 +25,11 @@ namespace Presentation.View
         private AddTaskViewModel ATViewModel;
         private ObservableCollection<ColumnModel> columns;
 
-        public AddTaskWindow()
-        {
-            InitializeComponent();
-            this.ATViewModel = new AddTaskViewModel();
-            this.DataContext = ATViewModel;
-            columns = new ObservableCollection<ColumnModel>();
-        }
-
+        /// <summary>
+        /// add task window
+        /// </summary>
+        /// <param name="Controller"></param>
+        /// <param name="columns"></param>
         internal AddTaskWindow(BackendController Controller, ObservableCollection<ColumnModel> columns)
         {
             InitializeComponent();
@@ -41,6 +38,12 @@ namespace Presentation.View
             this.columns = columns;
         }
 
+        /// <summary>
+        /// event that triggers when the "add task" button is clicked
+        /// adds a new task to the board
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {
             ATViewModel.AddTask(columns);

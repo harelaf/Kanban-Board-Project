@@ -13,6 +13,9 @@ namespace Presentation
         private Service MyService;
         public string Email { get; private set; }
         
+        /// <summary>
+        /// constructore with service instance and initial empty user email
+        /// </summary>
         public BackendController()
         {
             this.MyService = new Service();
@@ -20,6 +23,9 @@ namespace Presentation
             Email = "";
         }
 
+        /// <summary>
+        /// delete all database
+        /// </summary>
         public void DeleteData()
         {
             Response resp = MyService.DeleteData();
@@ -29,6 +35,13 @@ namespace Presentation
             }
         }
 
+        /// <summary>
+        /// takes care of user registration for his own board or an existing one
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <param name="Nickname"></param>
+        /// <param name="Password"></param>
+        /// <param name="HostEmail"></param>
         public void Register(string Email, string Nickname, string Password, string HostEmail)
         {
             Response response = (HostEmail == "" ? MyService.Register(Email, Password, Nickname)
@@ -36,6 +49,13 @@ namespace Presentation
             if (response.ErrorOccured) throw new Exception(response.ErrorMessage);
         }
 
+        /// <summary>
+        /// assign task for a new member of the board
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
+        /// <param name="emailAssignee"></param>
         public void AssignTask(string email, int columnOrdinal, int taskId, string emailAssignee)
         {
             Response resp = MyService.AssignTask(email, columnOrdinal, taskId, emailAssignee);
@@ -43,6 +63,12 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// delete a task with the specified id frm the board
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
         public void DeleteTask(string email, int columnOrdinal, int taskId)
         {
             Response resp = MyService.DeleteTask(email, columnOrdinal, taskId);
@@ -52,6 +78,12 @@ namespace Presentation
             }
         }
 
+        /// <summary>
+        /// takes care of user login to the board
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public UserModel Login(string email, string password)
         {
             Response<User> resp = MyService.Login(email, password);
@@ -66,6 +98,11 @@ namespace Presentation
             return ActiveUser;
         }
 
+        /// <summary>
+        /// convert service.board to boardModel
+        /// </summary>
+        /// <param name="MyBoard"></param>
+        /// <returns></returns>
         private BoardModel ToBoardModel(Board MyBoard)
         {
             ObservableCollection<ColumnModel> colList = new ObservableCollection<ColumnModel>();
@@ -79,6 +116,11 @@ namespace Presentation
             return new BoardModel(this, MyBoard.emailCreator, colList);
         }
 
+        /// <summary>
+        /// convert service.column to columnModel
+        /// </summary>
+        /// <param name="MyColumn"></param>
+        /// <returns></returns>
         private ColumnModel ToColumnModel(Column MyColumn)
         {
             ObservableCollection<TaskModel> TaskModelList = new ObservableCollection<TaskModel>();
@@ -86,14 +128,24 @@ namespace Presentation
             {
                 TaskModelList.Add(ToTaskModel(tsk, MyColumn.Name));
             }
-            return new ColumnModel(this, TaskModelList, MyColumn.Name);
+            return new ColumnModel(this, TaskModelList, MyColumn.Name, MyColumn.Limit);
         }
 
+        /// <summary>
+        /// convert service.Task to taskModel
+        /// </summary>
+        /// <param name="tsk"></param>
+        /// <param name="ColumnName"></param>
+        /// <returns></returns>
         public TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
             return new TaskModel(this,tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
         }
 
+        /// <summary>
+        /// takes care of user LogOut
+        /// </summary>
+        /// <param name="Email"></param>
         public void Logout(string Email)
         {
             Response response = MyService.Logout(Email);
@@ -101,11 +153,22 @@ namespace Presentation
             this.Email = "";
         }
 
+        /// <summary>
+        /// returns a boardModel of this email
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
         public BoardModel GetBoard(string Email)
         {
             return ToBoardModel(MyService.GetBoard(Email).Value);
         }
 
+        /// <summary>
+        /// limit the capacity of specified column
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="limit"></param>
         public void LimitColumnTasks(string email, int columnOrdinal, int limit)
         {
             Response resp = MyService.LimitColumnTasks(email, columnOrdinal, limit);
@@ -113,6 +176,12 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// replace column name
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="newName"></param>
         public void ChangeColumnName(string email, int columnOrdinal, string newName)
         {
             Response resp = MyService.ChangeColumnName(email, columnOrdinal, newName);
@@ -120,6 +189,14 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// add a new task to the board with the given components
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="dueDate"></param>
+        /// <returns></returns>
         public TaskModel AddTask(string email,string title,string description, DateTime dueDate)
         {
             Response<Task> resp = MyService.AddTask(email, title, description,dueDate);
@@ -129,6 +206,13 @@ namespace Presentation
             return ToTaskModel(resp.Value, MyService.GetColumn(email, 0).Value.Name);
         }
 
+        /// <summary>
+        /// updates task's dueDate 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
+        /// <param name="dueDate"></param>
         public void UpdateTaskDueDate(string email, int columnOrdinal, int taskId, DateTime dueDate)
         {
             Response resp = MyService.UpdateTaskDueDate(email, columnOrdinal,taskId, dueDate);
@@ -136,6 +220,13 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// updates task's title
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
+        /// <param name="title"></param>
         public void UpdateTaskTitle(string email, int columnOrdinal, int taskId, string title)
         {
             Response resp = MyService.UpdateTaskTitle(email, columnOrdinal, taskId, title);
@@ -143,6 +234,13 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// updates task's description
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
+        /// <param name="description"></param>
         public void UpdateTaskDescription(string email, int columnOrdinal, int taskId, string description)
         {
             Response resp = MyService.UpdateTaskDescription(email, columnOrdinal, taskId, description);
@@ -150,6 +248,12 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// advance the task with specified id to the next column if possible
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <param name="taskId"></param>
         public void AdvanceTask(string email, int columnOrdinal, int taskId)
         {
             Response resp = MyService.AdvanceTask(email, columnOrdinal, taskId);
@@ -157,6 +261,12 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// retrns the columnModel with the specified name
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
         public ColumnModel GetColumn(string email, string columnName)
         {
             Response<Column> resp = MyService.GetColumn(email, columnName);
@@ -165,6 +275,12 @@ namespace Presentation
             return ToColumnModel(resp.Value);
         }
 
+        /// <summary>
+        /// retrns the columnModel on the specified index
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <returns></returns>
         public ColumnModel GetColumn(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.GetColumn(email, columnOrdinal);
@@ -173,6 +289,11 @@ namespace Presentation
             return ToColumnModel(resp.Value);
         }
 
+        /// <summary>
+        /// removes the column on the specified index
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
         public void RemoveColumn(string email, int columnOrdinal)
         {
             Response resp = MyService.RemoveColumn(email, columnOrdinal);
@@ -180,6 +301,13 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
         }
 
+        /// <summary>
+        /// add a new column on the requsted index
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal">index to insert in</param>
+        /// <param name="Name"></param>
+        /// <returns></returns>
         public ColumnModel AddColumn(string email, int columnOrdinal,string Name)
         {
             Response<Column> resp = MyService.AddColumn(email, columnOrdinal,Name);
@@ -191,10 +319,16 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(this, list,Name);
+            ColumnModel column = new ColumnModel(this, list, Name, resp.Value.Limit);
             return column;
         }
 
+        /// <summary>
+        /// replace the column position with the one on its right if possible
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal"></param>
+        /// <returns></returns>
         public ColumnModel MoveColumnRight(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.MoveColumnRight(email, columnOrdinal);
@@ -206,10 +340,16 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column=new ColumnModel(this, list,resp.Value.Name);
+            ColumnModel column=new ColumnModel(this, list,resp.Value.Name, resp.Value.Limit);
             return column;
         }
 
+        /// <summary>
+        /// replace the column's position with the one on its right if possible
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="columnOrdinal">the column index</param>
+        /// <returns></returns>
         public ColumnModel MoveColumnLeft(string email, int columnOrdinal)
         {
             Response<Column> resp = MyService.MoveColumnLeft(email, columnOrdinal);
@@ -221,7 +361,7 @@ namespace Presentation
                 TaskModel ToAdd = ToTaskModel(task, resp.Value.Name);
                 list.Add(ToAdd);
             }
-            ColumnModel column = new ColumnModel(this, list, resp.Value.Name);
+            ColumnModel column = new ColumnModel(this, list, resp.Value.Name, resp.Value.Limit);
             return column;
         }
     }
