@@ -233,7 +233,7 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.UpdateTaskTitle(Controller.Email, ColId, LastSelected.Id, UpdateTitle);
-                ColumnList[ColId].TaskList.Where(x => x.Id == LastSelected.Id).ToList()[0].Title = UpdateTitle;
+                TaskSelectedItem.Title = UpdateTitle;
                 RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Updated task's title successfully";
             }
