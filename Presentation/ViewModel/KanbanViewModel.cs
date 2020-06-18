@@ -299,7 +299,7 @@ namespace Presentation.ViewModel
             }
         }
 
-        public void ChangeColumnName(string name)
+       /* public void ChangeColumnName(string name)
         {
             ColumnModel myColumn = ColumnSelectedItem;
             SearchValue = null;
@@ -322,7 +322,7 @@ namespace Presentation.ViewModel
                 ErrorLabel1 = e.Message;
             }
         }
-
+        */
         public void SortByDueDate()
         {
             SearchValue = null;

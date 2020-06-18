@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="KanbanWindow" MinHeight="500" MinWidth="700">
+        Title="KanbanWindow" MinHeight="650" MinWidth="700">
     <Window.Resources>
 
         <local:HeightConverter x:Key="HeightConverter"/>
@@ -72,16 +72,17 @@
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="35"/>
+                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <Label Content="Column Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2"/>
                 <Button Content="Add Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="3" Click="AddColumn_Button_Click"/>
-                <Button Content="Move Right" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="4" Click="MoveColumnRight_Button_Click"/>
-                <Button Content="Move Left" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="5" Click="MoveColumnLeft_Button_Click"/>
-                <Button Content="Remove Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="RemoveColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" Click="RemoveColumn_Button_Click"/>
-                <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="7"/>
-                <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="8" Click="AddTask_Button_Click"/>
-                <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="AdvanceTask_Button_Click"/>
-                <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="10" Click="DeleteTask_Button_Click"/>
+                <Button Content="Move Right" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnRight_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="5" Click="MoveColumnRight_Button_Click"/>
+                <Button Content="Move Left" HorizontalAlignment="Center" VerticalAlignment="Center" Name="MoveColumnLeft_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="6" Click="MoveColumnLeft_Button_Click"/>
+                <Button Content="Remove Column" HorizontalAlignment="Center" VerticalAlignment="Center" Name="RemoveColumn_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="7" Click="RemoveColumn_Button_Click"/>
+                <Label Content="Task Actions:" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="8"/>
+                <Button Content="Add Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AddTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="9" Click="AddTask_Button_Click"/>
+                <Button Content="Advance Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="AdvanceTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="10" Click="AdvanceTask_Button_Click"/>
+                <Button Content="Delete Task" HorizontalAlignment="Center" VerticalAlignment="Center" Name="DeleteTask_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="11" Click="DeleteTask_Button_Click"/>
                 <Button Content="Sort By DueDate" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Sort_Button" Height="25" MinWidth="120" FontSize="13" FontWeight="Bold" Grid.Row="0" Click="Sort_Button_Click"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Content="?" Name="Search_Button" Height="25" MinWidth="25" FontSize="13" FontWeight="Bold" Click="Search_Button_Click"/>
@@ -89,7 +90,7 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <StackPanel  Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85">
+        <StackPanel Margin="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="85" RenderTransformOrigin="0.481,1.388">
             <Button Content="Logout"  HorizontalAlignment="Center" VerticalAlignment="Center" Name="Logout_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Click="Logout_Button_Click" Margin="7"/>
             <Button Content="Instructions" HorizontalAlignment="Center" VerticalAlignment="Center" Name="Instructions_Button" Height="20" Width="100" FontWeight="Bold" FontSize="10" Click="Instructions_Button_Click"/>
             <Button Content="Delete All Boards"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="DeleteData_Button" Height="20" Width="100" FontSize="10" FontWeight="Bold" Foreground="Red" Background="Black" Click="DeleteData_Button_Click" Margin="7"/>
