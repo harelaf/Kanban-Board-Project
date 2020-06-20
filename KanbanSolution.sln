@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{82AA06FB-0629-4A84-B08B-A0E5CBF97465}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanTests", "KanbanTests\KanbanTests.csproj", "{B4262259-E61D-4E00-A6AC-EFE6C34C9CB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{82AA06FB-0629-4A84-B08B-A0E5CBF97465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82AA06FB-0629-4A84-B08B-A0E5CBF97465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82AA06FB-0629-4A84-B08B-A0E5CBF97465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4262259-E61D-4E00-A6AC-EFE6C34C9CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4262259-E61D-4E00-A6AC-EFE6C34C9CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4262259-E61D-4E00-A6AC-EFE6C34C9CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4262259-E61D-4E00-A6AC-EFE6C34C9CB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -394,6 +394,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             return add;
         }
 
+        public string GetCreatorEmail()
+        {
+            return CreatorEmail;
+        }
+
         /// <summary>
         /// implements the method ToDalObject as promised. turn current board to dal board who is ready to save.
         /// </summary>

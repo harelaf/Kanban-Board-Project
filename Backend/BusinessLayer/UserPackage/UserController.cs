@@ -3,14 +3,17 @@ using IntroSE.Kanban.Backend.DataAccessLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("KanbanTests")]
 namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
 {
+    
     class UserController
     {
-        private Dictionary<string, User> UserList;
+        internal Dictionary<string, User> UserList;
         private User CurrentUser;
         private DalController DalController = new DalController();
 
@@ -73,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         /// </summary>
         /// <param name="Password"></param>
         /// <returns>returns true if this Password is proper to register or false if not</returns>
-        private bool CheckProperPassToRegister(string Password)
+        internal bool CheckProperPassToRegister(string Password)
         {
             if (Password.Length > MAX_LENGTH_OF_Password | Password.Length < MIN_LENGTH_OF_Password)
                 throw new Exception("This password is not between " + MIN_LENGTH_OF_Password + "-" + MAX_LENGTH_OF_Password + " characters");
@@ -155,6 +158,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 User UserHost=null;
            
                 UserHost=UserList[EmailHost];
+                if(UserHost.GetBoard().GetCreatorEmail() != EmailHost)
+                {
+                    throw new Exception("The target user is not the host of his board");
+                }
                 User MyUser = new User(Email, Password, Nickname, UserHost.GetBoard());
                 UserList.Add(Email, MyUser);
                 MyUser.GetBoard().AddMember(Email);
@@ -171,11 +178,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
         /// </summary>
         /// <param name="Email"></param>
         /// <returns>returns true if the email adress is legal and false if not</returns>
-        private bool IsLegalEmailAdress(string Email)
+        internal bool IsLegalEmailAdress(string Email)
         {
             try
             {
-                var Addr = new System.Net.Mail.MailAddress(Email);
                 if (Email.IndexOf('@') == -1)
                     throw new Exception("Illegal email, the email must contains @");
                 int Index = Email.IndexOf('@');
@@ -200,6 +206,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.UserPackage
                 if (Counter < 2)
                     throw new Exception("Illegal email, every generic top level must contains 2 or more characters");
 
+                var Addr = new System.Net.Mail.MailAddress(Email);
                 return Addr.Address == Email;
             }
             catch
