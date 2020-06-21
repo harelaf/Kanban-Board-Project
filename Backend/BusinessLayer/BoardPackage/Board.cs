@@ -279,7 +279,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
             if (toAddTo.GetLimit() != -1 && removed.GetTaskList().Count > toAddTo.GetLimit() - toAddTo.GetTaskList().Count)
             {
-                throw new Exception("There isn't enough available space in the right column");
+                throw new Exception("There isn't enough available space in the nearby column");
             }
 
             if (!Email.Equals(removed.getEmail()))

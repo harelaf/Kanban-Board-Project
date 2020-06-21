@@ -61,10 +61,10 @@ namespace Presentation.ViewModel
                 if (value != null)
                 {
                     if(taskSelectedItem!=null)
-                        taskSelectedItem.TitleFontSize = 13;
+                        taskSelectedItem.TitleFontSize = 14;
                     taskSelectedItem = value;
                     lastSelected = taskSelectedItem;
-                    taskSelectedItem.TitleFontSize = 16;
+                    taskSelectedItem.TitleFontSize = 18;
                     UpdateTitle = taskSelectedItem.Title;
                     UpdateDescription = taskSelectedItem.Description;
                     UpdateAssignee = taskSelectedItem.EmailAssignee;
@@ -74,7 +74,7 @@ namespace Presentation.ViewModel
                 else
                 {
                     if (taskSelectedItem != null)
-                        taskSelectedItem.TitleFontSize = 13;
+                        taskSelectedItem.TitleFontSize = 14;
                     taskSelectedItem = null;
                     Enabled = false;
                 }
@@ -575,6 +575,7 @@ namespace Presentation.ViewModel
             }
             ColumnList = newColumnList;
             filterByString();
+            ErrorLabel1 = "the board has been sorted successfully";
         }
 
         /// <summary>

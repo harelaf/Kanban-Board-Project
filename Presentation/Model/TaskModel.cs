@@ -98,6 +98,7 @@ namespace Presentation.Model
             this.Description = description;
             this.EmailAssignee = emailAssignee;
             this.ColumnName = ColumnName;
+            this.TitleFontSize = 14;
             this.BorderBrush = Controller.Email.ToLower().Equals(EmailAssignee.ToLower()) ? Brushes.Blue : Brushes.White; //Checks if the user is the assignee and then puts a blue border
             this.BackgroundBrush = this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red : 
                 DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds) 
