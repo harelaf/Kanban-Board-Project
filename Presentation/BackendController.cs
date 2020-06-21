@@ -135,7 +135,7 @@ namespace Presentation
         /// <param name="tsk"></param>
         /// <param name="ColumnName"></param>
         /// <returns></returns>
-        public TaskModel ToTaskModel(Task tsk, string ColumnName)
+        private TaskModel ToTaskModel(Task tsk, string ColumnName)
         {
             return new TaskModel(this,tsk.Id, tsk.CreationTime, tsk.DueDate, tsk.Title, tsk.Description, tsk.emailAssignee, ColumnName);
         }
