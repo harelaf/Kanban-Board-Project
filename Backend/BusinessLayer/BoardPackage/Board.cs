@@ -102,12 +102,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 throw new Exception("The columnOrdinal is illegal");
 
             if (!list[ColumnOrdinal].getEmail().Equals(Email))
-                throw new Exception("You can't change the column name because you are not the creator of this column");
+                throw new Exception("only the board's creator can change column names");
 
             foreach (Column column in list)
             {
                 if (column.GetColumnName().Equals(NewName) & column.GetColumnOrdinal() != ColumnOrdinal)
-                    throw new Exception("you can't change the column name to this new name because there is already a column with this name");
+                    throw new Exception("couldn't change name. there is already a column with this name");
             }
 
             list[ColumnOrdinal].SetColumnName(NewName);
@@ -194,7 +194,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnId > list.Count - 1 | ColumnId < 0)
                 throw new Exception("This columnOrdinal does not exist");
             if (!GetColumn(ColumnId).getEmail().Equals(Email))
-                throw new Exception("This Column Limit can't changed because this user is not the creator of the column");
+                throw new Exception("only the board's creator can change column limit");
             Column toUpdate = GetColumn(ColumnId);
             toUpdate.SetLimit(Limit);
             toUpdate.ToDalObject(toUpdate.getEmail(), "").Save();
@@ -283,7 +283,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
 
             if (!Email.Equals(removed.getEmail()))
-                throw new Exception("This user can't remove this column because he is not the creator of this column");
+                throw new Exception("only the board's creator can remove columns");
 
             foreach (Task toMove in removed.GetTaskList())
             {
@@ -315,7 +315,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnOrdinal == 0)
                 throw new Exception("You can't move the first column left");
             if (!Email.Equals(GetColumn(ColumnOrdinal).getEmail()))
-                throw new Exception("This user cant move this column left because he is not the creator of the column");
+                throw new Exception("only the board's creator can change column position");
 
             Column toMove = GetColumn(ColumnOrdinal);
             Column Moved = GetColumn(ColumnOrdinal - 1);
@@ -338,7 +338,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             if (ColumnOrdinal == list.Count - 1)
                 throw new Exception("You can't move the last column right");
             if (!Email.Equals(GetColumn(ColumnOrdinal).getEmail()))
-                throw new Exception("This user cant move this column right because he is not the creator of the column");
+                throw new Exception("only the board's creator can change column position");
             Column toMove = GetColumn(ColumnOrdinal);
             Column Moved = GetColumn(ColumnOrdinal + 1);
             list.Remove(toMove);
@@ -371,7 +371,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
             }
 
             if (list.Count != 0 && !CreatorEmail.Equals(Email))
-                throw new Exception("This user can't add a new column because he is not the creator");
+                throw new Exception("only the board's creator can add column");
 
             foreach (Column col in list)
             {

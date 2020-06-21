@@ -75,6 +75,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void SetColumnName(string ColumnName)
         {
+            if (ColumnName == null || ColumnName.Equals(""))
+                throw new Exception("this column name is illegal");
             string oldName = this.ColumnName;
             this.ToDalObject(Email, "").Delete();
             this.ColumnName = ColumnName;
@@ -140,6 +142,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
 
         public void MoveExistingTaskHere(Task toAdd)
         {
+            if (TaskList.Count == Limit)
+                throw new Exception("the next column holds maximal number of tasks");
             TaskList.Add(toAdd);
         }
 
@@ -174,7 +178,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception("You can't update this tasks due date because you are not the assignee");
+                throw new Exception("only the task's assignee can update task");
             return toUpdate;
 
         }
@@ -194,7 +198,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception("You can't update this tasks title because you are not the assignee");
+                throw new Exception("only the task's assignee can update task");
             return toUpdate;
         }
 
@@ -214,7 +218,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer.BoardPackage
                 toUpdate.ToDalObject(this.Email, ColumnName).Save();
             }
             else
-                throw new Exception("You can't update this tasks description because you are not the assignee");
+                throw new Exception("only the task's assignee can update task");
             return toUpdate;
         }
 
