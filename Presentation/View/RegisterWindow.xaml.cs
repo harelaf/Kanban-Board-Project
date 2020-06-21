@@ -20,18 +20,18 @@ namespace Presentation.View
     /// </summary>
     public partial class RegisterWindow : Window
     {
-        private RegisterViewModel RegisterViewModel;
+        private RegisterViewModel registerViewModel;
 
-        internal RegisterWindow(BackendController Controller)
+        internal RegisterWindow(RegisterViewModel registerViewModel)
         {
             InitializeComponent();
-            this.RegisterViewModel = new RegisterViewModel(Controller);
-            this.DataContext = RegisterViewModel;
+            this.registerViewModel = registerViewModel;
+            this.DataContext = registerViewModel;
         }
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            RegisterViewModel.Register();
+            registerViewModel.Register();
         }
     }
 }

@@ -23,19 +23,12 @@ namespace Presentation.View
     public partial class AddTaskWindow : Window
     {
         private AddTaskViewModel ATViewModel;
-        private ObservableCollection<ColumnModel> columns;
 
-        /// <summary>
-        /// add task window
-        /// </summary>
-        /// <param name="Controller"></param>
-        /// <param name="columns"></param>
-        internal AddTaskWindow(BackendController Controller, ObservableCollection<ColumnModel> columns)
+        internal AddTaskWindow(AddTaskViewModel ATViewModel)
         {
             InitializeComponent();
-            this.ATViewModel = new AddTaskViewModel(Controller);
+            this.ATViewModel = ATViewModel;
             this.DataContext = ATViewModel;
-            this.columns = columns;
         }
 
         /// <summary>
@@ -46,7 +39,7 @@ namespace Presentation.View
         /// <param name="e"></param>
         private void AddTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            ATViewModel.AddTask(columns);
+            ATViewModel.AddTask();
         }
     }
 }

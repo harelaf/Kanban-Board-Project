@@ -82,7 +82,7 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.Register(Email, Nickname, Password, HostEmail);
-                ErrorMessage = "Registered Successefully! You can now login to the system.";
+                ErrorMessage = "Done! You may login or register another one.";
             }
             catch (Exception e)
             {

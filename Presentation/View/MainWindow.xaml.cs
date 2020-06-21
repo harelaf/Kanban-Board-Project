@@ -39,20 +39,20 @@ namespace Presentation
         /// for after logout
         /// </summary>
         /// <param name="controller">which olds an instance of service</param>
-        internal MainWindow(BackendController controller)
+        internal MainWindow(MainWindowViewModel MWVModel)
         {
             InitializeComponent();
-            MWViewModel = new MainWindowViewModel(controller);
+            MWViewModel = MWVModel;
             this.DataContext = MWViewModel;
         }
 
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            UserModel LoggedIn = MWViewModel.Login();
+            KanbanViewModel LoggedIn = MWViewModel.Login();
             if (LoggedIn != null)
             {
-                KanbanWindow KanbanWindow = new KanbanWindow(MWViewModel.Controller);
+                KanbanWindow KanbanWindow = new KanbanWindow(LoggedIn);
                 KanbanWindow.Show();
                 this.Close();
             }
@@ -65,7 +65,7 @@ namespace Presentation
         /// <param name="e"></param>
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            RegisterWindow w = new RegisterWindow(MWViewModel.Controller);
+            RegisterWindow w = new RegisterWindow(MWViewModel.RegisterPressed());
             w.Show();
         }
 

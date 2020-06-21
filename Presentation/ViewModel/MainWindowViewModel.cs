@@ -78,13 +78,14 @@ namespace Presentation.ViewModel
         /// order the controller to login a user and displays a proper message
         /// </summary>
         /// <returns></returns>
-        public UserModel Login()
+        public KanbanViewModel Login()
         {
             ErrorMessage = "";
             try
             {
-                UserModel loggedIn = Controller.Login(email, password);
-                return loggedIn;
+                BoardModel loggedIn = Controller.Login(email, password);
+                KanbanViewModel KVModel = new KanbanViewModel(Controller, loggedIn);
+                return KVModel;
             }
             catch (Exception e)
             {
@@ -93,6 +94,10 @@ namespace Presentation.ViewModel
             }
         }
 
+        public RegisterViewModel RegisterPressed()
+        {
+            return new RegisterViewModel(Controller);
+        }
 
     }
 }

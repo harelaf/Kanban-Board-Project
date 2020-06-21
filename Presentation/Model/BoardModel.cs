@@ -20,11 +20,13 @@ namespace Presentation.Model
             }
         }
         public readonly string CreatorEmail;
+        public readonly UserModel currUser;
 
-        public BoardModel(BackendController Controller, string CreatorEmail, ObservableCollection<ColumnModel> colList) : base(Controller)
+        public BoardModel(BackendController Controller, string CreatorEmail, ObservableCollection<ColumnModel> colList, UserModel currUser) : base(Controller)
         {
             this.colList = colList;
             this.CreatorEmail = CreatorEmail;
+            this.currUser = currUser;
         }
     }
 }

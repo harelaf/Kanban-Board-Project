@@ -18,6 +18,7 @@ namespace Presentation.Model
             set
             {
                 dueDate = value;
+                RaisePropertyChanged("DueDate");
                 this.BackgroundBrush = dueDate.Subtract(DateTime.Now).TotalMilliseconds <= 0 ? Brushes.Red :
                 DateTime.Now.Subtract(CreationDate).TotalMilliseconds >= (0.75 * dueDate.Subtract(CreationDate).TotalMilliseconds)
                 ? Brushes.Orange : Brushes.White; //First check if a red background is needed, then if an orange, otherwise white
@@ -30,6 +31,7 @@ namespace Presentation.Model
             set
             {
                 title = value;
+                RaisePropertyChanged("Title");
             }
         }
         private string description;
@@ -39,6 +41,7 @@ namespace Presentation.Model
             set
             {
                 description = value;
+                RaisePropertyChanged("Description");
             }
         }
         private string emailAssignee;
@@ -48,6 +51,7 @@ namespace Presentation.Model
             set
             {
                 emailAssignee = value;
+                RaisePropertyChanged("EmailAssignee");
                 BorderBrush = Controller.Email.ToLower().Equals(EmailAssignee.ToLower()) ? Brushes.Blue : Brushes.White; //Checks if the user is the assignee and then puts a blue border
             }
         }
@@ -62,6 +66,7 @@ namespace Presentation.Model
                 RaisePropertyChanged("BorderBrush");
             }
         }
+
         private SolidColorBrush backgroundBrush;
         public SolidColorBrush BackgroundBrush
         {
@@ -72,6 +77,18 @@ namespace Presentation.Model
                 RaisePropertyChanged("BackgroundBrush");
             }
         }
+
+        private int titleFontSize;
+        public int TitleFontSize
+        {
+            get => titleFontSize;
+            set
+            {
+                titleFontSize = value;
+                RaisePropertyChanged("TitleFontSize");
+            }
+        }
+
         public TaskModel(BackendController controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;

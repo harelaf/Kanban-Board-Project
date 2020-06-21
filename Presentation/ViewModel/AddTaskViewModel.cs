@@ -17,10 +17,10 @@ namespace Presentation.ViewModel
         /// always get an existing controller
         /// </summary>
         /// <param name="controller"></param>
-        public AddTaskViewModel(BackendController controller)
+        public AddTaskViewModel(BackendController controller, ColumnModel Column)
         {
             this.Controller = controller;
-            Column = new ColumnModel(Controller);
+            this.Column = Column;
         }
 
         private string title;
@@ -71,12 +71,11 @@ namespace Presentation.ViewModel
         /// add new task to the first column and displays a proper message
         /// </summary>
         /// <param name="columns"></param>
-        public void AddTask(ObservableCollection<ColumnModel> columns)
+        public void AddTask()
         {
             try
             {
                 TaskModel task = Controller.AddTask(Controller.Email, Title, Description, DueDate);
-                Column = columns[0];
                 Column.AddTask(task);
                 ErrorMessage = "Added the task successfully!";
             }

@@ -10,15 +10,35 @@ namespace Presentation.Model
 {
     class ColumnModel : NotifiableModelObject
     {
-        public string Name { get; set; }
+        private string name;
+        public string Name
+        {
+            get => name;
+            set
+            {
+                name = value;
+                RaisePropertyChanged("Name");
+            }
+        }
+
         public ObservableCollection<TaskModel> TaskList { get; set; }
         public ObservableCollection<TaskModel> filteredTaskList{ get; set;}
-        public int Limit { get; set; }
+        private int limit;
+        public int Limit
+        {
+            get => limit;
+            set
+            {
+                limit = value;
+                RaisePropertyChanged("Limit");
+            }
+        }
+        public string filteredBy;
 
         public ColumnModel(BackendController Controller) : base(Controller)
         {
             this.TaskList = new ObservableCollection<TaskModel>();
-            filter("");
+            filter(null);
             Name = "";
             Limit = 0;
         }
@@ -38,6 +58,7 @@ namespace Presentation.Model
         public void AddTask(TaskModel task)
         {
             TaskList.Add(task);
+            filteredTaskList = new ObservableCollection<TaskModel>(TaskList.Where(x => x.Description.Contains(filteredBy) | x.Title.Contains(filteredBy)));
         }
 
         /// <summary>
@@ -47,6 +68,7 @@ namespace Presentation.Model
         /// <returns>returns the filtered column</returns>
         public ColumnModel filter(string s)
         {
+            filteredBy = s==null ? "" : s;
             if(s==null || s == "")
             {
                 filteredTaskList = TaskList;

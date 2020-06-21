@@ -12,14 +12,16 @@ namespace Presentation.ViewModel
     {
 
         public BackendController Controller { get; private set; }
+        private ObservableCollection<ColumnModel> ColumnList;
         
         /// <summary>
         /// always get an existing controller
         /// </summary>
         /// <param name="Controller"></param>
-        public AddColumnViewModel(BackendController Controller)
+        public AddColumnViewModel(BackendController Controller, ObservableCollection<ColumnModel> ColumnList)
         {
             this.Controller = Controller;
+            this.ColumnList = ColumnList;
         }
 
         private string name;
@@ -63,13 +65,13 @@ namespace Presentation.ViewModel
         /// adds a new column to the recieved column list with the fields above^ and displays a proper message
         /// </summary>
         /// <param name="columns"></param>
-        public void AddColumn(ObservableCollection<ColumnModel> columns)
+        public void AddColumn()
         {
             ErrorMessage2 = "";
             try
             {
                 ColumnModel col = Controller.AddColumn(Controller.Email, Index, Name);
-                columns.Insert(Index, new ColumnModel(Controller, new ObservableCollection<TaskModel>(), Name, col.Limit));
+                ColumnList.Insert(Index, new ColumnModel(Controller, new ObservableCollection<TaskModel>(), Name, col.Limit));
                 ErrorMessage2 = "The column has been added successfully";
             }
             catch (Exception e)

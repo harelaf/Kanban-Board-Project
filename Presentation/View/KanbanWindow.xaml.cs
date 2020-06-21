@@ -24,10 +24,10 @@ namespace Presentation.View
     {
         private KanbanViewModel KVModel;
 
-        internal KanbanWindow(BackendController Controller)
+        internal KanbanWindow(KanbanViewModel KVModel)
         {
             InitializeComponent();
-            KVModel = new KanbanViewModel(Controller);
+            this.KVModel = KVModel;
             this.DataContext = KVModel;
         }
 
@@ -50,7 +50,7 @@ namespace Presentation.View
         /// <param name="e"></param>
         private void AddTask_Button_Click(object sender, RoutedEventArgs e)
         {
-            AddTaskWindow adw = new AddTaskWindow(KVModel.Controller, KVModel.ColumnList);
+            AddTaskWindow adw = new AddTaskWindow(KVModel.AddTask());
             adw.Show();
 	    }
 
@@ -115,7 +115,7 @@ namespace Presentation.View
 	    }
         private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
         {
-            AddColumn addColumn = new AddColumn(KVModel.Controller, KVModel.ColumnList);
+            AddColumn addColumn = new AddColumn(KVModel.AddColumn());
             addColumn.Show();
         }
 
@@ -127,8 +127,8 @@ namespace Presentation.View
         /// <param name="e"></param>
         private void Logout_Button_Click(object sender, RoutedEventArgs e)
         {
-            KVModel.logout();
-            MainWindow mw = new MainWindow(KVModel.Controller);
+            MainWindowViewModel MWVModel = KVModel.logout();
+            MainWindow mw = new MainWindow();
             mw.Show();
             this.Close();
         }

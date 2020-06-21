@@ -23,19 +23,12 @@ namespace Presentation.View
     public partial class AddColumn : Window
     {
         private AddColumnViewModel AddColumnModel;
-        private ObservableCollection<ColumnModel> columns;
 
-        /// <summary>
-        /// add column window
-        /// </summary>
-        /// <param name="Controller"></param>
-        /// <param name="columns"></param>
-        internal AddColumn(BackendController Controller, ObservableCollection<ColumnModel> columns)
+        internal AddColumn(AddColumnViewModel AddColumnModel)
         {
             InitializeComponent();
-            this.AddColumnModel = new AddColumnViewModel(Controller);
+            this.AddColumnModel = AddColumnModel;
             this.DataContext = AddColumnModel;
-            this.columns = columns;
         }
 
         /// <summary>
@@ -46,7 +39,7 @@ namespace Presentation.View
         /// <param name="e"></param>
         private void AddColumn_Click(object sender, RoutedEventArgs e)
         {
-            AddColumnModel.AddColumn(columns);
+            AddColumnModel.AddColumn();
         }
 
     }

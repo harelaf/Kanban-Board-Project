@@ -17,11 +17,12 @@ namespace Presentation.ViewModel
         /// always gets an existing controller
         /// </summary>
         /// <param name="Controller"></param>
-        public KanbanViewModel(BackendController Controller)
+        public KanbanViewModel(BackendController Controller, BoardModel Board)
         {
             this.Controller = Controller;
-            Board = Controller.GetBoard(Controller.Email);
+            this.Board = Board;
             ColumnList = Board.ColList;
+            ErrorLabel1 = "Hello there, " + Board.currUser.Nickname +"!";
         }
 
         private BoardModel board;
@@ -31,7 +32,6 @@ namespace Presentation.ViewModel
             set
             {
                 board = value;
-                RaisePropertyChanged("Board");
             }
         }
 
@@ -61,7 +61,7 @@ namespace Presentation.ViewModel
                 if (value != null)
                 {
                     taskSelectedItem = value;
-                    LastSelected = taskSelectedItem;
+                    lastSelected = taskSelectedItem;
                     UpdateTitle = taskSelectedItem.Title;
                     UpdateDescription = taskSelectedItem.Description;
                     UpdateAssignee = taskSelectedItem.EmailAssignee;
@@ -140,8 +140,6 @@ namespace Presentation.ViewModel
         /// <returns></returns>
         private int FindColumn(string myColumnName)
         {
-            SearchValue = null;
-            filterByString();
             int columnOrdinal = -1;
 
             if (myColumnName != null)
@@ -287,7 +285,7 @@ namespace Presentation.ViewModel
             {
                 Controller.LimitColumnTasks(Controller.Email, ColId, ColumnLimit);
                 ColumnList[ColId].Limit = ColumnLimit;
-                RaisePropertyChanged("ColumnList");
+                //RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Changed column's limit successfully";
             }
             catch (Exception e)
@@ -301,12 +299,12 @@ namespace Presentation.ViewModel
         /// </summary>
         public void UpdateTaskTitle()
         {
-            int ColId = FindColumn(LastSelected.ColumnName);
+            int ColId = FindColumn(TaskSelectedItem.ColumnName);
             try
             {
-                Controller.UpdateTaskTitle(Controller.Email, ColId, LastSelected.Id, UpdateTitle);
+                Controller.UpdateTaskTitle(Controller.Email, ColId, TaskSelectedItem.Id, UpdateTitle);
                 TaskSelectedItem.Title = UpdateTitle;
-                RaisePropertyChanged("ColumnList");
+                //RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Updated task's title successfully";
             }
             catch (Exception e)
@@ -320,12 +318,12 @@ namespace Presentation.ViewModel
         /// </summary>
         public void UpdateTaskDescription()
         {
-            int ColId = FindColumn(LastSelected.ColumnName);
+            int ColId = FindColumn(TaskSelectedItem.ColumnName);
             try
             {
-                Controller.UpdateTaskDescription(Controller.Email, ColId, LastSelected.Id, UpdateDescription);
+                Controller.UpdateTaskDescription(Controller.Email, ColId, TaskSelectedItem.Id, UpdateDescription);
                 TaskSelectedItem.Description = UpdateDescription;
-                RaisePropertyChanged("ColumnList");
+                //RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Updated task's description successfully";
             }
             catch (Exception e)
@@ -339,16 +337,16 @@ namespace Presentation.ViewModel
         /// </summary>
         public void UpdateTaskDueDate()
         {
-            int ColId = FindColumn(LastSelected.ColumnName);
+            int ColId = FindColumn(TaskSelectedItem.ColumnName);
             DateTime newDate;
             try
             {
                 newDate = DateTime.Parse(UpdateDueDate);
                 try
                 {
-                    Controller.UpdateTaskDueDate(Controller.Email, ColId, LastSelected.Id, newDate);
+                    Controller.UpdateTaskDueDate(Controller.Email, ColId, TaskSelectedItem.Id, newDate);
                     TaskSelectedItem.DueDate = newDate;
-                    RaisePropertyChanged("ColumnList");
+                    //RaisePropertyChanged("ColumnList");
                     ErrorLabel1 = "Updated task's due date successfully";
                 }
                 catch (Exception e)
@@ -372,7 +370,7 @@ namespace Presentation.ViewModel
             {
                 Controller.ChangeColumnName(Controller.Email, ColId, ColumnName);
                 ColumnList[ColId].Name = ColumnName;
-                RaisePropertyChanged("ColumnList");
+                //RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Changed column's name successfully";
             }
             catch (Exception e)
@@ -386,10 +384,10 @@ namespace Presentation.ViewModel
         /// </summary>
         public void AssignTask()
         {
-            int ColId = FindColumn(LastSelected.ColumnName);
+            int ColId = FindColumn(TaskSelectedItem.ColumnName);
             try
             {
-                Controller.AssignTask(Controller.Email, ColId, LastSelected.Id, UpdateAssignee);
+                Controller.AssignTask(Controller.Email, ColId, TaskSelectedItem.Id, UpdateAssignee);
                 TaskSelectedItem.EmailAssignee = UpdateAssignee;
                 RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "Assigned task successfully";
@@ -406,8 +404,7 @@ namespace Presentation.ViewModel
         public void AdvanceTask()
         {
             TaskModel myTask = TaskSelectedItem;
-            SearchValue = null;
-            filterByString();
+            
             if (myTask == null)
             {
                 ErrorLabel1 = "no task was chosen to advanced";
@@ -423,8 +420,9 @@ namespace Presentation.ViewModel
                 ColumnList[columnId + 1].TaskList.Add(myTask);
                 ColumnList[columnId].TaskList.Remove(TaskSelectedItem);
                 myTask.ColumnName = ColumnList[columnId + 1].Name;
+                filterByString();
+                RaisePropertyChanged("ColumnList");
                 ErrorLabel1 = "The task has advanced successfully";
-                TaskSelectedItem = myTask;
             }
             catch (Exception e)
             {
@@ -438,8 +436,6 @@ namespace Presentation.ViewModel
         public void DeleteTask()
         {
             TaskModel myTask = TaskSelectedItem;
-            SearchValue = null;
-            filterByString();
             int columnOrdinal = -1;
 
             columnOrdinal = FindColumn(myTask.ColumnName);
@@ -450,6 +446,7 @@ namespace Presentation.ViewModel
                 {
                     Controller.DeleteTask(Controller.Email, columnOrdinal, myTask.Id);
                     columnList[columnOrdinal].TaskList.Remove(TaskSelectedItem);
+                    filterByString();
                     ErrorLabel1 = "The task was deleted successfully";
                 }
                 catch (Exception e)
@@ -464,14 +461,22 @@ namespace Presentation.ViewModel
 
         }
 
+        public AddColumnViewModel AddColumn()
+        {
+            return new AddColumnViewModel(Controller, ColumnList);
+        }
+
+        public AddTaskViewModel AddTask()
+        {
+            return new AddTaskViewModel(Controller, ColumnList[0]);
+        }
+
         /// <summary>
         /// moves curent column to the right and displays a proper message
         /// </summary>
         public void MoveColumnRight()
         {
             ColumnModel myColumn = ColumnSelectedItem;
-            SearchValue = null;
-            filterByString();
             if (myColumn == null)
             {
                 ErrorLabel1 = "No column was chosen";
@@ -483,9 +488,11 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.MoveColumnRight(Controller.Email, id);
-                ColumnList = Controller.GetBoard(Controller.Email).ColList;
+                ColumnList = Controller.GetBoard(Controller.Email, board.currUser).ColList;
+                filterByString();
                 ErrorLabel1 = "The column has been moved successfully";
                 ColumnSelectedItem = columnList[id + 1];
+                TaskSelectedItem = null;
             }
             catch (Exception e)
             {
@@ -499,8 +506,6 @@ namespace Presentation.ViewModel
         public void MoveColumnLeft()
         {
             ColumnModel myColumn = ColumnSelectedItem;
-            SearchValue = null;
-            filterByString();
             if (myColumn == null)
             {
                 ErrorLabel1 = "No column was chosen";
@@ -512,9 +517,11 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.MoveColumnLeft(Controller.Email, id);
-                ColumnList = Controller.GetBoard(Controller.Email).ColList;
+                ColumnList = Controller.GetBoard(Controller.Email, board.currUser).ColList;
+                filterByString();
                 ErrorLabel1 = "The column has been moved successfully";
                 ColumnSelectedItem = columnList[id - 1];
+                TaskSelectedItem = null;
             }
             catch (Exception e)
             {
@@ -529,8 +536,6 @@ namespace Presentation.ViewModel
         public void RemoveColumn()
         {
             ColumnModel myColumn = ColumnSelectedItem;
-            SearchValue = null;
-            filterByString();
             int id = columnList.IndexOf(myColumn);
             if (id == -1)
             {
@@ -541,8 +546,11 @@ namespace Presentation.ViewModel
             try
             {
                 Controller.RemoveColumn(Controller.Email, id);
-                ColumnList = Controller.GetBoard(Controller.Email).ColList;
+                ColumnList = Controller.GetBoard(Controller.Email, board.currUser).ColList;
+                filterByString();
                 ErrorLabel1 = "The column has been removed successfully";
+                ColumnSelectedItem = ColumnList[id > 0 ? id - 1 : id];
+                TaskSelectedItem = null;
             }
             catch (Exception e)
             {
@@ -555,28 +563,29 @@ namespace Presentation.ViewModel
         /// </summary>
         public void SortByDueDate()
         {
-            SearchValue = null;
-            filterByString();
             ObservableCollection<ColumnModel> newColumnList = new ObservableCollection<ColumnModel>();
             foreach (ColumnModel cm in columnList)
             {
                 newColumnList.Add(new ColumnModel(Controller, new ObservableCollection<TaskModel>(cm.TaskList.OrderBy(x => x.DueDate).ToList()), cm.Name, cm.Limit));
             }
             ColumnList = newColumnList;
+            filterByString();
         }
 
         /// <summary>
         /// user check out and displays a proper message
         /// </summary>
-        public void logout()
+        public MainWindowViewModel logout()
         {
             try
             {
                 Controller.Logout(Controller.Email);
+                return new MainWindowViewModel(Controller);
             }
             catch (Exception e)
             {
                 ErrorLabel1 = e.Message;
+                return null;
             }
         }
 
@@ -599,8 +608,6 @@ namespace Presentation.ViewModel
         /// <returns></returns>
         public bool DeleteData()
         {
-            SearchValue = null;
-            filterByString();
             DialogResult d = MessageBox.Show("ARE YOU SURE?", "Confirmation", MessageBoxButtons.YesNo);
             if (d == DialogResult.Yes)
             {

@@ -9,15 +9,13 @@ namespace Presentation.Model
 {
     class UserModel : NotifiableModelObject
     {
-        private string Email;
-        private string Nickname;
-        private BoardModel Board;
+        public readonly string Email;
+        public readonly string Nickname;
 
-        public UserModel(BackendController Controller, string Email, string Nickname , BoardModel Board) : base(Controller)
+        public UserModel(BackendController Controller, string Email, string Nickname) : base(Controller)
         {
             this.Email = Email;
             this.Nickname = Nickname;
-            this.Board = Board;
         }
     }
 }

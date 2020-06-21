@@ -84,7 +84,7 @@ namespace Presentation
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public UserModel Login(string email, string password)
+        public BoardModel Login(string email, string password)
         {
             Response<User> resp = MyService.Login(email, password);
             if (resp.ErrorOccured)
@@ -92,10 +92,8 @@ namespace Presentation
                 throw new Exception(resp.ErrorMessage);
             }
             this.Email = email;
-            UserModel ActiveUser = new UserModel(this, email, resp.Value.Nickname
-                , ToBoardModel(MyService.GetBoard(email).Value));
-            Email = email;
-            return ActiveUser;
+            BoardModel ActiveBoard = ToBoardModel(MyService.GetBoard(email).Value, new UserModel(this, email, resp.Value.Nickname));
+            return ActiveBoard;
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace Presentation
         /// </summary>
         /// <param name="MyBoard"></param>
         /// <returns></returns>
-        private BoardModel ToBoardModel(Board MyBoard)
+        private BoardModel ToBoardModel(Board MyBoard, UserModel ActiveUser)
         {
             ObservableCollection<ColumnModel> colList = new ObservableCollection<ColumnModel>();
             int i = 0;
@@ -113,7 +111,7 @@ namespace Presentation
                 colList.Add(ToColumnModel(col));
                 i++;
             }
-            return new BoardModel(this, MyBoard.emailCreator, colList);
+            return new BoardModel(this, MyBoard.emailCreator, colList, ActiveUser);
         }
 
         /// <summary>
@@ -158,9 +156,9 @@ namespace Presentation
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public BoardModel GetBoard(string Email)
+        public BoardModel GetBoard(string Email, UserModel ActiveUser)
         {
-            return ToBoardModel(MyService.GetBoard(Email).Value);
+            return ToBoardModel(MyService.GetBoard(Email).Value, ActiveUser);
         }
 
         /// <summary>
