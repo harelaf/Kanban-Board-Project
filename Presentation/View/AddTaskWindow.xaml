@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Presentation.View"
         mc:Ignorable="d"
-        Title="AddTaskWindow" Height="400" Width="600" ResizeMode="CanMinimize">
+        Title="AddTaskWindow" Height="400" Width="600" ResizeMode="CanMinimize" >
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>

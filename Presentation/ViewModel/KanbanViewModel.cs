@@ -60,8 +60,11 @@ namespace Presentation.ViewModel
             {
                 if (value != null)
                 {
+                    if(taskSelectedItem!=null)
+                        taskSelectedItem.TitleFontSize = 13;
                     taskSelectedItem = value;
                     lastSelected = taskSelectedItem;
+                    taskSelectedItem.TitleFontSize = 16;
                     UpdateTitle = taskSelectedItem.Title;
                     UpdateDescription = taskSelectedItem.Description;
                     UpdateAssignee = taskSelectedItem.EmailAssignee;
@@ -70,6 +73,8 @@ namespace Presentation.ViewModel
                 }
                 else
                 {
+                    if (taskSelectedItem != null)
+                        taskSelectedItem.TitleFontSize = 13;
                     taskSelectedItem = null;
                     Enabled = false;
                 }

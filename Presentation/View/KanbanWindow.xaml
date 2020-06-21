@@ -41,7 +41,7 @@
                                         <DataTemplate>
                                             <Border BorderThickness="3" BorderBrush="{Binding Path=BorderBrush, Mode=OneWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}">
                                                 <StackPanel Width="150" Margin="10">
-                                                    <TextBlock Name="Title" FontSize="{Binding Path=TitleFontSize,Mode=TwoWay}" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
+                                                    <TextBlock Name="Title" FontSize="{Binding Path=TitleFontSize,Mode=OneWay}" FontWeight="Bold" Text="{Binding Path=Title, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="Description" FontSize="13" Text="{Binding Path=Description, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="EmailAssignee" FontSize="13" Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Background="{Binding Path=BackgroundBrush, Mode=OneWay}" TextWrapping="Wrap"/>
                                                     <TextBlock Name="CreationDateLabel" Text="Creation Date: " FontWeight="Bold"/>

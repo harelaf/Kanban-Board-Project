@@ -66,7 +66,7 @@ namespace Presentation
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             RegisterWindow w = new RegisterWindow(MWViewModel.RegisterPressed());
-            w.Show();
+            w.ShowDialog();
         }
 
     }

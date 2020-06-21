@@ -67,17 +67,6 @@ namespace Presentation.Model
             }
         }
 
-        private SolidColorBrush backgroundBrush;
-        public SolidColorBrush BackgroundBrush
-        {
-            get => backgroundBrush;
-            set
-            {
-                backgroundBrush = value;
-                RaisePropertyChanged("BackgroundBrush");
-            }
-        }
-
         private int titleFontSize;
         public int TitleFontSize
         {
@@ -89,6 +78,17 @@ namespace Presentation.Model
             }
         }
 
+        private SolidColorBrush backgroundBrush;
+        public SolidColorBrush BackgroundBrush
+        {
+            get => backgroundBrush;
+            set
+            {
+                backgroundBrush = value;
+                RaisePropertyChanged("BackgroundBrush");
+            }
+        }
+        
         public TaskModel(BackendController controller, int id, DateTime CreationDate, DateTime dueDate, string title, string description, string emailAssignee, string ColumnName) : base(controller)
         {
             this.Id = id;

@@ -51,7 +51,7 @@ namespace Presentation.View
         private void AddTask_Button_Click(object sender, RoutedEventArgs e)
         {
             AddTaskWindow adw = new AddTaskWindow(KVModel.AddTask());
-            adw.Show();
+            adw.ShowDialog();
 	    }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Presentation.View
         private void AddColumn_Button_Click(object sender, RoutedEventArgs e)
         {
             AddColumn addColumn = new AddColumn(KVModel.AddColumn());
-            addColumn.Show();
+            addColumn.ShowDialog();
         }
 
         /// <summary>
