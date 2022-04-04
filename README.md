@@ -2,7 +2,7 @@
 
 A Kanban Board is a project management tool designed to help visualize work and maximize efficiency.
 
-## Project Explanation
+## About The Project
 
 This project uses a 3-tier architecture. The 'Data Layer' uses DB Browser for the RDBMS. The 'Business Layer is written in C#. The 'Presentation Layer' uses XAML to display the GUI.
 
